@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet ,TouchableOpacity} from 'react-native';
 import RecommendList from '../../../component/RecommendList';
 import TopPlacesCarousel from '../../../component/TopPlacesCarousel';
 import SectionHeader from '../../../component/SectionHeader';
+import ScreenHeader from '../../../component/ScreenHeader';
+import { Searchbar } from 'react-native-paper';
 
 const TOP_PLACES = [
   {
@@ -61,27 +63,58 @@ const PLACES = [
 
 export default function Home({ navigation }) {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
+      <ScreenHeader mainTitle="Welcome back !" secondTitle="Ngo Ba Cuong" />
+
+
+      
+
+      <View style={styles.searchContainer}>
+        <Searchbar
+          style={styles.search}
+          placeholder="Search Class..."
+          inputStyle={styles.searchInput}
+        />
+      </View>
+
       <SectionHeader
         title="Recommend Class"
-        onPress={() => { }}
+        onPress={() => {}}
       />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <TopPlacesCarousel list={TOP_PLACES} />
-        <SectionHeader
-          title="All Class"
-          buttonTitle="See All"
-          onPress={() => { }}
-        />
-        <RecommendList list={PLACES} />
-      </ScrollView>
-    </View>
+      <TopPlacesCarousel list={TOP_PLACES} />
+      <SectionHeader
+        title="All Class"
+        buttonTitle="See All"
+        onPress={() => {}}
+      />
+      <RecommendList list={PLACES} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F4F4F4', // Thay 'colors.light' bằng màu bạn mong muốn
+    backgroundColor: '#F4F4F4',
+    
   },
+  searchContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  search: {
+    backgroundColor: '#CACED1',
+    width: 300,
+    height: 40,
+  },
+  searchInput: {
+    margin :-8, // Căn giữa văn bản trong thanh tìm kiếm
+  },
+
 });
+
+
+
+
+

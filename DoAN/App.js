@@ -66,15 +66,7 @@ const App = () => {
               ),
             }}
           />
-          <Tab.Screen name="Notification" 
-          component={notification}
-          options={{
-            tabBarLabel:'Notification',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="notifications" size={size} color={color} />
-            ),
-          }}
-          />
+         
           <Tab.Screen name="Setting" 
           component={setting}
           options={{
