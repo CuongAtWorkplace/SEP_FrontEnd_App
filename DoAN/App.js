@@ -71,7 +71,7 @@ const App = () => {
           options={{
             tabBarLabel:'Notification',
             tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="notification" size={size} color={color} />
+              <MaterialIcons name="notifications" size={size} color={color} />
             ),
           }}
           />
@@ -80,7 +80,7 @@ const App = () => {
           options={{
             tabBarLabel:'settinng',
             tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="settinng" size={size} color={color} />
+              <MaterialIcons name="settings" size={size} color={color} />
             ),
           }}
           />
