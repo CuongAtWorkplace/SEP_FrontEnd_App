@@ -42,7 +42,7 @@ export default function Login({ navigation }) {
         </TouchableOpacity>
       </View>
       <LoginButton mode="contained" onPress={onLoginPressed}>
-        Login abc
+        Login 
         </LoginButton>
       <View style={styles.row}>
         <Text>Don’t have an account? </Text>
