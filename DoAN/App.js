@@ -6,21 +6,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
 
-<Tab.Screen
-  name="Home"
-  component={Home}
-  options={{
-    tabBarLabel: 'Trang chủ',
-    tabBarIcon: ({ color, size }) => (
-      <MaterialIcons name="home" size={size} color={color} />
-    ),
-  }}
-/>
-
-
 import home from './src/screen/homescreen/home';
 import Login from './src/screen/login/login';
 import register from './src/screen/register/register';
+import community from './src/screen/homescreen/community';
+import notification from './src/screen/homescreen/notification';
+import setting from './src/screen/homescreen/setting';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -46,28 +37,45 @@ const App = () => {
         <Tab.Navigator initialRouteName="Home"
 
           screenOptions={{
-      headerShown: false ,
-      tabBarStyle:{
-        height:60,
-        position: 'absolute',
-        bottom:16,
-        right:16,
-        left:16,
-        borderRadius:16
-      }
-    }}>
-         <Tab.Screen
-        name="Home"
-        component={home}
-        options={{
-          tabBarLabel: 'Trang chủ',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="home" size={size} color={color} />
-          ),
-        }}
-      />
-          <Tab.Screen name="Login" component={Login} />
-          <Tab.Screen name="Register" component={register} />
+            headerShown: false,
+            tabBarStyle: {
+              height: 60,
+              position: 'absolute',
+              bottom: 16,
+              right: 16,
+              left: 16,
+              borderRadius: 16
+            }
+          }}>
+          <Tab.Screen
+            name="Home"
+            component={home}
+            options={{
+              tabBarLabel: 'Home',
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="home" size={size} color={color} />
+              ),
+            }}
+          />
+          <Tab.Screen name="Community"
+            component={community}
+            options={{
+              tabBarLabel:'Community',
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="language" size={size} color={color} />
+              ),
+            }}
+          />
+         
+          <Tab.Screen name="Setting" 
+          component={setting}
+          options={{
+            tabBarLabel:'settinng',
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="settings" size={size} color={color} />
+            ),
+          }}
+          />
 
         </Tab.Navigator>
       ) : (
@@ -81,14 +89,14 @@ const App = () => {
           />
           <Stack.Screen
             name="Home"
-            component={Home}
+            component={home}
             options={{
               headerShown: false, // Bỏ header ở màn hình Home
             }}
           />
           <Stack.Screen
             name="Register"
-            component={Register}
+            component={register}
             options={{
               headerShown: false, // Bỏ header ở màn hình Register
             }}
