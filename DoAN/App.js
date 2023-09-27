@@ -3,8 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { MaterialIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-
+import { TouchableOpacity,View,Text } from 'react-native';
+import { useFonts } from 'expo-font';
 
 import home from './src/screen/homescreen/home';
 import Login from './src/screen/login/login';
@@ -12,6 +12,8 @@ import register from './src/screen/register/register';
 import community from './src/screen/homescreen/community';
 import notification from './src/screen/homescreen/notification';
 import setting from './src/screen/homescreen/setting';
+import Home from './src/screen/homescreen/home';
+import { colors } from './constants/theme';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -19,6 +21,7 @@ const Tab = createBottomTabNavigator();
 const App = () => {
   const [routeName, setRouteName] = useState('Home');
 
+  
   const handleLogin = () => {
     setRouteName('Login');
   };
@@ -35,9 +38,7 @@ const App = () => {
     <NavigationContainer>
       {routeName === 'Home' ? (
         <Tab.Navigator initialRouteName="Home"
-
           screenOptions={{
-            headerShown: false,
             tabBarStyle: {
               height: 60,
               position: 'absolute',
@@ -47,20 +48,33 @@ const App = () => {
               borderRadius: 16
             }
           }}>
-          <Tab.Screen
-            name="Home"
-            component={home}
-            options={{
-              tabBarLabel: 'Home',
-              tabBarIcon: ({ color, size }) => (
-                <MaterialIcons name="home" size={size} color={color} />
-              ),
-            }}
-          />
+         <Tab.Screen
+          name="Knoco"
+          component={Home}
+          options={({ navigation }) => ({
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ color, size }) => (
+              <MaterialIcons name="home" size={size} color={color} />
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  // Xử lý sự kiện khi TouchableOpacity được nhấn
+                  // Ví dụ: mở một màn hình khác
+                  navigation.navigate('OtherScreen');
+                }}
+              >
+                <View style={{ marginRight: 16 }}>
+                <MaterialIcons name="notifications-none" size={30} color={colors.black} />
+                </View>
+              </TouchableOpacity>
+            ),
+          })}
+        />
           <Tab.Screen name="Community"
             component={community}
             options={{
-              tabBarLabel:'Community',
+              headerShown: false, // Bỏ header ở màn hình Login
               tabBarIcon: ({ color, size }) => (
                 <MaterialIcons name="language" size={size} color={color} />
               ),
@@ -70,7 +84,8 @@ const App = () => {
           <Tab.Screen name="Setting" 
           component={setting}
           options={{
-            tabBarLabel:'settinng',
+            headerShown: false, // Bỏ header ở màn hình Login
+            
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="settings" size={size} color={color} />
             ),
@@ -89,9 +104,8 @@ const App = () => {
           />
           <Stack.Screen
             name="Home"
-            component={home}
+            component={Home}
             options={{
-              headerShown: false, // Bỏ header ở màn hình Home
             }}
           />
           <Stack.Screen

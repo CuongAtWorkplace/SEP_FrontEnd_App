@@ -14,7 +14,6 @@ const RecommendList =({list})=> {
             <TouchableOpacity style={styles.cardContainer}>
               <View style={[styles.card, shadow.light]} key={item.id}>
                 <View style={styles.imageBox}>
-                  <Image style={styles.image} source={require('../asset/0e627c12c05e4dd93ab122d618ea7849.jpeg')} />
                 </View>
                 <View style={styles.footer}>
                   <View style={styles.titleBox}>

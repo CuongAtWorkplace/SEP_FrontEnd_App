@@ -3,8 +3,8 @@ import { View, ScrollView, StyleSheet ,TouchableOpacity} from 'react-native';
 import RecommendList from '../../../component/RecommendList';
 import TopPlacesCarousel from '../../../component/TopPlacesCarousel';
 import SectionHeader from '../../../component/SectionHeader';
-import ScreenHeader from '../../../component/ScreenHeader';
 import { Searchbar } from 'react-native-paper';
+import ScreenHeader from '../../../component/ScreenHeader';
 
 const TOP_PLACES = [
   {
@@ -65,10 +65,6 @@ export default function Home({ navigation }) {
   return (
     <ScrollView style={styles.container}>
       <ScreenHeader mainTitle="Welcome back !" secondTitle="Ngo Ba Cuong" />
-
-
-      
-
       <View style={styles.searchContainer}>
         <Searchbar
           style={styles.search}
