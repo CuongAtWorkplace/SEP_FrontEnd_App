@@ -7,13 +7,13 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import {colors, shadow, sizes, spacing} from '../constants/theme';
+import { colors, shadow, sizes, spacing } from '../constants/theme';
 
 const CARD_WIDTH = sizes.width - 80;
 const CARD_HEIGHT = 200;
 const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 
-const TopPlacesCarousel = ({list}) => {
+const TopPlacesCarousel = ({ list }) => {
   return (
     <FlatList
       data={list}
@@ -22,7 +22,7 @@ const TopPlacesCarousel = ({list}) => {
       decelerationRate="fast"
       showsHorizontalScrollIndicator={false}
       keyExtractor={i => i.id}
-      renderItem={({item, index}) => {
+      renderItem={({ item, index }) => {
         return (
           <TouchableOpacity
             style={{
@@ -30,9 +30,8 @@ const TopPlacesCarousel = ({list}) => {
               marginRight: index === list.length - 1 ? spacing.l : 0,
             }}>
             <View style={[styles.card, shadow.dark]}>
-            
+
               <View style={styles.imageBox}>
-                <Image source={require('../asset/2082f59465c39094ce90bebd0fcf8fa7.jpeg')}  style={styles.image} />
               </View>
               <View style={styles.titleBox}>
                 <Text style={styles.title}>{item.title}</Text>
