@@ -26,11 +26,15 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     color: colors.black,
+    elevation: 5,
+
   },
   secondTitle: {
     fontSize: 15,
     fontWeight:'bold',
     color: colors.black,
+    elevation: 5,
+
   },
   titleContainer: {
     flex: 1,

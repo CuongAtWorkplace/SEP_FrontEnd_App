@@ -14,6 +14,9 @@ const RecommendList =({list})=> {
             <TouchableOpacity style={styles.cardContainer}>
               <View style={[styles.card, shadow.light]} key={item.id}>
                 <View style={styles.imageBox}>
+                <Image style={styles.image}
+                  source={require('../asset/images/2082f59465c39094ce90bebd0fcf8fa7.jpeg')}
+                />
                 </View>
                 <View style={styles.footer}>
                   <View style={styles.titleBox}>
@@ -37,6 +40,8 @@ const RecommendList =({list})=> {
     cardContainer: {
       marginLeft: spacing.l,
       marginBottom: spacing.l,
+      elevation: 100,
+
     },
     card: {
       width: CARD_WIDTH,
