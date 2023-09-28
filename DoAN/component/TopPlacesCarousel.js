@@ -8,12 +8,17 @@ import {
   Image,
 } from 'react-native';
 import { colors, shadow, sizes, spacing } from '../constants/theme';
+import { useNavigation } from '@react-navigation/native';
 
 const CARD_WIDTH = sizes.width - 80;
 const CARD_HEIGHT = 200;
 const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 
-const TopPlacesCarousel = ({ list }) => {
+
+const TopPlacesCarousel = ({ list ,onPress }) => {
+
+  
+
   return (
     <FlatList
       data={list}
@@ -28,7 +33,9 @@ const TopPlacesCarousel = ({ list }) => {
             style={{
               marginLeft: spacing.l,
               marginRight: index === list.length - 1 ? spacing.l : 0,
-            }}>
+            }}
+            onPress={onPress}
+            >
             <View style={styles.card}>
 
               <View style={styles.imageBox}>

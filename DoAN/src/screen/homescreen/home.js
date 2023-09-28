@@ -1,10 +1,14 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet ,TouchableOpacity} from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import RecommendList from '../../../component/RecommendList';
 import TopPlacesCarousel from '../../../component/TopPlacesCarousel';
 import SectionHeader from '../../../component/SectionHeader';
 import { Searchbar } from 'react-native-paper';
 import ScreenHeader from '../../../component/ScreenHeader';
+import { Button, Text } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { ImageBackground } from 'react-native';
 
 const TOP_PLACES = [
   {
@@ -61,9 +65,33 @@ const PLACES = [
   },
 ];
 
-export default function Home({ navigation }) {
+export default function Home() {
+  const navigation = useNavigation();
+
+  const handleDetailClass = () => {
+    navigation.navigate('ClassDetail')
+  };
+
   return (
     <ScrollView style={styles.container}>
+
+      <View style={styles.headerContainer}>
+      <ImageBackground source={require('../asset/images/1990-Students-in-Classroom-26iriuq.jpg')} >
+        <Text style={styles.headerText}>Knoco</Text>
+        <TouchableOpacity
+          onPress={() => {
+            // Xử lý sự kiện khi biểu tượng chuông được nhấn
+            // Ví dụ: mở một màn hình thông báo
+            navigation.navigate('NotificationScreen');
+          }}
+        >
+          <MaterialIcons name="notifications" size={24} color="black" />
+        </TouchableOpacity>
+        </ImageBackground>
+
+      </View>
+      <View style={styles.separator}></View>
+
       <ScreenHeader mainTitle="Welcome back !" secondTitle="Ngo Ba Cuong" />
       <View style={styles.searchContainer}>
         <Searchbar
@@ -75,14 +103,15 @@ export default function Home({ navigation }) {
 
       <SectionHeader
         title="Recommend Class"
-        onPress={() => {}}
+        onPress={() => { }}
       />
-      <TopPlacesCarousel list={TOP_PLACES} />
+      <TopPlacesCarousel list={TOP_PLACES} onPress={handleDetailClass} />
       <SectionHeader
         title="All Class"
         buttonTitle="See All"
-        onPress={() => {}}
+        onPress={() => { }}
       />
+
       <RecommendList list={PLACES} />
     </ScrollView>
   );
@@ -92,14 +121,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F4F4F4',
-    
   },
   searchContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    elevation: 5,
-
   },
   search: {
     backgroundColor: '#CACED1',
@@ -107,10 +133,25 @@ const styles = StyleSheet.create({
     height: 40,
   },
   searchInput: {
-    margin :-8, // Căn giữa văn bản trong thanh tìm kiếm
-
+    margin: -8,
   },
-
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+  },
+  headerText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  separator: {
+    height: 1, // Điều chỉnh độ dày của dòng ngăn cách
+    backgroundColor: '#CCCCCC', // Màu của dòng ngăn cách
+    marginHorizontal: 0, // Khoảng cách từ lề trái và lề phải
+    marginVertical: 8, // Khoảng cách từ lề trên và lề dưới
+    fontWeight: 'bold'
+  },
 });
 
 
