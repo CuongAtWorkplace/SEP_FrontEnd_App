@@ -9,7 +9,7 @@ import { Button, Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ImageBackground } from 'react-native';
-
+import { Image } from 'react-native';
 const TOP_PLACES = [
   {
     id: 1,
@@ -76,7 +76,7 @@ export default function Home() {
     <ScrollView style={styles.container}>
 
       <View style={styles.headerContainer}>
-      <ImageBackground source={require('../asset/images/1990-Students-in-Classroom-26iriuq.jpg')} >
+       
         <Text style={styles.headerText}>Knoco</Text>
         <TouchableOpacity
           onPress={() => {
@@ -87,7 +87,6 @@ export default function Home() {
         >
           <MaterialIcons name="notifications" size={24} color="black" />
         </TouchableOpacity>
-        </ImageBackground>
 
       </View>
       <View style={styles.separator}></View>

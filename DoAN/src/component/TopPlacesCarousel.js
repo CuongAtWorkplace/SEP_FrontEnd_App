@@ -17,7 +17,6 @@ const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 
 const TopPlacesCarousel = ({ list ,onPress }) => {
 
-  
 
   return (
     <FlatList
@@ -40,7 +39,7 @@ const TopPlacesCarousel = ({ list ,onPress }) => {
 
               <View style={styles.imageBox}>
                 <Image style={styles.image}
-                  source={require('../asset/images/2082f59465c39094ce90bebd0fcf8fa7.jpeg')}
+                  source={require('../asset/images/1990-Students-in-Classroom-26iriuq.jpg')}
                 />
               </View>
               <View style={styles.titleBox}>
