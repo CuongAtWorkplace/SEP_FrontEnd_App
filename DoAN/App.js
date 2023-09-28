@@ -108,6 +108,7 @@ const App = () => {
             options={{
             }}
           />
+         
           <Stack.Screen
             name="Register"
             component={register}
