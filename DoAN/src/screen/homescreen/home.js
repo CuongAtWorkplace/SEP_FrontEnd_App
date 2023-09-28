@@ -98,6 +98,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
+    elevation: 5,
+
   },
   search: {
     backgroundColor: '#CACED1',
@@ -106,6 +108,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     margin :-8, // Căn giữa văn bản trong thanh tìm kiếm
+
   },
 
 });

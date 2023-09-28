@@ -29,9 +29,12 @@ const TopPlacesCarousel = ({ list }) => {
               marginLeft: spacing.l,
               marginRight: index === list.length - 1 ? spacing.l : 0,
             }}>
-            <View style={[styles.card, shadow.dark]}>
+            <View style={styles.card}>
 
               <View style={styles.imageBox}>
+                <Image style={styles.image}
+                  source={require('../asset/images/2082f59465c39094ce90bebd0fcf8fa7.jpeg')}
+                />
               </View>
               <View style={styles.titleBox}>
                 <Text style={styles.title}>{item.title}</Text>
