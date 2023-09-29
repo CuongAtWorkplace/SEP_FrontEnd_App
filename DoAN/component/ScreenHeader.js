@@ -24,9 +24,7 @@ const styles = StyleSheet.create({
   },
   mainTitle: {
     fontSize: 25,
-    fontWeight: 'bold',
     color: colors.black,
-    elevation: 5,
 
   },
   secondTitle: {

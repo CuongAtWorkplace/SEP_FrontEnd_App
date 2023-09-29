@@ -6,17 +6,17 @@ import { colors,shadow,sizes,spacing } from '../constants/theme';
 const CARD_WIDTH = sizes.width / 2 - (spacing.l + spacing.l / 2);
 const CARD_HEIGHT = 220;
 
-const RecommendList =({list})=> {
+const RecommendList =(props)=> {
     return (
       <View style={styles.container}>
-        {list.map((item, index) => {
+        {props.list.map((item, index) => {
           return (
-            <TouchableOpacity style={styles.cardContainer}>
+            <TouchableOpacity style={styles.cardContainer} onPress={props.actionClass}>
               <View style={[styles.card, shadow.light]} key={item.id}>
                 <View style={styles.imageBox}>
                 <Image style={styles.image}
-                  source={require('../asset/images/2082f59465c39094ce90bebd0fcf8fa7.jpeg')}
-                />
+                  source={require('../asset/images/1990-Students-in-Classroom-26iriuq.jpg')}
+                  />
                 </View>
                 <View style={styles.footer}>
                   <View style={styles.titleBox}>
