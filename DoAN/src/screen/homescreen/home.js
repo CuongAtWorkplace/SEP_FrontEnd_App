@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+
 import RecommendList from '../../../component/RecommendList';
 import TopPlacesCarousel from '../../../component/TopPlacesCarousel';
 import SectionHeader from '../../../component/SectionHeader';
@@ -10,6 +11,8 @@ import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ImageBackground } from 'react-native';
 import { Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
 const TOP_PLACES = [
   {
     id: 1,
@@ -72,25 +75,25 @@ export default function Home() {
     navigation.navigate('ClassDetail')
   };
 
+  const handleBackDetailClass = () => {
+    navigation.navigate('Home')
+  };
+
+
   return (
     <ScrollView style={styles.container}>
-
       <View style={styles.headerContainer}>
-       
         <Text style={styles.headerText}>Knoco</Text>
         <TouchableOpacity
           onPress={() => {
             // Xử lý sự kiện khi biểu tượng chuông được nhấn
             // Ví dụ: mở một màn hình thông báo
-            navigation.navigate('NotificationScreen');
+            navigation.navigate('');
           }}
         >
-          <MaterialIcons name="notifications" size={24} color="black" />
+          <Ionicons name="notifications-circle-outline" size={35} color="black" />
         </TouchableOpacity>
-
       </View>
-      <View style={styles.separator}></View>
-
       <ScreenHeader mainTitle="Welcome back !" secondTitle="Ngo Ba Cuong" />
       <View style={styles.searchContainer}>
         <Searchbar
@@ -104,7 +107,7 @@ export default function Home() {
         title="Recommend Class"
         onPress={() => { }}
       />
-      <TopPlacesCarousel list={TOP_PLACES} onPress={handleDetailClass} />
+      <TopPlacesCarousel list={TOP_PLACES} action={handleBackDetailClass} onPress={handleDetailClass} />
       <SectionHeader
         title="All Class"
         buttonTitle="See All"
