@@ -72,13 +72,8 @@ export default function Home() {
   const navigation = useNavigation();
 
   const handleDetailClass = () => {
-    navigation.navigate('ClassDetail')
+    navigation.navigate('Login')
   };
-
-  const handleBackDetailClass = () => {
-    navigation.navigate('Home')
-  };
-
 
   return (
     <ScrollView style={styles.container}>
@@ -107,14 +102,14 @@ export default function Home() {
         title="Recommend Class"
         onPress={() => { }}
       />
-      <TopPlacesCarousel list={TOP_PLACES} action={handleBackDetailClass} onPress={handleDetailClass} />
+      <TopPlacesCarousel list={TOP_PLACES}  actionClass={handleDetailClass} />
       <SectionHeader
         title="All Class"
         buttonTitle="See All"
         onPress={() => { }}
       />
-
       <RecommendList list={PLACES} />
+     
     </ScrollView>
   );
 }

@@ -7,7 +7,7 @@ import { TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
+import { LinearGradient } from 'expo-linear-gradient';
 
 const CARD_WIDTH = sizes.width - 20;
 const CARD_HEIGHT = 200;
@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         overflow: 'hidden',
         marginTop: 30,
-        alignItems: 'center', // Để căn giữa theo chiều ngang
-        justifyContent: 'center', // Để căn giữa theo chiều dọc
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     image: {
         width: CARD_WIDTH,
@@ -35,13 +35,13 @@ const styles = StyleSheet.create({
         position: 'absolute',
         justifyContent: 'center',
         alignItems: 'center',
-        color: 'white', // Màu văn bản
-        fontSize: 30, // Kích thước văn bản
+        color: 'white',
+        fontSize: 30,
         fontWeight: 'bold'
     },
     Arrowback: {
         position: 'absolute',
-        top: 7, // Điều chỉnh vị trí theo nhu cầu
+        top: 7,
         left: 10,
     },
     actionButton: {
@@ -50,10 +50,9 @@ const styles = StyleSheet.create({
         bottom: 15,
         width: 100,
         height: 35,
-        justifyContent: 'center', // Để căn giữa theo chiều ngang
+        justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'row', // Xếp theo hàng ngang
-
+        flexDirection: 'row',
     },
     report: {
         backgroundColor: '#D13B3B',
@@ -63,31 +62,41 @@ const styles = StyleSheet.create({
         backgroundColor: '#4C9F50',
         right: 50,
     },
+    Chat: {
+        left: 100,
+    },
     buttonText: {
         color: colors.white,
         fontWeight: 'bold',
+        fontSize: 14,
     },
     des: {
         fontWeight: 'bold',
         fontSize: 25,
-        marginTop: 20, // Khoảng cách giữa phần mô tả và hình ảnh
+        marginTop: 20,
     },
     desText: {
-        textAlign: 'justify', // Căn đều văn bản
-        marginHorizontal: 20, // Khoảng cách lề hai bên
-        marginTop: 20, // Khoảng cách giữa phần mô tả và hình ảnh
-
-    }
-
+        textAlign: 'justify',
+        marginHorizontal: 20,
+        marginTop: 20,
+    },
+    ItemBoxLeft: {
+        width: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 150,
+        backgroundColor: '#4c669f',
+        marginTop: 20,
+        borderRadius: 15,
+    },
 });
 
 export default function classDetail(props) {
-
     const navigation = useNavigation();
 
-  const handleBack = () => {
-    navigation.navigate('Home')
-  };
+    const handleBack = () => {
+        navigation.navigate('Home')
+    };
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -114,13 +123,21 @@ export default function classDetail(props) {
                     <Text style={styles.buttonText}>Enroll </Text>
                     <AntDesign name="pluscircleo" size={15} color="white" />
                 </TouchableOpacity>
-
             </View>
 
             <Text style={styles.des}>Description</Text>
             <Text style={styles.desText}>
                 The Basic English Communication Class is a course that provides students with fundamental knowledge and skills to confidently communicate in various everyday situations. This course is designed for learners at a basic level and does not require prior knowledge of English.
             </Text>
+
+            {/* "Group chat" button positioned below desText */}
+            <View>
+                <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={[styles.ItemBoxLeft,styles.Chat]}>
+                    <Text style={styles.buttonText}>
+                        Group chat
+                    </Text>
+                </LinearGradient>
+            </View>
         </ScrollView>
     )
 }
