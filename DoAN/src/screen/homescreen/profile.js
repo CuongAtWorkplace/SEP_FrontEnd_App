@@ -1,10 +1,10 @@
 import React from 'react';
-import { Text, View, Image, StyleSheet, Dimensions, TouchableOpacity ,ScrollView } from 'react-native';
+import { Text, View, Image, StyleSheet, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
+import { Ionicons } from '@expo/vector-icons';
 
 import HeaderBack from '../../../component/HeaderBack';
 import { colors } from '../../../constants/theme';
@@ -14,13 +14,13 @@ export default function Profile() {
     const navigation = useNavigation();
 
     const handleBack = () => {
-      navigation.navigate('Setting')
+        navigation.navigate('Setting')
     };
-  
+
     const handleUpdateProfile = () => {
         navigation.navigate('UpdateProfile')
-      };
-    
+    };
+
 
     return (
         <ScrollView style={styles.container}>
@@ -39,8 +39,7 @@ export default function Profile() {
                 </Text>
 
                 <View style={styles.location}>
-                    <EvilIcons name="location" size={24} color="black" />
-                    <Text> Hanoi , VietNam</Text>
+                <Ionicons name="ios-location-outline" size={24} color="black" />                    <Text> Hanoi , VietNam</Text>
                 </View>
 
                 <View style={styles.location}>
@@ -64,11 +63,11 @@ export default function Profile() {
 
                 <View style={styles.BottomContainer}>
                     <View style={styles.leftContainer}>
-                        <Text style={{ fontWeight: 'bold' , fontSize: 20 }}>10</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#495095' }}>10</Text>
                         <Text style={styles.classText}>Class</Text>
                     </View>
                     <View style={styles.rightContainer}>
-                        <Text style={{ fontWeight: 'bold' , fontSize: 20 }}>10.000 VND</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#7DB246' }}>10.000 VND</Text>
                         <Text style={styles.balanceText}>Balance</Text>
                     </View>
                 </View>
@@ -133,12 +132,12 @@ const styles = StyleSheet.create({
     leftContainer: {
         flexDirection: 'column',
         alignItems: 'center',
-        marginLeft:60,
+        marginLeft: 60,
     },
     rightContainer: {
         flexDirection: 'column',
         alignItems: 'center',
-        marginRight:60,
+        marginRight: 60,
     },
     classText: {
         fontSize: 16,
