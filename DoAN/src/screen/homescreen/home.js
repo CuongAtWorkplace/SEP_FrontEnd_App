@@ -76,17 +76,15 @@ export default function Home() {
     navigation.navigate('ClassDetail')
   };
 
+  const handleNotification = () => {
+    navigation.navigate('Notification')
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Knoco</Text>
-        <TouchableOpacity
-          onPress={() => {
-            // Xử lý sự kiện khi biểu tượng chuông được nhấn
-            // Ví dụ: mở một màn hình thông báo
-            navigation.navigate('');
-          }}
-        >
+        <TouchableOpacity onPress={handleNotification}>
           <Ionicons name="notifications-circle-outline" size={35} color="black" />
         </TouchableOpacity>
       </View>
