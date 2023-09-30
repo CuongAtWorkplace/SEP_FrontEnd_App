@@ -13,6 +13,7 @@ import Setting from './src/screen/homescreen/setting';
 import ClassDetail from './src/screen/class/classDetail';
 import profile from './src/screen/homescreen/profile'; 
 import { MaterialIcons } from '@expo/vector-icons';
+import updateProfile from './src/screen/homescreen/updateProfile';
 
 
 const Stack = createStackNavigator();
@@ -76,6 +77,7 @@ const App = () => {
         <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
         <Stack.Screen name="ClassDetail" component={ClassDetail} options={{ headerShown: false }} />
         <Stack.Screen name="Profile" component={profile} options={{ headerShown: false }} />
+        <Stack.Screen name="UpdateProfile" component={updateProfile} options={{ headerShown: false }} />
 
       </Stack.Navigator>
     </NavigationContainer>

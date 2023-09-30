@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 const HeaderBack = (props) => {
     return(
             <View style={styles.header}>
-              <TouchableOpacity style={styles.iconContainer}>
+              <TouchableOpacity style={styles.iconContainer} onPress={props.action}>
                 <Ionicons name="ios-arrow-back" size={24} color="black" />
               </TouchableOpacity>
               <Text style={styles.title}>{props.title}</Text>

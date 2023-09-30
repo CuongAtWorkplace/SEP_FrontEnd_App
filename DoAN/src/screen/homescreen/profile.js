@@ -3,14 +3,28 @@ import { Text, View, Image, StyleSheet, Dimensions, TouchableOpacity ,ScrollView
 import { EvilIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+
 
 import HeaderBack from '../../../component/HeaderBack';
 import { colors } from '../../../constants/theme';
 
 export default function Profile() {
+
+    const navigation = useNavigation();
+
+    const handleBack = () => {
+      navigation.navigate('Setting')
+    };
+  
+    const handleUpdateProfile = () => {
+        navigation.navigate('UpdateProfile')
+      };
+    
+
     return (
         <ScrollView style={styles.container}>
-            <HeaderBack title='Profile' />
+            <HeaderBack title='Profile' action={handleBack} />
             <View style={styles.imageContainer}>
                 <Image
                     style={styles.image}
@@ -40,7 +54,7 @@ export default function Profile() {
                 </View>
 
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button} onPress={() => console.log('Nút Edit đã được nhấn')}>
+                    <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
                         <Text style={styles.buttonText}>Update</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button} onPress={() => console.log('Nút Mới đã được nhấn')}>

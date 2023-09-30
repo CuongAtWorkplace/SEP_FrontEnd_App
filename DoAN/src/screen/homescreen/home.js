@@ -73,7 +73,7 @@ export default function Home() {
   const navigation = useNavigation();
 
   const handleDetailClass = () => {
-    navigation.navigate('Profile')
+    navigation.navigate('ClassDetail')
   };
 
   return (
