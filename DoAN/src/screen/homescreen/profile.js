@@ -1,11 +1,11 @@
 import React from 'react';
-import { Text, View, Image, StyleSheet, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
-import { EvilIcons } from '@expo/vector-icons';
+import { View, Image, StyleSheet, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
+import { Text } from 'react-native';
 import HeaderBack from '../../../component/HeaderBack';
 import { colors } from '../../../constants/theme';
 
@@ -14,7 +14,7 @@ export default function Profile() {
     const navigation = useNavigation();
 
     const handleBack = () => {
-        navigation.navigate('Setting')
+        navigation.navigate("Home")
     };
 
     const handleUpdateProfile = () => {
@@ -39,7 +39,8 @@ export default function Profile() {
                 </Text>
 
                 <View style={styles.location}>
-                <Ionicons name="ios-location-outline" size={24} color="black" />                    <Text> Hanoi , VietNam</Text>
+                <Ionicons name="ios-location-outline" size={24} color="black" />                    
+                <Text> Hanoi , VietNam</Text>
                 </View>
 
                 <View style={styles.location}>
