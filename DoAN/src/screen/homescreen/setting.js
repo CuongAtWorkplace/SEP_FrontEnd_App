@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
-import { View, StyleSheet ,Text } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import SettingItem from '../../../component/SettingItem';
+import { useNavigation } from '@react-navigation/native';
 
-export default function setting({ navigation }) {
+export default function setting() {
+
+    const navigation = useNavigation();
+
+    const handleProfile = () => {
+        navigation.navigate('Profile')
+    };
+    const handleLogout = () => {
+        navigation.navigate('Login')
+    };
+
+   
 
     return (
         <View>
@@ -10,20 +22,19 @@ export default function setting({ navigation }) {
                 Settings
             </Text>
 
-            <SettingItem text="Profile" iconName="user" />
-            <SettingItem text="Help with manager" iconName="contacts" />
+            <SettingItem text="Profile" iconName="user" action={handleProfile} />
+            <SettingItem text="Help with manager" iconName="contacts"  />
             <SettingItem text="About us" iconName="profile" />
-            <SettingItem text="Logout" iconName="logout" />
+            <SettingItem text="Logout" iconName="logout" action={handleLogout}/>
 
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    setting:{
-        fontWeight:"bold",
+    setting: {
+        fontWeight: "bold",
         fontSize: 50,
-        margin:30
+        margin: 30
     }
-  });
-  
+});

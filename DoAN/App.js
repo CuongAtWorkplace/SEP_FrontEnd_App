@@ -11,7 +11,9 @@ import Register from './src/screen/register/register';
 import Community from './src/screen/homescreen/community';
 import Setting from './src/screen/homescreen/setting';
 import ClassDetail from './src/screen/class/classDetail';
+import profile from './src/screen/homescreen/profile'; 
 import { MaterialIcons } from '@expo/vector-icons';
+import updateProfile from './src/screen/homescreen/updateProfile';
 
 
 const Stack = createStackNavigator();
@@ -65,7 +67,7 @@ const TabNavigator = () => (
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="ClassDetail">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
           name="Home"
           component={TabNavigator}
@@ -74,6 +76,9 @@ const App = () => {
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
         <Stack.Screen name="ClassDetail" component={ClassDetail} options={{ headerShown: false }} />
+        <Stack.Screen name="Profile" component={profile} options={{ headerShown: false }} />
+        <Stack.Screen name="UpdateProfile" component={updateProfile} options={{ headerShown: false }} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

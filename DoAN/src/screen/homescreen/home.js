@@ -69,10 +69,11 @@ const PLACES = [
 ];
 
 export default function Home() {
+
   const navigation = useNavigation();
 
   const handleDetailClass = () => {
-    navigation.navigate('Login')
+    navigation.navigate('ClassDetail')
   };
 
   return (
@@ -100,9 +101,8 @@ export default function Home() {
 
       <SectionHeader
         title="Recommend Class"
-        onPress={() => { }}
       />
-      <TopPlacesCarousel list={TOP_PLACES}  actionClass={handleDetailClass} />
+      <TopPlacesCarousel list={TOP_PLACES} onPress={handleDetailClass} />
       <SectionHeader
         title="All Class"
         buttonTitle="See All"

@@ -6,7 +6,7 @@ import { colors } from "../constants/theme";
 
 export default function SettingItem(props) {
   return (
-    <TouchableOpacity style={styles.itembox}>
+    <TouchableOpacity style={styles.itembox} onPress={props.action}>
       <View style={styles.itemContent}>
         <AntDesign name={props.iconName} size={30} color={colors.black} />
         <Text style={styles.SettingText} >{props.text}</Text>
