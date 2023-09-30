@@ -67,7 +67,7 @@ const TabNavigator = () => (
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Profile">
         <Stack.Screen
           name="Home"
           component={TabNavigator}
@@ -78,7 +78,6 @@ const App = () => {
         <Stack.Screen name="ClassDetail" component={ClassDetail} options={{ headerShown: false }} />
         <Stack.Screen name="Profile" component={profile} options={{ headerShown: false }} />
         <Stack.Screen name="UpdateProfile" component={updateProfile} options={{ headerShown: false }} />
-
       </Stack.Navigator>
     </NavigationContainer>
   );
