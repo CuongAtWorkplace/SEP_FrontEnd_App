@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { Button, Image, Text } from 'react-native';
-import { StyleSheet, ScrollView, View } from 'react-native';
-import { colors, sizes, spacing } from '../../../constants/theme';
+import React from 'react';
+import { Image, Text, ScrollView, View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Feather } from '@expo/vector-icons';
+import { StyleSheet } from 'react-native';
+import { colors, sizes } from '../../../constants/theme';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const CARD_WIDTH = sizes.width - 20;
 const CARD_HEIGHT = 200;
@@ -15,7 +16,6 @@ const CARD_HEIGHT = 200;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
     },
     imageBox: {
         width: CARD_WIDTH,
@@ -23,8 +23,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         overflow: 'hidden',
         marginTop: 30,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignSelf: 'center',
     },
     image: {
         width: CARD_WIDTH,
@@ -33,11 +32,12 @@ const styles = StyleSheet.create({
     },
     textOnImage: {
         position: 'absolute',
-        justifyContent: 'center',
-        alignItems: 'center',
+        top: '50%',
+        left: '50%',
+        transform: [{ translateX: -50 }, { translateY: -50 }],
         color: 'white',
         fontSize: 30,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     Arrowback: {
         position: 'absolute',
@@ -68,26 +68,48 @@ const styles = StyleSheet.create({
     buttonText: {
         color: colors.white,
         fontWeight: 'bold',
-        fontSize: 14,
+        fontSize: 17,
+        marginLeft: 5,
     },
     des: {
         fontWeight: 'bold',
         fontSize: 25,
         marginTop: 20,
+        textAlign: 'center',
     },
     desText: {
         textAlign: 'justify',
         marginHorizontal: 20,
         marginTop: 20,
     },
-    ItemBoxLeft: {
-        width: 100,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 150,
-        backgroundColor: '#4c669f',
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginHorizontal: 30,
         marginTop: 20,
-        borderRadius: 15,
+        alignItems: 'center', // Để căn giữa các container theo chiều ngang
+        justifyContent: 'center'
+    },
+    linearGradient: {
+        width: 140,
+        height: 120,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 10, // Khoảng cách giữa các container
+        marginLeft: 10, // Khoảng cách giữa các container
+    },
+    meetingRoomContainer: {
+        alignItems: 'center', // Để căn giữa theo chiều ngang
+        marginTop: 20,
+        marginBottom: 20,
+    },
+    meetingRoom: {
+        height: 80,
+        width: 300,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
     },
 });
 
@@ -95,11 +117,11 @@ export default function classDetail(props) {
     const navigation = useNavigation();
 
     const handleBack = () => {
-        navigation.navigate('Home')
+        navigation.navigate('Home');
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.imageBox}>
                 <Image
                     style={styles.image}
@@ -130,14 +152,30 @@ export default function classDetail(props) {
                 The Basic English Communication Class is a course that provides students with fundamental knowledge and skills to confidently communicate in various everyday situations. This course is designed for learners at a basic level and does not require prior knowledge of English.
             </Text>
 
-            {/* "Group chat" button positioned below desText */}
-            <View>
-                <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={[styles.ItemBoxLeft,styles.Chat]}>
-                    <Text style={styles.buttonText}>
-                        Group chat
-                    </Text>
-                </LinearGradient>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity>
+
+                    <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.linearGradient}>
+                        <Feather name="message-circle" size={24} color="white" />
+                        <Text style={styles.buttonText}>Group chat</Text>
+                    </LinearGradient>
+                </TouchableOpacity>
+
+                <TouchableOpacity>
+                    <LinearGradient colors={['#FF3CAC', '#784BA0', '#2B86C5']} style={styles.linearGradient}>
+                        <MaterialIcons name="assignment" size={24} color="white" />
+                        <Text style={styles.buttonText}>Quiz</Text>
+                    </LinearGradient>
+                </TouchableOpacity>
+
             </View>
-        </ScrollView>
-    )
+
+            <TouchableOpacity style={styles.meetingRoomContainer}>
+                <LinearGradient colors={['#ED213A', '#93291E']} style={styles.meetingRoom}>
+                    <FontAwesome5 name="chalkboard-teacher" size={24} color="white" />
+                    <Text style={styles.buttonText}>Meeting room</Text>
+                </LinearGradient>
+            </TouchableOpacity>
+        </ScrollView >
+    );
 }
