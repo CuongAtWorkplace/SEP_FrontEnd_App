@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper'; // Thêm TextInput và Button vào import
+
 import TextInput from '../../../component/TextInput';
 import Background from '../../../component/Background';
 import LoginButton from '../../../component/LoginButton';
+import LottieView from 'lottie-react-native';
+
+
 export default function Login({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
@@ -13,8 +17,14 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <Background>
-      <Text>Welcome back.</Text>
+    <Background  >
+      <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'center',width: 300, height: 300 }}>
+        <LottieView
+          style={{ width: '80%', aspectRatio: 1 }}
+          source={require('C:/Users/ngoba/OneDrive/Máy tính/SEP_FrontEnd_App/DoAN/asset/gif/Login.json')}
+          autoPlay
+        />
+      </View>
       <TextInput
         label="Email"
         returnKeyType="next"
@@ -42,8 +52,8 @@ export default function Login({ navigation }) {
         </TouchableOpacity>
       </View>
       <LoginButton mode="contained" onPress={onLoginPressed}>
-        Login 
-        </LoginButton>
+        Login
+      </LoginButton>
       <View style={styles.row}>
         <Text>Don’t have an account? </Text>
         <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>

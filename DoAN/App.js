@@ -68,7 +68,7 @@ const TabNavigator = () => (
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Profile">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name="Home"
           component={TabNavigator}

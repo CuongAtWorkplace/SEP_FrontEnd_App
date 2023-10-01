@@ -11,6 +11,10 @@ export default function TextInput({ errorText, description, ...props }) {
         underlineColor="transparent"
         mode="outlined"
         {...props}
+        outlineColor="#3E427B" // Màu border khi input được focus
+        outlineWidth={2}    // Độ rộng của border khi input được focus
+
+
       />
       {description && !errorText ? (
         <Text style={styles.description}>{description}</Text>
