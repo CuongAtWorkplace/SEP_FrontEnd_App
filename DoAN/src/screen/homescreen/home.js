@@ -76,40 +76,35 @@ export default function Home() {
     navigation.navigate('ClassDetail')
   };
 
+  const handleNotification = () => {
+    navigation.navigate('Notification')
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Knoco</Text>
-        <TouchableOpacity
-          onPress={() => {
-            // Xử lý sự kiện khi biểu tượng chuông được nhấn
-            // Ví dụ: mở một màn hình thông báo
-            navigation.navigate('');
-          }}
-        >
-          <Ionicons name="notifications-circle-outline" size={35} color="black" />
-        </TouchableOpacity>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+
+          <TouchableOpacity onPress={handleNotification} style={{marginRight: 10}}>
+            <Ionicons name="search-circle-outline" size={37} color="black" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={handleNotification}>
+            <Ionicons name="notifications-circle-outline" size={35} color="black" />
+          </TouchableOpacity>
+        </View>
+
       </View>
       <ScreenHeader mainTitle="Welcome back !" secondTitle="Ngo Ba Cuong" />
-      <View style={styles.searchContainer}>
-        <Searchbar
-          style={styles.search}
-          placeholder="Search Class..."
-          inputStyle={styles.searchInput}
-        />
-      </View>
 
-      <SectionHeader
-        title="Recommend Class"
-      />
+      <SectionHeader title="Recommend Class" />
       <TopPlacesCarousel list={TOP_PLACES} onPress={handleDetailClass} />
-      <SectionHeader
-        title="All Class"
-        buttonTitle="See All"
-        onPress={() => { }}
-      />
+      <SectionHeader title="Studying Class" />
       <RecommendList list={PLACES} />
-     
+      <SectionHeader title="All Class" />
+      <RecommendList list={PLACES} />
     </ScrollView>
   );
 }
