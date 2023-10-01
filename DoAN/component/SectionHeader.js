@@ -1,11 +1,16 @@
 import React from 'react';
-import {Button, Text, View, StyleSheet} from 'react-native';
-import {sizes, spacing} from '../constants/theme';
+import { Button, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { colors, sizes, spacing } from '../constants/theme';
+import { MaterialIcons } from '@expo/vector-icons';
 
-const SectionHeader = ({title, onPress, buttonTitle = 'Button'}) => {
+const SectionHeader = ({ title }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
+      <TouchableOpacity style={styles.seeAllButton}>
+        <Text style={styles.seeAllText}>See All</Text>
+        <MaterialIcons name="navigate-next" size={24} color="black" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -23,6 +28,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: sizes.h3,
     fontWeight: 'bold',
+    color: '#3E427B',
+  },
+  seeAllButton: {
+    flexDirection: 'row', // Sử dụng flexDirection để đặt cùng một dòng
+    alignItems: 'center',
+  },
+  seeAllText: {
+    marginRight: 5, // Để tạo khoảng cách giữa "See All" và biểu tượng
   },
 });
 
