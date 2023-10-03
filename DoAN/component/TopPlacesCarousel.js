@@ -17,6 +17,12 @@ const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 
 const TopPlacesCarousel = ({ list ,onPress }) => {
 
+  const navigation = useNavigation();
+
+  const goToClassDetail = (id) => {
+    // Chuyển đến trang classDetail và truyền ID qua route.params
+    navigation.navigate('ClassDetail', { classId: id });
+  };
 
   return (
     <FlatList
@@ -33,7 +39,7 @@ const TopPlacesCarousel = ({ list ,onPress }) => {
               marginLeft: spacing.l,
               marginRight: index === list.length - 1 ? spacing.l : 0,
             }}
-            onPress={onPress}
+            onPress={() => goToClassDetail(item.id)} // Gọi hàm goToClassDetail với ID
             >
             <View style={styles.card}>
 
