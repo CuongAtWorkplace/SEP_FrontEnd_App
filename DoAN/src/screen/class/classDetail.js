@@ -9,6 +9,11 @@ import { Feather } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 import { colors, sizes } from '../../../constants/theme';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useRoute } from '@react-navigation/native';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { ActivityIndicator } from 'react-native-paper';
+
 
 const CARD_WIDTH = sizes.width - 20;
 const CARD_HEIGHT = 200;
@@ -114,68 +119,105 @@ const styles = StyleSheet.create({
 });
 
 export default function classDetail(props) {
+
+
     const navigation = useNavigation();
 
     const handleBack = () => {
         navigation.navigate('Home');
     };
 
+    const route = useRoute();
+    const { classId } = route.params; // Lấy ID từ route.params
+
+    const [classData, setClassData] = useState([]);
+    const [imageUrl, setImageUrl] = useState(''); // State để lưu URL hình ảnh từ API
+    const [isLoading, setIsLoading] = useState(true);
+
+
+    const URL = 'https://ade4-123-24-215-136.ngrok-free.app';
+
+    useEffect(() => {
+        async function getClassById() {
+            const response = await fetch(URL + '/api/Class/GetClassById/' + classId);
+            const JsonConvert = await response.json();
+            setClassData(JsonConvert);
+            console.log(classId);
+            setIsLoading(false);
+
+        }
+        console.log(classId);
+        getClassById();
+    });
+
     return (
         <ScrollView style={styles.container}>
-            <View style={styles.imageBox}>
-                <Image
-                    style={styles.image}
-                    source={{
-                        uri:
-                            'https://www.tastingtable.com/img/gallery/why-classroom-heaters-were-once-used-as-school-kitchens/intro-1660759308.jpg',
-                    }}
-                />
-                <Text style={styles.textOnImage}>SEP_490</Text>
+            {!isLoading && (
+                <View style={styles.imageBox}>
+                    <Image
+                        style={styles.image}
+                        source={{ uri: URL + '/GetImage/' + classData[0]?.courseId }}
+                    />
+                    <Text style={styles.textOnImage}>{classData[0]?.fee}</Text>
+                    <TouchableOpacity style={styles.Arrowback} onPress={handleBack}>
+                        <Ionicons name="arrow-back-circle-outline" size={30} color="white" />
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={styles.Arrowback} onPress={handleBack}>
-                    <Ionicons name="arrow-back-circle-outline" size={30} color="white" />
-                </TouchableOpacity>
+                    <TouchableOpacity style={[styles.actionButton, styles.report]}>
+                        <Text style={styles.buttonText}>Report </Text>
+                        <MaterialIcons style={styles.reportIcon} name="report" size={17} color="white" />
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.actionButton, styles.report]}>
-                    <Text style={styles.buttonText}>Report </Text>
-                    <MaterialIcons style={styles.reportIcon} name="report" size={17} color="white" />
-                </TouchableOpacity>
+                    <TouchableOpacity style={[styles.actionButton, styles.enroll]}>
+                        <Text style={styles.buttonText}>Enroll </Text>
+                        <AntDesign name="pluscircleo" size={15} color="white" />
+                    </TouchableOpacity>
+                </View>
+            )}
 
-                <TouchableOpacity style={[styles.actionButton, styles.enroll]}>
-                    <Text style={styles.buttonText}>Enroll </Text>
-                    <AntDesign name="pluscircleo" size={15} color="white" />
-                </TouchableOpacity>
-            </View>
+            {!isLoading && (
+                <>
+                    <Text style={styles.des}>Description</Text>
+                    <Text style={styles.desText}>
+                        The Basic English Communication Class is a course that provides students with fundamental knowledge and skills to confidently communicate in various everyday situations. This course is designed for learners at a basic level and does not require prior knowledge of English.
+                    </Text>
 
-            <Text style={styles.des}>Description</Text>
-            <Text style={styles.desText}>
-                The Basic English Communication Class is a course that provides students with fundamental knowledge and skills to confidently communicate in various everyday situations. This course is designed for learners at a basic level and does not require prior knowledge of English.
-            </Text>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity>
+                            <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.linearGradient}>
+                                <Feather name="message-circle" size={24} color="white" />
+                                <Text style={styles.buttonText}>Group chat</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
 
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity>
+                        <TouchableOpacity>
+                            <LinearGradient colors={['#FF3CAC', '#784BA0', '#2B86C5']} style={styles.linearGradient}>
+                                <MaterialIcons name="assignment" size={24} color="white" />
+                                <Text style={styles.buttonText}>Quiz</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    </View>
 
-                    <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.linearGradient}>
-                        <Feather name="message-circle" size={24} color="white" />
-                        <Text style={styles.buttonText}>Group chat</Text>
-                    </LinearGradient>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.meetingRoomContainer}>
+                        <LinearGradient colors={['#ED213A', '#93291E']} style={styles.meetingRoom}>
+                            <FontAwesome5 name="chalkboard-teacher" size={24} color="white" />
+                            <Text style={styles.buttonText}>Meeting room</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
 
-                <TouchableOpacity>
-                    <LinearGradient colors={['#FF3CAC', '#784BA0', '#2B86C5']} style={styles.linearGradient}>
-                        <MaterialIcons name="assignment" size={24} color="white" />
-                        <Text style={styles.buttonText}>Quiz</Text>
-                    </LinearGradient>
-                </TouchableOpacity>
+                    <Text>{classData[0]?.className}</Text>
 
-            </View>
+                </>
+            )}
+            {isLoading && (
+                <View>
+                    <View style={styles.imageBox}>
 
-            <TouchableOpacity style={styles.meetingRoomContainer}>
-                <LinearGradient colors={['#ED213A', '#93291E']} style={styles.meetingRoom}>
-                    <FontAwesome5 name="chalkboard-teacher" size={24} color="white" />
-                    <Text style={styles.buttonText}>Meeting room</Text>
-                </LinearGradient>
-            </TouchableOpacity>
-        </ScrollView >
+                        <ActivityIndicator size="medium" color={colors.primary} />
+                    </View>
+                </View>
+            )}
+        </ScrollView>
+
     );
 }
