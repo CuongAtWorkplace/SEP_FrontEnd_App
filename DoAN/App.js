@@ -15,6 +15,7 @@ import profile from './src/screen/homescreen/profile';
 import { MaterialIcons } from '@expo/vector-icons';
 import updateProfile from './src/screen/homescreen/updateProfile';
 import notification from './src/screen/homescreen/notification';
+import classSearch from './src/screen/homescreen/classSearch';
 
 
 const Stack = createStackNavigator();
@@ -80,6 +81,7 @@ const App = () => {
         <Stack.Screen name="Profile" component={profile} options={{ headerShown: false }} />
         <Stack.Screen name="UpdateProfile" component={updateProfile} options={{ headerShown: false }} />
         <Stack.Screen name="Notification" component={notification} options={{ headerShown: false }} />
+        <Stack.Screen name="ClassSearch" component={classSearch} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

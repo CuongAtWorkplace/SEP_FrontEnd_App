@@ -80,6 +80,10 @@ export default function Home() {
     navigation.navigate('Notification')
   };
 
+  const handleSearch = () => {
+    navigation.navigate('ClassSearch')
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -87,7 +91,7 @@ export default function Home() {
 
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
 
-          <TouchableOpacity onPress={handleNotification} style={{marginRight: 10}}>
+          <TouchableOpacity onPress={handleSearch} style={{marginRight: 10}}>
             <Ionicons name="search-circle-outline" size={37} color="black" />
           </TouchableOpacity>
 
