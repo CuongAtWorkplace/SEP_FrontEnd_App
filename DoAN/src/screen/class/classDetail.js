@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
-
+import myGlobalVariable from '../../global';
 
 const CARD_WIDTH = sizes.width - 20;
 const CARD_HEIGHT = 200;
@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.black,
         alignSelf: 'center',
 
+        margin:10,
     },
     detailText: {
         textAlign: 'justify',
@@ -163,19 +164,23 @@ export default function classDetail(props) {
     const { classId } = route.params; // Lấy ID từ route.params
 
     const [classData, setClassData] = useState([]);
+    const [teacherData, setTeacherData] = useState([]);
+
     const [imageUrl, setImageUrl] = useState(''); // State để lưu URL hình ảnh từ API
     const [isLoading, setIsLoading] = useState(true);
 
 
-    const URL = 'https://c48f-123-24-215-136.ngrok-free.app';
+    const URL = myGlobalVariable;
 
     useEffect(() => {
         async function getClassById() {
             const response = await fetch(URL + '/api/Class/GetClassById/' + classId);
             const JsonConvert = await response.json();
             setClassData(JsonConvert);
+            const response1 = await fetch(URL + '/GetUserById/' + JsonConvert[0].teacherId);
+            const JsonConvert1 = await response1.json();
+            setTeacherData(JsonConvert1);
             setIsLoading(false);
-
         }
         getClassById();
     });
@@ -223,7 +228,7 @@ export default function classDetail(props) {
 
                     <LinearGradient colors={['#F7DBA7', '#F0AB86']} style={styles.DetailContainer}>
 
-                        <Text style={styles.des}>Class Deatail</Text>
+                        <Text style={[styles.des, { color: colors.white }]}>Class Deatail</Text>
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                             <MaterialIcons name="date-range" size={20} color="black" style={{ marginTop: 5 }} />
                             <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
@@ -239,17 +244,49 @@ export default function classDetail(props) {
                             </Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                        <AntDesign name="team" size={20} color="black" style={{ marginTop: 5 }}   />
+                            <AntDesign name="team" size={20} color="black" style={{ marginTop: 5 }} />
                             <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
                                 Student In  Class  :   {classData[0]?.numberStudent}
                             </Text>
                         </View>
 
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                        <FontAwesome5 name="calendar-week" size={20} color="black"  style={{ marginTop: 5 }} />
-                        <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
-                            Number Of Week :   {classData[0]?.numberOfWeek}
-                        </Text>
+                            <FontAwesome5 name="calendar-week" size={20} color="black" style={{ marginTop: 5 }} />
+                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
+                                Number Of Week :   {classData[0]?.numberOfWeek}
+                            </Text>
+                        </View>
+                    </LinearGradient>
+
+                    <LinearGradient colors={['#005AA7', '#FFFDE4']} style={styles.DetailContainer}>
+
+                        <Text style={[styles.des, { color: colors.white }]}>Teacher Information</Text>
+                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                            <MaterialIcons name="date-range" size={20} color="black" style={{ marginTop: 5 }} />
+                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
+                                Teacher Name: {teacherData[0].fullName}
+                            </Text>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                            <MaterialIcons name="date-range" size={20} color="black" style={{ marginTop: 5 }} />
+
+                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
+                                End Date  : {classData[0]?.endDate ? new Date(classData[0]?.startDate).toLocaleDateString('en-GB') : ''}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                            <AntDesign name="team" size={20} color="black" style={{ marginTop: 5 }} />
+                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
+                                Student In  Class  :   {classData[0]?.numberStudent}
+                            </Text>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                            <FontAwesome5 name="calendar-week" size={20} color="black" style={{ marginTop: 5 }} />
+                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
+                                Number Of Week :   {classData[0]?.numberOfWeek}
+                            </Text>
                         </View>
                     </LinearGradient>
 
