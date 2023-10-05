@@ -28,8 +28,9 @@ export default function Login({ navigation }) {
       <View >
         <LottieView
           style={{ flex: 1, width: 300, height: 300, justifyContent: 'center', alignSelf: 'center' }}
-          source={require('C:/Users/ngoba/OneDrive/Máy tính/SEP_FrontEnd_App/DoAN/asset/gif/Login.json')}
+        //  source={require('../Login.json')}
           autoPlay={true}
+          loop={true}
         />
       </View>
 
