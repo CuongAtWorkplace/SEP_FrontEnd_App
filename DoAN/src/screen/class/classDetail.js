@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import myGlobalVariable from '../../global';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const CARD_WIDTH = sizes.width - 20;
 const CARD_HEIGHT = 200;
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.black,
         alignSelf: 'center',
 
-        margin:10,
+        margin: 10,
     },
     detailText: {
         textAlign: 'justify',
@@ -140,7 +141,13 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: '60%',
         left: '50%',
-    }
+    },
+
+    // ... Other styles ...
+
+
+
+
 
 });
 
@@ -229,65 +236,96 @@ export default function classDetail(props) {
                     <LinearGradient colors={['#F7DBA7', '#F0AB86']} style={styles.DetailContainer}>
 
                         <Text style={[styles.des, { color: colors.white }]}>Class Deatail</Text>
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <MaterialIcons name="date-range" size={20} color="black" style={{ marginTop: 5 }} />
-                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
-                                Start Date: {classData[0]?.startDate ? new Date(classData[0]?.startDate).toLocaleDateString('en-GB') : ''}
-                            </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                <MaterialIcons name="access-time" size={20} color="black" />
+                            </View>
+                            <View style={{ flexDirection: 'column' }}>
+                                <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', fontSize: 13 }]}>
+                                    Start Date: {classData[0]?.startDate ? new Date(classData[0]?.startDate).toLocaleDateString('en-GB') : ''}                                </Text>
+                            </View>
                         </View>
 
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <MaterialIcons name="date-range" size={20} color="black" style={{ marginTop: 5 }} />
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                <MaterialIcons name="access-time" size={20} color="black" />
+                            </View>
 
-                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
-                                End Date  : {classData[0]?.endDate ? new Date(classData[0]?.startDate).toLocaleDateString('en-GB') : ''}
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <AntDesign name="team" size={20} color="black" style={{ marginTop: 5 }} />
-                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
-                                Student In  Class  :   {classData[0]?.numberStudent}
-                            </Text>
+                            <View style={{ flexDirection: 'column' }}>
+                                <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', fontSize: 13 }]}>
+                                    End Date  : {classData[0]?.endDate ? new Date(classData[0]?.startDate).toLocaleDateString('en-GB') : ''}                                </Text>
+                            </View>
                         </View>
 
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <FontAwesome5 name="calendar-week" size={20} color="black" style={{ marginTop: 5 }} />
-                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
-                                Number Of Week :   {classData[0]?.numberOfWeek}
-                            </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                <AntDesign name="team" size={20} color="black" style={{ marginTop: 5 }} />
+                            </View>
+
+                            <View style={{ flexDirection: 'column' }}>
+                                <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', fontSize: 13 }]}>
+                                    Student In Class: {classData[0]?.numberStudent}
+                                </Text>
+                            </View>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                <FontAwesome5 name="calendar-week" size={20} color="black" style={{ marginTop: 5 }} />
+                            </View>
+
+                            <View style={{ flexDirection: 'column' }}>
+                                <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', fontSize: 13 }]}>
+                                    Number Of Week :   {classData[0]?.numberOfWeek}
+                                </Text>
+                            </View>
                         </View>
                     </LinearGradient>
 
                     <LinearGradient colors={['#005AA7', '#FFFDE4']} style={styles.DetailContainer}>
 
                         <Text style={[styles.des, { color: colors.white }]}>Teacher Information</Text>
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <MaterialIcons name="date-range" size={20} color="black" style={{ marginTop: 5 }} />
-                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
-                                Teacher Name: {teacherData[0].fullName}
-                            </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                <FontAwesome5 name="chalkboard-teacher" size={16} color="black" />
+                            </View>
+                            <View style={{ flexDirection: 'column' }}>
+                                <Text style={[styles.detailText, { color: colors.black, fontWeight: 'bold', fontSize: 13 }]}>
+                                    Teacher Name: {teacherData[0].fullName}
+                                </Text>
+                            </View>
                         </View>
 
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <MaterialIcons name="date-range" size={20} color="black" style={{ marginTop: 5 }} />
-
-                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
-                                End Date  : {classData[0]?.endDate ? new Date(classData[0]?.startDate).toLocaleDateString('en-GB') : ''}
-                            </Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <AntDesign name="team" size={20} color="black" style={{ marginTop: 5 }} />
-                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
-                                Student In  Class  :   {classData[0]?.numberStudent}
-                            </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                <Feather name="phone" size={18} color="black" />
+                            </View>
+                            <View style={{ flexDirection: 'column' }}>
+                                <Text style={[styles.detailText, { color: colors.black, fontWeight: 'bold', fontSize: 13 }]}>
+                                    Teacher Phone: {teacherData[0].phone}
+                                </Text>
+                            </View>
                         </View>
 
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <FontAwesome5 name="calendar-week" size={20} color="black" style={{ marginTop: 5 }} />
-                            <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', alignSelf: 'center', fontSize: 13 }]}>
-                                Number Of Week :   {classData[0]?.numberOfWeek}
-                            </Text>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                <MaterialCommunityIcons name="gmail" size={18} color="black" />
+                            </View>
+                            <View style={{ flexDirection: 'column' }}>
+                                <Text style={[styles.detailText, { color: colors.black, fontWeight: 'bold', fontSize: 13 }]}>
+                                    Teacher Email: {teacherData[0].email}
+                                </Text>
+                            </View>
                         </View>
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginRight: 10, marginBottom: 10 }}>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                                <Text style={{ color: 'black', textDecorationLine: 'underline' }}>View All</Text>
+                                <MaterialIcons name="navigate-next" size={24} color="black" />
+                            </TouchableOpacity>
+                        </View>
+
                     </LinearGradient>
 
                     {showButtons && (
