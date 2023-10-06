@@ -184,7 +184,7 @@ export default function classDetail(props) {
             const response = await fetch(URL + '/api/Class/GetClassById/' + classId);
             const JsonConvert = await response.json();
             setClassData(JsonConvert);
-            const response1 = await fetch(URL + '/GetUserById/' + JsonConvert[0].teacherId);
+            const response1 = await fetch(URL + '/api/User/GetUserById/' + JsonConvert[0].teacherId);
             const JsonConvert1 = await response1.json();
             setTeacherData(JsonConvert1);
             setIsLoading(false);
@@ -198,7 +198,7 @@ export default function classDetail(props) {
                 <View style={styles.imageBox}>
                     <Image
                         style={styles.image}
-                        source={{ uri: URL + '/GetImage/' + classData[0]?.courseId }}
+                        source={{ uri: URL + '/api/Course/GetImage/' + classData[0]?.courseId }}
                     />
                     <Text style={styles.textOnImage}>ENGLISH_490</Text>
 

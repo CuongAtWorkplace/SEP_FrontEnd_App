@@ -1,4 +1,4 @@
 // global.js
-const myGlobalVariable = 'https://a6c8-123-17-153-227.ngrok-free.app';
+const myGlobalVariable = 'https://444c-14-232-144-228.ngrok-free.app';
 
 export default myGlobalVariable;
