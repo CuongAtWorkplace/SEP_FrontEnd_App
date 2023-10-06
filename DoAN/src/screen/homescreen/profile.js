@@ -8,6 +8,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text } from 'react-native';
 import HeaderBack from '../../../component/HeaderBack';
 import { colors } from '../../../constants/theme';
+import myGlobalVariable from '../../global';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { ActivityIndicator } from 'react-native-paper';
 
 export default function Profile() {
 
@@ -21,57 +25,96 @@ export default function Profile() {
         navigation.navigate('UpdateProfile')
     };
 
+    const URL = myGlobalVariable;
+
+    const UserID = 3;
+    const [isImageLoading, setImageLoading] = useState(true);
+    const [UserData, setUserData] = useState([]);
+    const [isLoading, setLoading] = useState(true); // Trạng thái tải dữ liệu người dùng
+
+    useEffect(() => {
+        async function getUser() {
+            try {
+                const response = await fetch(URL + '/api/User/GetStudentById/' + UserID);
+                if (response.ok) {
+                    const user = await response.json();
+                    setUserData(user);
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false); // Khi tải dữ liệu xong hoặc gặp lỗi, đặt isLoading thành false
+            }
+        }
+        getUser();
+    });
+
+    const imageSource = { uri: URL + '/api/User/GetImage/' + UserID };
+
 
     return (
         <ScrollView style={styles.container}>
             <HeaderBack title='Profile' action={handleBack} />
             <View style={styles.imageContainer}>
+
+                <View style={styles.imageLoading}>
+                    {isImageLoading && <ActivityIndicator size="large" color={colors.primary} />}
+                </View>
                 <Image
                     style={styles.image}
-                    source={{
-                        uri:
-                            'https://i0.wp.com/scottbarrykaufman.com/wp-content/uploads/2023/06/Ken-Wilber.png?fit=1280%2C720&ssl=1',
-                    }}
+                    source={imageSource}
+                    onLoadEnd={() => setImageLoading(false)}
                 />
+                {isLoading ? (
+                    <ActivityIndicator size="large" color={colors.primary} />
+                ) : (
+                    <>
+                        <Text style={styles.Name}>
+                            {UserData[0]?.fullName}
+                        </Text>
 
-                <Text style={styles.Name}>
-                    Ken wilber
-                </Text>
+                        <View style={styles.location}>
+                            <Ionicons name="ios-location-outline" size={24} color="black" />
+                            <Text>
+                                {UserData[0]?.address}
+                            </Text>
+                        </View>
 
-                <View style={styles.location}>
-                <Ionicons name="ios-location-outline" size={24} color="black" />                    
-                <Text> Hanoi , VietNam</Text>
-                </View>
+                        <View style={styles.location}>
+                            <Feather name="phone" size={20} color="black" />
+                            <Text>
+                                {UserData[0]?.phone}
+                            </Text>
+                        </View>
 
-                <View style={styles.location}>
-                    <Feather name="phone" size={20} color="black" />
-                    <Text>  0964918288 </Text>
-                </View>
+                        <View style={styles.location}>
+                            <AntDesign name="mail" size={20} color="black" />
+                            <Text>
+                                {UserData[0]?.email}
+                            </Text>
+                        </View>
 
-                <View style={styles.location}>
-                    <AntDesign name="mail" size={20} color="black" />
-                    <Text> Ngobacuong2211@gmail.com</Text>
-                </View>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
+                                <Text style={styles.buttonText}>Update</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.button} onPress={() => console.log('Nút Mới đã được nhấn')}>
+                                <Text style={styles.buttonText}>Recharge</Text>
+                            </TouchableOpacity>
+                        </View>
 
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
-                        <Text style={styles.buttonText}>Update</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => console.log('Nút Mới đã được nhấn')}>
-                        <Text style={styles.buttonText}>Recharge</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.BottomContainer}>
-                    <View style={styles.leftContainer}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#495095' }}>10</Text>
-                        <Text style={styles.classText}>Class</Text>
-                    </View>
-                    <View style={styles.rightContainer}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#7DB246' }}>10.000 VND</Text>
-                        <Text style={styles.balanceText}>Balance</Text>
-                    </View>
-                </View>
+                        <View style={styles.BottomContainer}>
+                            <View style={styles.leftContainer}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#495095' }}>10</Text>
+                                <Text style={styles.classText}>Class</Text>
+                            </View>
+                            <View style={styles.rightContainer}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#7DB246' }}>10.000 VND</Text>
+                                <Text style={styles.balanceText}>Balance</Text>
+                            </View>
+                        </View>
+                    </>
+                )}
             </View>
         </ScrollView>
     );
