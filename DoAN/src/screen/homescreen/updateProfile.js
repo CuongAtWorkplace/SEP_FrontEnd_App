@@ -61,13 +61,41 @@ export default function UpdateProfile() {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 1,
         });
+    
         if (!result.canceled) {
             if (result.assets && result.assets.length > 0) {
                 setSelectedImage(result.assets[0].uri);
-                Alert.alert('Thông báo', 'Cập nhật ảnh thành công');
+    
+                // Tạo FormData để gửi dữ liệu ảnh
+                const formData = new FormData();
+                formData.append('file', {
+                    uri: result.assets[0].uri,
+                    type: 'image/jpeg', // Loại ảnh, bạn có thể điều chỉnh tùy theo định dạng ảnh
+                    name: 'image.jpg', // Tên tệp trên máy chủ
+                });
+    
+                try {
+                    const response = await fetch( URL+'/api/User/UploadImage/'+UserID, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Content-Type': 'multipart/form-data', // Định dạng gửi dữ liệu
+                        },
+                    });
+    
+                    if (response.ok) {
+                        Alert.alert('Thông báo', 'Cập nhật ảnh thành công');
+                    } else {
+                        Alert.alert('Lỗi', 'Cập nhật ảnh thất bại');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    Alert.alert('Lỗi', 'Có lỗi xảy ra khi gửi yêu cầu.');
+                }
             }
         }
     }
+    
 
     return (
         <ScrollView style={styles.container}>
@@ -123,6 +151,8 @@ export default function UpdateProfile() {
                             style={styles.textInput}
                             value={address}
                             placeholder="Enter your custom text"
+                            onChangeText={text => setAddress(text)} // Cập nhật giá trị của address khi thay đổi
+
                         />
                     </View>
 

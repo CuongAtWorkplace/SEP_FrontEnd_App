@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StyleSheet, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Image, StyleSheet, Dimensions, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -31,6 +31,19 @@ export default function Profile() {
     const [isImageLoading, setImageLoading] = useState(true);
     const [UserData, setUserData] = useState([]);
     const [isLoading, setLoading] = useState(true); // Trạng thái tải dữ liệu người dùng
+    const [imageSource, setImageSource] = useState({ uri: URL + '/api/User/GetImage/' + UserID + `?t=${new Date().getTime()}` });
+
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+
+        // Gọi API hoặc thực hiện các công việc cần làm khi làm mới trang
+        // Ví dụ: Gọi API lấy dữ liệu người dùng
+        setImageSource({ uri: URL + '/api/User/GetImage/' + UserID + `?t=${new Date().getTime()}` });
+        setRefreshing(false);
+    };
+
 
     useEffect(() => {
         async function getUser() {
@@ -49,11 +62,15 @@ export default function Profile() {
         getUser();
     });
 
-    const imageSource = { uri: URL + '/api/User/GetImage/' + UserID };
 
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} refreshControl={
+            <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+            />
+        }>
             <HeaderBack title='Profile' action={handleBack} />
             <View style={styles.imageContainer}>
 
