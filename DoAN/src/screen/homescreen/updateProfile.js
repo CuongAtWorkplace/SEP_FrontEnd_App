@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet, View, Image, TouchableOpacity, Text, TextInput,
 import { Ionicons, AntDesign, Feather } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from "react-native";
-
+import { Button } from "react-native-paper";
 
 import myGlobalVariable from "../../global";
 import HeaderBack from "../../../component/HeaderBack";
@@ -56,16 +56,46 @@ export default function UpdateProfile() {
         navigation.navigate('Profile');
     };
 
+    const updateUserProfile = async () => {
+        try {
+            // Tạo đối tượng userUpdate chứa thông tin cập nhật
+            const userUpdate = {
+                fullName: fullName,
+                email: email,
+                phone: phone,
+                address: address
+            };
+
+            const response = await fetch(URL + '/api/User/UpdateStudentById/' + UserID, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userUpdate),
+            });
+
+            if (response.ok) {
+                Alert.alert('Thông báo', 'Cập nhật thông tin thành công');
+            } else {
+                Alert.alert('Lỗi', 'Cập nhật thông tin thất bại');
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Lỗi', 'Có lỗi xảy ra khi gửi yêu cầu.');
+        }
+    };
+
+
     const openImagePicker = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 1,
         });
-    
+
         if (!result.canceled) {
             if (result.assets && result.assets.length > 0) {
                 setSelectedImage(result.assets[0].uri);
-    
+
                 // Tạo FormData để gửi dữ liệu ảnh
                 const formData = new FormData();
                 formData.append('file', {
@@ -73,16 +103,16 @@ export default function UpdateProfile() {
                     type: 'image/jpeg', // Loại ảnh, bạn có thể điều chỉnh tùy theo định dạng ảnh
                     name: 'image.jpg', // Tên tệp trên máy chủ
                 });
-    
+
                 try {
-                    const response = await fetch( URL+'/api/User/UploadImage/'+UserID, {
+                    const response = await fetch(URL + '/api/User/UploadImage/' + UserID, {
                         method: 'POST',
                         body: formData,
                         headers: {
                             'Content-Type': 'multipart/form-data', // Định dạng gửi dữ liệu
                         },
                     });
-    
+
                     if (response.ok) {
                         Alert.alert('Thông báo', 'Cập nhật ảnh thành công');
                     } else {
@@ -95,7 +125,7 @@ export default function UpdateProfile() {
             }
         }
     }
-    
+
 
     return (
         <ScrollView style={styles.container}>
@@ -123,6 +153,8 @@ export default function UpdateProfile() {
                             style={styles.textInput}
                             value={email}
                             placeholder="Enter your custom text"
+                            onChangeText={text => setEmail(text)} // Cập nhật giá trị của address khi thay đổi
+
                         />
                     </View>
 
@@ -132,6 +164,8 @@ export default function UpdateProfile() {
                             style={styles.textInput}
                             value={fullName}
                             placeholder="Enter your custom text"
+                            onChangeText={text => setFullName(text)} // Cập nhật giá trị của address khi thay đổi
+
                         />
                     </View>
 
@@ -142,6 +176,7 @@ export default function UpdateProfile() {
                             value={phone}
                             placeholder="Enter your custom text"
                             keyboardType="numeric"
+                            onChangeText={text => setPhone(text)} // Cập nhật giá trị của address khi thay đổi
                         />
                     </View>
 
@@ -156,9 +191,13 @@ export default function UpdateProfile() {
                         />
                     </View>
 
-                    <TouchableOpacity style={styles.buttonContainer}>
+
+
+                    <Button style={styles.buttonContainer} onPress={updateUserProfile}>
                         <Text style={styles.buttonText}>Update</Text>
-                    </TouchableOpacity>
+                    </Button>
+
+
 
                     {isLoading && <ActivityIndicator size="large" color="blue" style={styles.loadingIndicator} />}
                 </View>

@@ -89,51 +89,71 @@ export default function Profile() {
                         <Text style={styles.Name}>
                             {UserData[0]?.fullName}
                         </Text>
+                    </>
+                )}
+            </View>
 
-                        <View style={styles.location}>
-                            <Ionicons name="ios-location-outline" size={24} color="black" />
-                            <Text>
-                                {UserData[0]?.address}
-                            </Text>
+            <View style={styles.info}>
+                <View>
+                    <View style={styles.location}>
+                        <View style={{ flexDirection: 'row', marginRight: 10 }}>
+                            <Ionicons name="ios-location-outline" size={20} color="black" />
                         </View>
+                        <Text>
+                            {UserData[0]?.address}
+                        </Text>
+                    </View>
 
-                        <View style={styles.location}>
+                    <View style={styles.location}>
+                        <View style={{ flexDirection: 'row', marginRight: 10 }}>
                             <Feather name="phone" size={20} color="black" />
-                            <Text>
-                                {UserData[0]?.phone}
-                            </Text>
                         </View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <Text>{UserData[0]?.phone}</Text>
+                        </View>
+                    </View>
 
-                        <View style={styles.location}>
+                    <View style={styles.location}>
+                        <View style={{ flexDirection: 'column', marginRight: 10 }}>
+                            <Feather name="phone" size={20} color="black" />
+                        </View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <Text>{UserData[0]?.phone}</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.location}>
+                        <View style={{ flexDirection: 'row', marginRight: 10 }}>
                             <AntDesign name="mail" size={20} color="black" />
+                        </View>
+                        <View style={{ flexDirection: 'column' }}>
                             <Text>
                                 {UserData[0]?.email}
                             </Text>
                         </View>
+                    </View>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
+                        <Text style={styles.buttonText}>Update</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => console.log('Nút Mới đã được nhấn')}>
+                        <Text style={styles.buttonText}>Recharge</Text>
+                    </TouchableOpacity>
+                </View>
 
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
-                                <Text style={styles.buttonText}>Update</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={() => console.log('Nút Mới đã được nhấn')}>
-                                <Text style={styles.buttonText}>Recharge</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={styles.BottomContainer}>
-                            <View style={styles.leftContainer}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#495095' }}>10</Text>
-                                <Text style={styles.classText}>Class</Text>
-                            </View>
-                            <View style={styles.rightContainer}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#7DB246' }}>
-                                    {UserData[0]?.balance} VND
-                                </Text>
-                                <Text style={styles.balanceText}>Balance</Text>
-                            </View>
-                        </View>
-                    </>
-                )}
+                <View style={styles.BottomContainer}>
+                    <View style={styles.leftContainer}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#495095' }}>10</Text>
+                        <Text style={styles.classText}>Class</Text>
+                    </View>
+                    <View style={styles.rightContainer}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#7DB246' }}>
+                            {UserData[0]?.balance} VND
+                        </Text>
+                        <Text style={styles.balanceText}>Balance</Text>
+                    </View>
+                </View>
             </View>
         </ScrollView>
     );
@@ -142,9 +162,6 @@ export default function Profile() {
 const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
     imageContainer: {
         flex: 1,
         alignItems: 'center',
@@ -178,8 +195,14 @@ const styles = StyleSheet.create({
     },
     location: {
         flexDirection: 'row',
+        alignItems: 'center',
         marginTop: 10,
         elevation: 5,
+    },
+    info: {
+        alignItems: 'center',
+
+        backgroundColor: colors.white
     },
     BottomContainer: {
         marginTop: 20,
