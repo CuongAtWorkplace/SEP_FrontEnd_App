@@ -109,7 +109,9 @@ export default function Profile() {
                                 <Text style={styles.classText}>Class</Text>
                             </View>
                             <View style={styles.rightContainer}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#7DB246' }}>10.000 VND</Text>
+                                <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#7DB246' }}>
+                                    {UserData[0]?.balance} VND
+                                </Text>
                                 <Text style={styles.balanceText}>Balance</Text>
                             </View>
                         </View>
