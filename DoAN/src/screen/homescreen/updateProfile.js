@@ -8,27 +8,55 @@ import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { colors } from "../../../constants/theme";
-
+import { useState } from "react";
+import * as ImagePicker from 'expo-image-picker'; // Import module Expo ImagePicker
+import { useEffect } from "react";
+import { Alert } from "react-native";
 
 export default function updateProfile() {
     const navigation = useNavigation();
-
+    const [selectedImage, setSelectedImage] = useState("https://stockdep.net/files/images/45572075.jpg"); // Đặt ảnh mặc định
+  
+    useEffect(() => {
+        (async () => {
+            // Yêu cầu quyền truy cập vào thư viện ảnh (Camera Roll)
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+                alert('Quyền truy cập vào thư viện ảnh bị từ chối!');
+            }
+        })();
+    }, []);
     const handleBack = () => {
         navigation.navigate('Profile');
     };
 
+    const openImagePicker = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 1,
+        });
+        if (!result.canceled) {
+            if (result.assets && result.assets.length > 0) {
+                setSelectedImage(result.assets[0].uri);
+                Alert.alert('Thông báo', 'Cập nhật ảnh thành công');
+
+            }
+        }
+    }
+
+
     return (
         <ScrollView style={styles.container}>
             <HeaderBack title="Update Profile" action={handleBack} />
+
             <View style={styles.imageContainer}>
                 <Image
                     style={styles.image}
                     source={{
-                        uri:
-                            "https://stockdep.net/files/images/45572075.jpg",
+                        uri:selectedImage
                     }}
                 />
-                <TouchableOpacity style={styles.iconContainer}>
+                <TouchableOpacity style={styles.iconContainer} onPress={openImagePicker}>
                     <Ionicons name="camera" size={40} color="white" />
                 </TouchableOpacity>
                 <Text style={{ fontWeight: 'bold', fontSize: 20, margin: 20 }}>Ngo Ba Cuong</Text>
@@ -70,6 +98,7 @@ export default function updateProfile() {
                         keyboardType="numeric" // Chỉ cho phép nhập chữ số
                     />
                 </View>
+
                 <TouchableOpacity style={styles.ButtonContainer}>
                     <Text style={styles.buttonText}>Update</Text>
                 </TouchableOpacity>
@@ -90,6 +119,7 @@ const styles = StyleSheet.create({
     image: {
         width: 150,
         height: 150,
+        padding:20,
         borderRadius: 40,
     },
     iconContainer: {
@@ -123,12 +153,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     ButtonContainer: {
-        margin:10,
+        margin: 10,
         backgroundColor: '#3E427B',
         width: 90,
         height: 40,
         borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
-    }
+    },
 });
