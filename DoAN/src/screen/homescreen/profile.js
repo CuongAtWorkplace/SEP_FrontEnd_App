@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StyleSheet, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Image, StyleSheet, Dimensions, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -31,6 +31,19 @@ export default function Profile() {
     const [isImageLoading, setImageLoading] = useState(true);
     const [UserData, setUserData] = useState([]);
     const [isLoading, setLoading] = useState(true); // Trạng thái tải dữ liệu người dùng
+    const [imageSource, setImageSource] = useState({ uri: URL + '/api/User/GetImage/' + UserID + `?t=${new Date().getTime()}` });
+
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+
+        // Gọi API hoặc thực hiện các công việc cần làm khi làm mới trang
+        // Ví dụ: Gọi API lấy dữ liệu người dùng
+        setImageSource({ uri: URL + '/api/User/GetImage/' + UserID + `?t=${new Date().getTime()}` });
+        setRefreshing(false);
+    };
+
 
     useEffect(() => {
         async function getUser() {
@@ -49,11 +62,15 @@ export default function Profile() {
         getUser();
     });
 
-    const imageSource = { uri: URL + '/api/User/GetImage/' + UserID };
 
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} refreshControl={
+            <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+            />
+        }>
             <HeaderBack title='Profile' action={handleBack} />
             <View style={styles.imageContainer}>
 
@@ -72,49 +89,62 @@ export default function Profile() {
                         <Text style={styles.Name}>
                             {UserData[0]?.fullName}
                         </Text>
+                    </>
+                )}
+            </View>
 
-                        <View style={styles.location}>
-                            <Ionicons name="ios-location-outline" size={24} color="black" />
-                            <Text>
-                                {UserData[0]?.address}
-                            </Text>
+            <View style={styles.info}>
+                <View>
+                    <View style={styles.location}>
+                        <View style={{ flexDirection: 'row', marginRight: 10 }}>
+                            <Ionicons name="ios-location-outline" size={20} color="black" />
                         </View>
+                        <Text>
+                            {UserData[0]?.address}
+                        </Text>
+                    </View>
 
-                        <View style={styles.location}>
+                    <View style={styles.location}>
+                        <View style={{ flexDirection: 'row', marginRight: 10 }}>
                             <Feather name="phone" size={20} color="black" />
-                            <Text>
-                                {UserData[0]?.phone}
-                            </Text>
                         </View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <Text>{UserData[0]?.phone}</Text>
+                        </View>
+                    </View>
 
-                        <View style={styles.location}>
+                    <View style={styles.location}>
+                        <View style={{ flexDirection: 'row', marginRight: 10 }}>
                             <AntDesign name="mail" size={20} color="black" />
+                        </View>
+                        <View style={{ flexDirection: 'column' }}>
                             <Text>
                                 {UserData[0]?.email}
                             </Text>
                         </View>
+                    </View>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
+                        <Text style={styles.buttonText}>Update</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => console.log('Nút Mới đã được nhấn')}>
+                        <Text style={styles.buttonText}>Recharge</Text>
+                    </TouchableOpacity>
+                </View>
 
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
-                                <Text style={styles.buttonText}>Update</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={() => console.log('Nút Mới đã được nhấn')}>
-                                <Text style={styles.buttonText}>Recharge</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={styles.BottomContainer}>
-                            <View style={styles.leftContainer}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#495095' }}>10</Text>
-                                <Text style={styles.classText}>Class</Text>
-                            </View>
-                            <View style={styles.rightContainer}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#7DB246' }}>10.000 VND</Text>
-                                <Text style={styles.balanceText}>Balance</Text>
-                            </View>
-                        </View>
-                    </>
-                )}
+                <View style={styles.BottomContainer}>
+                    <View style={styles.leftContainer}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#495095' }}>10</Text>
+                        <Text style={styles.classText}>Class</Text>
+                    </View>
+                    <View style={styles.rightContainer}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#7DB246' }}>
+                            {UserData[0]?.balance} VND
+                        </Text>
+                        <Text style={styles.balanceText}>Balance</Text>
+                    </View>
+                </View>
             </View>
         </ScrollView>
     );
@@ -123,9 +153,6 @@ export default function Profile() {
 const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
     imageContainer: {
         flex: 1,
         alignItems: 'center',
@@ -159,8 +186,14 @@ const styles = StyleSheet.create({
     },
     location: {
         flexDirection: 'row',
+        alignItems: 'center',
         marginTop: 10,
         elevation: 5,
+    },
+    info: {
+        alignItems: 'center',
+
+        backgroundColor: colors.white
     },
     BottomContainer: {
         marginTop: 20,
