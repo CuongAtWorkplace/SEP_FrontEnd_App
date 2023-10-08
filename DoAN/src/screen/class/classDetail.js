@@ -45,6 +45,8 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 30,
         fontWeight: 'bold',
+        color: colors.white,
+
     },
     Arrowback: {
         position: 'absolute',
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     feeText: {
-        color: colors.gray,
+        color: colors.white,
         fontWeight: 'bold',
         fontSize: 20, // Điều chỉnh kích thước văn bản tùy theo nhu cầu của bạn
         textAlign: 'center', // Để canh giữa văn bản theo chiều ngang
@@ -200,7 +202,7 @@ export default function classDetail(props) {
                         style={styles.image}
                         source={{ uri: URL + '/api/Course/GetImage/' + classData[0]?.courseId }}
                     />
-                    <Text style={styles.textOnImage}>ENGLISH_490</Text>
+                    <Text style={styles.textOnImage}>{classData[0]?.className}</Text>
 
                     <Text style={styles.feeText}>Fee : {classData[0]?.fee}</Text>
 
