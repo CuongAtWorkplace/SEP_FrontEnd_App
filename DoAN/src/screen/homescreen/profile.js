@@ -114,15 +114,6 @@ export default function Profile() {
                     </View>
 
                     <View style={styles.location}>
-                        <View style={{ flexDirection: 'column', marginRight: 10 }}>
-                            <Feather name="phone" size={20} color="black" />
-                        </View>
-                        <View style={{ flexDirection: 'column' }}>
-                            <Text>{UserData[0]?.phone}</Text>
-                        </View>
-                    </View>
-
-                    <View style={styles.location}>
                         <View style={{ flexDirection: 'row', marginRight: 10 }}>
                             <AntDesign name="mail" size={20} color="black" />
                         </View>

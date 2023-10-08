@@ -57,6 +57,7 @@ export default function UpdateProfile() {
     };
 
     const updateUserProfile = async () => {
+
         try {
             // Tạo đối tượng userUpdate chứa thông tin cập nhật
             const userUpdate = {
@@ -126,6 +127,52 @@ export default function UpdateProfile() {
         }
     }
 
+    function validateEmail(email) {
+        // Sử dụng biểu thức chính quy để kiểm tra định dạng email
+        const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        return regex.test(email);
+    }
+
+    function validatePhoneNumber(phoneNumber) {
+        // Sử dụng biểu thức chính quy để kiểm tra định dạng số điện thoại
+        const regex = /^\d{10}$/; // Ví dụ: 10 chữ số liên tiếp
+        return regex.test(phoneNumber);
+    }
+
+    function validateLocationString(inputString) {
+        // Biểu thức chính quy để kiểm tra tên thành phố và tên đất nước của Việt Nam
+        const regex =/^[^\d,]+,\s*Việt Nam$/;
+        return regex.test(inputString);
+    }
+
+
+    function Test() {
+        let isValid = true; // Biến để kiểm tra xem tất cả đều hợp lệ
+        let noti = '';
+        if (!validateEmail(email)) {
+            isValid = false;
+            noti = noti + "Email Format "
+        }
+
+        if (!validatePhoneNumber(phone)) {
+            isValid = false;
+            noti = noti + "Phone Format"
+        }
+
+        if (!validateLocationString(address)) {
+            isValid = false;
+            noti = noti + "Adress Format"
+        } 
+
+        if (isValid) {
+            Alert.alert('Notification', 'Your Profile has updated successfully');
+            updateUserProfile();
+        } else {
+            Alert.alert('Error', 'Wrong ' + noti);
+        }
+    }
+
+
 
     return (
         <ScrollView style={styles.container}>
@@ -154,7 +201,6 @@ export default function UpdateProfile() {
                             value={email}
                             placeholder="Enter your custom text"
                             onChangeText={text => setEmail(text)} // Cập nhật giá trị của address khi thay đổi
-
                         />
                     </View>
 
@@ -193,7 +239,7 @@ export default function UpdateProfile() {
 
 
 
-                    <Button style={styles.buttonContainer} onPress={updateUserProfile}>
+                    <Button style={styles.buttonContainer} onPress={Test}>
                         <Text style={styles.buttonText}>Update</Text>
                     </Button>
 
