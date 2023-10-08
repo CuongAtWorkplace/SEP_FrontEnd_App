@@ -23,9 +23,9 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => (
   <Tab.Navigator
+  initialRouteName="Home" // Đặt màn hình mặc định ở đây
   tabBarOptions={{
     tabStyle: {
-      
       padding: 5, // Khoảng cách từ biểu tượng đến biên trên của tab
     },
   }}

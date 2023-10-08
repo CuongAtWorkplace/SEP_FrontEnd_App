@@ -12,61 +12,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { ImageBackground } from 'react-native';
 import { Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-const TOP_PLACES = [
-  {
-    id: 1,
-    title: 'Amalfi',
-    location: 'Italy',
-    description:
-      'The ultimate Amalfi Coast travel guide, where to stay, where to eat, and what areas to visit in the Amalfi Coast of Italy. Positano, Ravello, Amalfi and more',
-  },
-  {
-    id: 2,
-    title: 'Granada',
-    location: 'Spain',
-    description:
-      'Granada is the capital city of the province of Granada, in the autonomous community of Andalusia, Spain',
-  },
-  {
-    id: 3,
-    title: 'Cherry blossoms',
-    location: 'Japan',
-    description:
-      "Cherry blossoms usually bloom between mid-March and early May. In 2022, Tokyo's cherry blossom season officially began on March 20",
-  },
-];
-
-const PLACES = [
-  {
-    id: 4,
-    title: 'Cappadocia',
-    location: 'Turkey',
-    description:
-      "Cappadocia's landscape includes dramatic expanses of soft volcanic rock, shaped by erosion into towers, cones, valleys, and caves. Rock-cut churches and underground tunnel complexes from the Byzantine and Islamic eras are scattered throughout the countryside.",
-  },
-  {
-    id: 5,
-    title: 'Capri',
-    location: 'Italy',
-    description:
-      'Capri is an island of a thousand faces, where visitors can walk the trails skirting the cliffs above the Mediterranean in total solitude, dive into the crystalline waters of its rocky shore, or plunge into the vibrant crowds of the Piazzetta and shop in the most fashionable boutiques in the world.',
-  },
-  {
-    id: 6,
-    title: 'Bora Bora',
-    location: 'Polynesia',
-    description:
-      'Learn how you can travel Bora Bora on a budget and how overwater bungalows are possible for cheap plus tips on keeping Bora Bora trip costs low.',
-  },
-  {
-    id: 7,
-    title: 'Phuket',
-    location: 'Thailand',
-    description:
-      'Phuket is the largest island in Thailand. It is located in the Andaman Sea in southern Thailand',
-  },
-];
+import { useState } from 'react';
+import { useEffect } from 'react';
+import myGlobalVariable from '../../global';
+import ActivityIndicator from 'react-native-paper';
+import { colors } from 'react-native-elements';
 
 export default function Home() {
 
@@ -84,14 +34,59 @@ export default function Home() {
     navigation.navigate('ClassSearch')
   };
 
+
+  const [AllClassData, setAllClassData] = useState([]);
+  const [AllStudyingClass, setAllStudyingClass] = useState([]);
+  const [AllRecommend, setAllRecommend] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+  const [UserData, setUserData] = useState([]);
+
+
+  const URL = myGlobalVariable;
+  const UserID = 3;
+
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response1 = fetch(URL + '/api/Class/GetAllClass/4');
+        const response2 = fetch(URL + '/api/Class/GetAllClass/3');
+        const response3 = await fetch(URL + '/api/User/GetStudentById/' + UserID);
+
+        const [data1, data2 , data3 ] = await Promise.all([response1, response2 ,response3 ]);
+
+        if (data1.ok) {
+          const DataClass1 = await data1.json();
+          setAllClassData(DataClass1);
+        }
+
+        if (data2.ok) {
+          const DataClass2 = await data2.json();
+          setAllRecommend(DataClass2);
+        }
+        if (data3.ok) {
+          const DataClass3 = await data3.json();
+          setUserData(DataClass3);
+        }
+      console.log(UserData[0].fullName);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false); // Đặt isLoading thành false sau khi tải dữ liệu xong hoặc gặp lỗi
+      }
+    }
+
+    fetchData();
+  }, []);
+
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Knoco</Text>
 
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-
-          <TouchableOpacity onPress={handleSearch} style={{marginRight: 10}}>
+          <TouchableOpacity onPress={handleSearch} style={{ marginRight: 10 }}>
             <Ionicons name="search-circle-outline" size={37} color="black" />
           </TouchableOpacity>
 
@@ -99,17 +94,32 @@ export default function Home() {
             <Ionicons name="notifications-circle-outline" size={35} color="black" />
           </TouchableOpacity>
         </View>
-
       </View>
-      <ScreenHeader mainTitle="Welcome back !" secondTitle="Ngo Ba Cuong" />
+      <ScreenHeader mainTitle="Welcome back !" secondTitle={UserData[0].fullName} />
 
-      <SectionHeader title="Recommend Class" />
-      <TopPlacesCarousel list={TOP_PLACES} onPress={handleDetailClass} />
-      <SectionHeader title="Studying Class" />
-      <RecommendList list={PLACES} />
-      <SectionHeader title="All Class" />
-      <RecommendList list={PLACES} />
+      {!isLoading && ( // Kiểm tra isLoading, nếu false, hiển thị nội dung
+        <>
+          <SectionHeader title="Recommend Class" />
+          <TopPlacesCarousel list={AllRecommend} onPress={handleDetailClass} />
+
+          <SectionHeader title="All Class" />
+          <RecommendList list={AllClassData} />
+
+          <SectionHeader title="Studying Class" />
+          {AllStudyingClass.length === 0 ? (
+            <Text style={styles.noClassText}>No Class Studying</Text>
+          ) : (
+            <RecommendList list={AllStudyingClass} />
+          )}
+        </>
+      )}
+      {isLoading && (
+        <View>
+          
+        </View>
+      )}
     </ScrollView>
+
   );
 }
 
@@ -147,6 +157,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 0, // Khoảng cách từ lề trái và lề phải
     marginVertical: 8, // Khoảng cách từ lề trên và lề dưới
     fontWeight: 'bold'
+  },
+  noClassText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 20,
+    color: '#848482',
+  },
+  imageBox: {
+    width: 300,
+    height: 300,
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginTop: 30,
+    alignSelf: 'center',
   },
 });
 

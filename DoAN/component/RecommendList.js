@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { colors, shadow, sizes, spacing } from '../constants/theme';
 import { useNavigation } from '@react-navigation/native';
+import myGlobalVariable from '../src/global';
 
 const CARD_WIDTH = sizes.width / 2 - (spacing.l + spacing.l / 2);
 const CARD_HEIGHT = 220;
@@ -15,6 +16,8 @@ const RecommendList = (props) => {
     navigation.navigate('Login')
   };
 
+  const URL = myGlobalVariable;
+
   return (
     <View style={styles.container}>
       {props.list.map((item, index) => {
@@ -23,13 +26,13 @@ const RecommendList = (props) => {
             <View style={[styles.card, shadow.light]} key={item.id}>
               <View style={styles.imageBox}>
                 <Image style={styles.image}
-                  source={require('../asset/images/1990-Students-in-Classroom-26iriuq.jpg')}
-                />
+                        source={{ uri: URL + '/api/Course/GetImage/' + item.courseId }}
+              />
               </View>
               <View style={styles.footer}>
                 <View style={styles.titleBox}>
-                  <Text style={styles.title}>{item.title}</Text>
-                  <Text style={styles.location}>{item.location}</Text>
+                  <Text style={styles.title}>{item.className}</Text>
+                  <Text style={styles.location}>{item.courseName}</Text>
                 </View>
               </View>
             </View>

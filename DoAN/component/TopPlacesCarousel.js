@@ -9,13 +9,14 @@ import {
 } from 'react-native';
 import { colors, shadow, sizes, spacing } from '../constants/theme';
 import { useNavigation } from '@react-navigation/native';
+import myGlobalVariable from '../src/global';
 
 const CARD_WIDTH = sizes.width - 80;
 const CARD_HEIGHT = 200;
 const CARD_WIDTH_SPACING = CARD_WIDTH + spacing.l;
 
 
-const TopPlacesCarousel = ({ list ,onPress }) => {
+const TopPlacesCarousel = ({ list, onPress }) => {
 
   const navigation = useNavigation();
 
@@ -23,6 +24,9 @@ const TopPlacesCarousel = ({ list ,onPress }) => {
     // Chuyển đến trang classDetail và truyền ID qua route.params
     navigation.navigate('ClassDetail', { classId: id });
   };
+
+
+  const URL = myGlobalVariable
 
   return (
     <FlatList
@@ -40,17 +44,17 @@ const TopPlacesCarousel = ({ list ,onPress }) => {
               marginRight: index === list.length - 1 ? spacing.l : 0,
             }}
             onPress={() => goToClassDetail(item.id)} // Gọi hàm goToClassDetail với ID
-            >
+          >
             <View style={styles.card}>
 
               <View style={styles.imageBox}>
                 <Image style={styles.image}
-                  source={require('../asset/images/1990-Students-in-Classroom-26iriuq.jpg')}
+                  source={{ uri: URL + '/api/Course/GetImage/' + item.courseId }}
                 />
               </View>
               <View style={styles.titleBox}>
-                <Text style={styles.title}>{item.title}</Text>
-                <Text style={styles.location}>{item.location}</Text>
+                <Text style={styles.title}>{item.className}</Text>
+                <Text style={styles.location}>{item.courseName}</Text>
               </View>
             </View>
           </TouchableOpacity>
