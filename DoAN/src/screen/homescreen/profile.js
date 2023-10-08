@@ -12,6 +12,8 @@ import myGlobalVariable from '../../global';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
+import User from '../../user';
+
 
 export default function Profile() {
 
@@ -27,7 +29,7 @@ export default function Profile() {
 
     const URL = myGlobalVariable;
 
-    const UserID = 3;
+    const UserID = User;
     const [isImageLoading, setImageLoading] = useState(true);
     const [UserData, setUserData] = useState([]);
     const [isLoading, setLoading] = useState(true); // Trạng thái tải dữ liệu người dùng

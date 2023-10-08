@@ -12,8 +12,9 @@ const RecommendList = (props) => {
 
   const navigation = useNavigation();
 
-  const handleDetailClass = () => {
-    navigation.navigate('Login')
+  const goToClassDetail = (id) => {
+    // Chuyển đến trang classDetail và truyền ID qua route.params
+    navigation.navigate('ClassDetail', { classId: id });
   };
 
   const URL = myGlobalVariable;
@@ -22,12 +23,14 @@ const RecommendList = (props) => {
     <View style={styles.container}>
       {props.list.map((item, index) => {
         return (
-          <TouchableOpacity style={styles.cardContainer} onPress={handleDetailClass} >
+          <TouchableOpacity style={styles.cardContainer}
+            onPress={() => goToClassDetail(item.classId)} // Gọi hàm goToClassDetail với ID
+          >
             <View style={[styles.card, shadow.light]} key={item.id}>
               <View style={styles.imageBox}>
                 <Image style={styles.image}
-                        source={{ uri: URL + '/api/Course/GetImage/' + item.courseId }}
-              />
+                  source={{ uri: URL + '/api/Course/GetImage/' + item.courseId }}
+                />
               </View>
               <View style={styles.footer}>
                 <View style={styles.titleBox}>

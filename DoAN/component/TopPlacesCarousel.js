@@ -43,7 +43,7 @@ const TopPlacesCarousel = ({ list, onPress }) => {
               marginLeft: spacing.l,
               marginRight: index === list.length - 1 ? spacing.l : 0,
             }}
-            onPress={() => goToClassDetail(item.id)} // Gọi hàm goToClassDetail với ID
+            onPress={() => goToClassDetail(item.classId)} // Gọi hàm goToClassDetail với ID
           >
             <View style={styles.card}>
 

@@ -14,9 +14,11 @@ import { Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import myGlobalVariable from '../../global';
+import myGlobalVariable  from '../../global';
 import ActivityIndicator from 'react-native-paper';
 import { colors } from 'react-native-elements';
+import User from '../../user';
+
 
 export default function Home() {
 
@@ -43,8 +45,7 @@ export default function Home() {
 
 
   const URL = myGlobalVariable;
-  const UserID = 3;
-
+  const UserID = User;
 
   useEffect(() => {
     async function fetchData() {
@@ -68,7 +69,7 @@ export default function Home() {
           const DataClass3 = await data3.json();
           setUserData(DataClass3);
         }
-      console.log(UserData[0].fullName);
+
       } catch (error) {
         console.error(error);
       } finally {
@@ -95,7 +96,6 @@ export default function Home() {
           </TouchableOpacity>
         </View>
       </View>
-      <ScreenHeader mainTitle="Welcome back !" secondTitle={UserData[0].fullName} />
 
       {!isLoading && ( // Kiểm tra isLoading, nếu false, hiển thị nội dung
         <>

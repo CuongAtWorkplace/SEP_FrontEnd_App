@@ -9,7 +9,7 @@ import { Button } from "react-native-paper";
 import myGlobalVariable from "../../global";
 import HeaderBack from "../../../component/HeaderBack";
 import { colors } from "react-native-elements";
-
+import User from "../../user";
 
 
 export default function UpdateProfile() {
@@ -22,7 +22,7 @@ export default function UpdateProfile() {
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
     const URL = myGlobalVariable;
-    const UserID = 3;
+    const UserID = User;
 
     useEffect(() => {
         (async () => {
