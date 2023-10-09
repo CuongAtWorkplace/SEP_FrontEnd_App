@@ -49,7 +49,7 @@ const TopPlacesCarousel = ({ list, onPress }) => {
 
               <View style={styles.imageBox}>
                 <Image style={styles.image}
-                  source={{ uri: URL + '/api/Course/GetImage/' + item.courseId }}
+                  source={{ uri: URL + '/api/Course/GetImage/GetImage/' + item.courseId }}
                 />
               </View>
               <View style={styles.titleBox}>

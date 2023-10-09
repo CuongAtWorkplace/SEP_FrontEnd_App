@@ -29,7 +29,7 @@ const RecommendList = (props) => {
             <View style={[styles.card, shadow.light]} key={item.id}>
               <View style={styles.imageBox}>
                 <Image style={styles.image}
-                  source={{ uri: URL + '/api/Course/GetImage/' + item.courseId }}
+                  source={{ uri: URL + '/api/Course/GetImage/GetImage/' + item.courseId }}
                 />
               </View>
               <View style={styles.footer}>
