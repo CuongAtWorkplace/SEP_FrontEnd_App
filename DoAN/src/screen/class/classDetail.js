@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Text, ScrollView, View, TouchableOpacity } from 'react-native';
+import { Image, Text, ScrollView, View, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -16,6 +16,9 @@ import { ActivityIndicator } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import myGlobalVariable from '../../global';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import User from '../../user';
+import ProgressDialog from 'react-native-progress-dialog';
+
 
 const CARD_WIDTH = sizes.width - 20;
 const CARD_HEIGHT = 200;
@@ -165,9 +168,6 @@ export default function classDetail(props) {
         navigation.navigate('Home');
     };
 
-    const handleEnroll = () => {
-        setShowButtons(true);
-    }
 
     const route = useRoute();
     const { classId } = route.params; // Lấy ID từ route.params
@@ -177,30 +177,71 @@ export default function classDetail(props) {
 
     const [imageUrl, setImageUrl] = useState(''); // State để lưu URL hình ảnh từ API
     const [isLoading, setIsLoading] = useState(true);
+    const [Enroll, setEnroll] = useState(false);
 
 
     const URL = myGlobalVariable;
 
+
+    const HandleEnroll = async () => {
+        try {
+            setEnroll(true);
+            // Dữ liệu cần gửi đến API, với các tên thuộc tính phù hợp với backend
+            const dataToSend = {
+                ClassId: classId, // Thay thế bằng classId thực tế
+                UserId: User, // Thay thế bằng userId thực tế
+            };
+
+            const response = await fetch(URL + '/api/ListStudentClass/AddStudentsToClass/AddStudentsToClass', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToSend),
+            });
+
+            if (response.status === 200) {
+                setShowButtons(true);
+                setEnroll(false);
+                Alert.alert('Notification', 'Enroll class successfully');
+                
+            } else {
+                console.log(response.status);
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'Something must wrong');
+        }
+    };
+
     useEffect(() => {
         async function getClassById() {
-            const response = await fetch(URL + '/api/Class/GetClassById/' + classId);
+            const response = await fetch(URL + '/api/Class/GetClassById/GetClassById/' + classId);
             const JsonConvert = await response.json();
             setClassData(JsonConvert);
-            const response1 = await fetch(URL + '/api/User/GetUserById/' + JsonConvert[0].teacherId);
+            const response1 = await fetch(URL + '/api/User/GetTeacherById/GetUserById/' + JsonConvert[0].teacherId);
             const JsonConvert1 = await response1.json();
             setTeacherData(JsonConvert1);
+            const response2 = await fetch(URL + '/api/ListStudentClass/CheckClassExists/CheckClassExists/' + classId+'/'+User);
+
+            if(response2.ok){
+                setShowButtons(true);
+            }
             setIsLoading(false);
+            
         }
         getClassById();
     });
 
     return (
         <ScrollView style={styles.container}>
+            <ProgressDialog visible={Enroll}/>
+
             {!isLoading && (
                 <View style={styles.imageBox}>
                     <Image
                         style={styles.image}
-                        source={{ uri: URL + '/api/Course/GetImage/' + classData[0]?.courseId }}
+                        source={{ uri: URL + '/api/Course/GetImage/GetImage/' + classData[0]?.courseId }}
                     />
                     <Text style={styles.textOnImage}>{classData[0]?.className}</Text>
 
@@ -219,7 +260,7 @@ export default function classDetail(props) {
                     )}
                     {!showButtons && (
 
-                        <TouchableOpacity style={[styles.actionButton, styles.enroll]} onPress={handleEnroll}>
+                        <TouchableOpacity style={[styles.actionButton, styles.enroll]} onPress={HandleEnroll}>
                             <Text style={styles.buttonText}>Enroll </Text>
                             <AntDesign name="pluscircleo" size={15} color="white" />
                         </TouchableOpacity>

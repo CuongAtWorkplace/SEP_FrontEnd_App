@@ -37,6 +37,8 @@ export default function Home() {
   };
 
 
+
+
   const [AllClassData, setAllClassData] = useState([]);
   const [AllStudyingClass, setAllStudyingClass] = useState([]);
   const [AllRecommend, setAllRecommend] = useState([]);
@@ -50,8 +52,8 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response1 = fetch(URL + '/api/Class/GetAllClass/4');
-        const response2 = fetch(URL + '/api/Class/GetAllClass/3');
+        const response1 = fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/4');
+        const response2 = fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/3');
         const response3 = await fetch(URL + '/api/User/GetStudentById/' + UserID);
 
         const [data1, data2 , data3 ] = await Promise.all([response1, response2 ,response3 ]);
