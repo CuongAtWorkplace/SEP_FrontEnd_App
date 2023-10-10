@@ -33,8 +33,8 @@ export default function Profile() {
     const [isImageLoading, setImageLoading] = useState(true);
     const [UserData, setUserData] = useState([]);
     const [isLoading, setLoading] = useState(true); // Trạng thái tải dữ liệu người dùng
-    const [imageSource, setImageSource] = useState({ uri: URL + '/api/User/GetImage/' + UserID + `?t=${new Date().getTime()}` });
-
+    const [imageSource, setImageSource] = useState({ uri: URL + '/api/User/GetUserImage/GetImage/' + UserID + `?t=${new Date().getTime()}` });
+    const [listCount1, setListCount] = useState([]); // Thêm state để lưu số lượng danh sách
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = async () => {
@@ -42,18 +42,25 @@ export default function Profile() {
 
         // Gọi API hoặc thực hiện các công việc cần làm khi làm mới trang
         // Ví dụ: Gọi API lấy dữ liệu người dùng
-        setImageSource({ uri: URL + '/api/User/GetImage/' + UserID + `?t=${new Date().getTime()}` });
+        setImageSource({ uri: URL + '/api/User/GetUserImage/GetImage/' + UserID + `?t=${new Date().getTime()}` });
         setRefreshing(false);
     };
+
 
 
     useEffect(() => {
         async function getUser() {
             try {
-                const response = await fetch(URL + '/api/User/GetStudentById/' + UserID);
+                const response = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + UserID);
+                const response4 = await fetch(URL + '/api/ListStudentClass/AllUserClassRegister/AllUserClassRegister/' + UserID);
+
                 if (response.ok) {
                     const user = await response.json();
                     setUserData(user);
+                }
+                if(response4.ok){
+                    const listData = await response4.json();
+                    setListCount(listData); // Cập nhật số lượng danh sách từ dữ liệu API
                 }
             } catch (error) {
                 console.error(error);
@@ -137,7 +144,7 @@ export default function Profile() {
 
                 <View style={styles.BottomContainer}>
                     <View style={styles.leftContainer}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#495095' }}>10</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#495095' }}>{listCount1.length}</Text>
                         <Text style={styles.classText}>Class</Text>
                     </View>
                     <View style={styles.rightContainer}>
