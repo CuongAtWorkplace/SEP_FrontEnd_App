@@ -55,16 +55,16 @@ export default function Home() {
     // Đặt refreshing thành true để hiển thị spinner refresh
     setRefreshing(true);
 
-      fetchData();
-      setRefreshing(false);
+    fetchData();
+    setRefreshing(false);
   };
 
   const fetchData = async () => {
     try {
-      const response1 = fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/4');
-      const response2 = fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/3');
-      const response3 = await fetch(URL + '/api/User/GetStudentById/' + UserID);
-      const response4 = fetch(URL + '/api/ListStudentClass/AllUserClassRegister/AllUserClassRegister/' + UserID);
+      const response1 = await fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/4');
+      const response2 = await fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/3');
+      const response3 = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + UserID);
+      const response4 = await fetch(URL + '/api/ListStudentClass/AllUserClassRegister/AllUserClassRegister/' + UserID);
 
       const [data1, data2, data3, data4] = await Promise.all([response1, response2, response3, response4]);
 
@@ -125,8 +125,12 @@ export default function Home() {
         </View>
       </View>
 
+
+
       {!isLoading && ( // Kiểm tra isLoading, nếu false, hiển thị nội dung
         <>
+          <ScreenHeader mainTitle='Welcome back !!!' secondTitle={UserData[0]?.fullName}/>
+
           <SectionHeader title="Recommend Class" />
           <TopPlacesCarousel list={AllRecommend} onPress={handleDetailClass} />
 

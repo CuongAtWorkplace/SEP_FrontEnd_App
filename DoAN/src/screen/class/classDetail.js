@@ -147,13 +147,6 @@ const styles = StyleSheet.create({
         top: '60%',
         left: '50%',
     },
-
-    // ... Other styles ...
-
-
-
-
-
 });
 
 export default function classDetail(props) {
@@ -174,7 +167,7 @@ export default function classDetail(props) {
 
     const [classData, setClassData] = useState([]);
     const [teacherData, setTeacherData] = useState([]);
-
+    const [UserData, setUserData] = useState([]);
     const [imageUrl, setImageUrl] = useState(''); // State để lưu URL hình ảnh từ API
     const [isLoading, setIsLoading] = useState(true);
     const [Enroll, setEnroll] = useState(false);
@@ -182,6 +175,36 @@ export default function classDetail(props) {
 
     const URL = myGlobalVariable;
 
+
+    const HandleBalance = async () => {
+        setEnroll(true);
+        if (UserData[0].balance >= classData[0]?.fee) {
+            setEnroll(false);
+            Alert.alert('Notification', 'Ok');
+            try {
+                const response = await fetch(URL + '/api/User/UpdateBalanceStudent/UpdateBalanceStudent/' + classData[0]?.fee + '/' + User, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    // Gọi HandleEnroll sau khi cập nhật thành công
+                    HandleEnroll();
+                } else {
+                    Alert.alert('Notification', 'Something wrong !!!!');
+                }
+            } catch (error) {
+                Alert.alert('Notification', 'Something wrong !!!!');
+            }
+
+        }
+        else {
+            setEnroll(false);
+            Alert.alert('Notification', 'You dont have enough money');
+        }
+    }
 
     const HandleEnroll = async () => {
         try {
@@ -204,7 +227,7 @@ export default function classDetail(props) {
                 setShowButtons(true);
                 setEnroll(false);
                 Alert.alert('Notification', 'Enroll class successfully');
-                
+
             } else {
                 console.log(response.status);
             }
@@ -222,20 +245,22 @@ export default function classDetail(props) {
             const response1 = await fetch(URL + '/api/User/GetTeacherById/GetUserById/' + JsonConvert[0].teacherId);
             const JsonConvert1 = await response1.json();
             setTeacherData(JsonConvert1);
-            const response2 = await fetch(URL + '/api/ListStudentClass/CheckClassExists/CheckClassExists/' + classId+'/'+User);
-
-            if(response2.ok){
+            const response2 = await fetch(URL + '/api/ListStudentClass/CheckClassExists/CheckClassExists/' + classId + '/' + User);
+            const response3 = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + User);
+            const JsonConvert2 = await response3.json();
+            setUserData(JsonConvert2)
+            if (response2.ok) {
                 setShowButtons(true);
             }
             setIsLoading(false);
-            
+
         }
         getClassById();
     });
 
     return (
         <ScrollView style={styles.container}>
-            <ProgressDialog visible={Enroll}/>
+            <ProgressDialog visible={Enroll} />
 
             {!isLoading && (
                 <View style={styles.imageBox}>
@@ -260,7 +285,7 @@ export default function classDetail(props) {
                     )}
                     {!showButtons && (
 
-                        <TouchableOpacity style={[styles.actionButton, styles.enroll]} onPress={HandleEnroll}>
+                        <TouchableOpacity style={[styles.actionButton, styles.enroll]} onPress={HandleBalance}>
                             <Text style={styles.buttonText}>Enroll </Text>
                             <AntDesign name="pluscircleo" size={15} color="white" />
                         </TouchableOpacity>
