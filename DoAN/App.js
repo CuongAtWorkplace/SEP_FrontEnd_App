@@ -2,9 +2,8 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleSheet } from 'react-native';
+import { LogBox, StyleSheet } from 'react-native';
 import { View } from 'react-native';
-
 import Home from './src/screen/homescreen/home';
 import Login from './src/screen/login/login';
 import Register from './src/screen/register/register';
@@ -65,6 +64,8 @@ const TabNavigator = () => (
     />
   </Tab.Navigator>
 );
+
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 const App = () => {
   return (

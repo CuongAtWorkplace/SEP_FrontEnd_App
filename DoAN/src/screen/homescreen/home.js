@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 
 import RecommendList from '../../../component/RecommendList';
 import TopPlacesCarousel from '../../../component/TopPlacesCarousel';
@@ -14,7 +14,7 @@ import { Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import myGlobalVariable  from '../../global';
+import myGlobalVariable from '../../global';
 import ActivityIndicator from 'react-native-paper';
 import { colors } from 'react-native-elements';
 import User from '../../user';
@@ -49,42 +49,68 @@ export default function Home() {
   const URL = myGlobalVariable;
   const UserID = User;
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response1 = fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/4');
-        const response2 = fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/3');
-        const response3 = await fetch(URL + '/api/User/GetStudentById/' + UserID);
+  const [refreshing, setRefreshing] = useState(false);
 
-        const [data1, data2 , data3 ] = await Promise.all([response1, response2 ,response3 ]);
+  const onRefresh = () => {
+    // Đặt refreshing thành true để hiển thị spinner refresh
+    setRefreshing(true);
 
-        if (data1.ok) {
-          const DataClass1 = await data1.json();
-          setAllClassData(DataClass1);
-        }
+      fetchData();
+      setRefreshing(false);
+  };
 
-        if (data2.ok) {
-          const DataClass2 = await data2.json();
-          setAllRecommend(DataClass2);
-        }
-        if (data3.ok) {
-          const DataClass3 = await data3.json();
-          setUserData(DataClass3);
-        }
+  const fetchData = async () => {
+    try {
+      const response1 = fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/4');
+      const response2 = fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/3');
+      const response3 = await fetch(URL + '/api/User/GetStudentById/' + UserID);
+      const response4 = fetch(URL + '/api/ListStudentClass/AllUserClassRegister/AllUserClassRegister/' + UserID);
 
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false); // Đặt isLoading thành false sau khi tải dữ liệu xong hoặc gặp lỗi
+      const [data1, data2, data3, data4] = await Promise.all([response1, response2, response3, response4]);
+
+      if (data1.ok) {
+        const DataClass1 = await data1.json();
+        setAllClassData(DataClass1);
       }
-    }
 
+      if (data2.ok) {
+        const DataClass2 = await data2.json();
+        setAllRecommend(DataClass2);
+      }
+      if (data3.ok) {
+        const DataClass3 = await data3.json();
+        setUserData(DataClass3);
+      }
+      if (data4.ok) {
+        const DataClass4 = await data4.json();
+        setAllStudyingClass(DataClass4);
+      }
+
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false); // Đặt isLoading thành false sau khi tải dữ liệu xong hoặc gặp lỗi
+      setRefreshing(false);
+
+    }
+  }
+
+  useEffect(() => {
     fetchData();
   }, []);
 
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+    >
+
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Knoco</Text>
 
@@ -117,7 +143,7 @@ export default function Home() {
       )}
       {isLoading && (
         <View>
-          
+
         </View>
       )}
     </ScrollView>
