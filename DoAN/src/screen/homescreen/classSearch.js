@@ -16,7 +16,7 @@ export default function ClassSearch() {
     const [isLoading, setIsLoading] = useState(true);
     const [AllClassData, setAllClassData] = useState([]);
     const [searchText, setSearchText] = useState('');
-    const countries = ["Newest", "Oldest", "Study"];
+    const countries = ["Newest", "Oldest"];
     const URL = myGlobalVariable;
 
     const handleBack = () => {
@@ -95,13 +95,7 @@ export default function ClassSearch() {
               const data1 = await response1.json();
               setAllClassData(data1);
             }
-          } else if (selectedItem === 'Study') {
-            const response1 = await fetch(URL + '/api/ListStudentClass/AllUserClassRegister/AllUserClassRegister/' + User);
-            if (response1.ok) {
-              const data1 = await response1.json();
-              setAllClassData(data1);
-            }
-          }
+          } 
         } catch (error) {
           console.error(error);
         } finally {
