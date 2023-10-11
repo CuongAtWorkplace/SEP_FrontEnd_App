@@ -5,6 +5,9 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from '@expo/vector-icons';
 import { Image } from "react-native";
 import { ImageBackground } from "react-native";
+import {ref , set} from "firebase/database"
+import { db } from "../../../component/config";
+
 
 import HeaderBack from "../../../component/HeaderBack";
 
@@ -18,10 +21,19 @@ export default function Chat() {
     };
 
     const handleSendMessage = () => {
-        if (newMessage) {
-            setMessages([...messages, { text: newMessage, user: "You" }]);
-            setNewMessage("");
-        }
+        set(ref(db,'users'+3),{
+            username : 'Cuong',
+            mail:'aaaaa',
+        })
+        .then(() => {
+            alert('ok');
+            console.log('ok');
+        })
+        .catch((error) =>{
+            alert(error);
+            console.log('fail');
+
+        });
     };
 
     return (
@@ -53,8 +65,11 @@ export default function Chat() {
                         value={newMessage}
                         onChangeText={text => setNewMessage(text)}
                     />
+        
                     <TouchableOpacity style={{ marginLeft: 20 }} onPress={handleSendMessage}>
+                        <View style={{backgroundColor:colors.black , width:30 , height:30}}>
                         <FontAwesome name="send" size={24} color="white" />
+                        </View>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
