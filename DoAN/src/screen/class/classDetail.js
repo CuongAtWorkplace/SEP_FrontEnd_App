@@ -161,9 +161,9 @@ export default function classDetail(props) {
         navigation.navigate('Home');
     };
 
-    const ChatHandle = () =>{
-        navigation.navigate('ChatClass');
-    }
+    const ChatHandle = (id) => {
+        navigation.navigate('ChatClass', { id: id });
+    };
 
     const route = useRoute();
     const { classId } = route.params; // Lấy ID từ route.params
@@ -402,12 +402,13 @@ export default function classDetail(props) {
                     {showButtons && (
                         <>
                             <View style={styles.buttonContainer}>
-                                <TouchableOpacity onPress={ChatHandle}>
+                                <TouchableOpacity onPress={() => ChatHandle(classData[0]?.courseId)}>
                                     <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.linearGradient}>
                                         <Feather name="message-circle" size={24} color="white" />
                                         <Text style={styles.buttonText}>Group chat</Text>
                                     </LinearGradient>
                                 </TouchableOpacity>
+
 
                                 <TouchableOpacity>
                                     <LinearGradient colors={['#FF3CAC', '#784BA0', '#2B86C5']} style={styles.linearGradient}>
