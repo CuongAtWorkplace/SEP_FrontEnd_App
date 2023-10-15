@@ -106,7 +106,7 @@ export default function UpdateProfile() {
                 });
 
                 try {
-                    const response = await fetch(URL + '/api/User/UploadImage/' + UserID, {
+                    const response = await fetch(URL + '/api/User/UploadImage/UploadImage/' + UserID, {
                         method: 'POST',
                         body: formData,
                         headers: {

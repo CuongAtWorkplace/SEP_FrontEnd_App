@@ -18,6 +18,8 @@ import myGlobalVariable from '../../global';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import User from '../../user';
 import ProgressDialog from 'react-native-progress-dialog';
+import { Linking } from 'react-native';
+
 
 
 const CARD_WIDTH = sizes.width - 20;
@@ -240,6 +242,12 @@ export default function classDetail(props) {
         }
     };
 
+
+    const handleMeetingRoomPress = () => {
+        const meetingRoomUrl = 'https://cliff-lovely-system.glitch.me/?room=room-vn-1-XU1AO32XCC-1697214817745&fbclid=IwAR2YgfqNcaExiAEQKigeH8oflSD51g8EwFqtCfReJxVQz_1dPFb4LnSuoDs';
+        Linking.openURL(meetingRoomUrl);
+      };
+
     useEffect(() => {
         async function getClassById() {
             const response = await fetch(URL + '/api/Class/GetClassById/GetClassById/' + classId);
@@ -418,7 +426,7 @@ export default function classDetail(props) {
                                 </TouchableOpacity>
                             </View>
 
-                            <TouchableOpacity style={styles.meetingRoomContainer}>
+                            <TouchableOpacity style={styles.meetingRoomContainer} onPress={handleMeetingRoomPress}>
                                 <LinearGradient colors={['#ED213A', '#93291E']} style={styles.meetingRoom}>
                                     <FontAwesome5 name="chalkboard-teacher" size={24} color="white" />
                                     <Text style={styles.buttonText}>Meeting room</Text>
