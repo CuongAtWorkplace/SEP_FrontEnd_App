@@ -1,5 +1,80 @@
 import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import AllPostScreen from '../PostScreen/AllPostScreen';
+import UpdateScreen from '../PostScreen/UpdateScreen';
 
 
-export default function community({ navigation }) {
+
+export default function Community({ navigation }) {
+    const [isButton1Active, setIsButton1Active] = useState(true);
+    const [isButton2Active, setIsButton2Active] = useState(false);
+    const [isAllPostScreenVisible, setIsAllPostScreenVisible] = useState(true);
+    const [isUpdatePostScreenVisible, setIsUpdatePostScreenVisible] = useState(true);
+
+
+
+    const handleButton1Click = () => {
+        setIsButton1Active(!isButton1Active);
+        setIsButton2Active(false);
+        setIsAllPostScreenVisible(true);
+        setIsUpdatePostScreenVisible(false);
+    };
+
+    const handleButton2Click = () => {
+        setIsButton2Active(!isButton2Active);
+        setIsButton1Active(false);
+        setIsAllPostScreenVisible(false);
+        setIsUpdatePostScreenVisible(true);
+
+    };
+
+    return (
+        <View>
+            <View style={styles.container}>
+                <TouchableOpacity
+                    style={[styles.button, isButton1Active && styles.activeButton]}
+                    onPress={handleButton1Click}
+                >
+                    <Text style={styles.buttonText}>All Post</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.button, isButton2Active && styles.activeButton]}
+                    onPress={handleButton2Click}
+                >
+                    <Text style={styles.buttonText}>Your Post</Text>
+                </TouchableOpacity>
+            </View>
+
+            {isAllPostScreenVisible && <AllPostScreen />}
+            {isUpdatePostScreenVisible && <UpdateScreen />}
+
+        </View>
+
+    );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop:10,
+    },
+    button: {
+        backgroundColor: 'white',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        padding: 10,
+        margin: 5,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 30,
+    },
+    activeButton: {
+        backgroundColor: '#6EEF78',
+    },
+    buttonText: {
+        color: 'black', // Điều chỉnh màu chữ cho nút active
+    },
+});
