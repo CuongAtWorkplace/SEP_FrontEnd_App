@@ -1,26 +1,125 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, ScrollView } from "react-native";
 import { TextInput } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
 import SelectDropdown from "react-native-select-dropdown";
-
-
+import * as ImagePicker from 'expo-image-picker';
+import { useRef } from "react";
 
 import User from "../../user";
 import myGlobalVariable from "../../global";
 
 export default function AllPostScreen() {
     const URL = myGlobalVariable;
+    const selectDropdownRef = useRef(); // Tạo một tham chiếu
 
     const [imageSource, setImageSource] = useState({
         uri: URL + '/api/User/GetUserImage/GetImage/' + User + `?t=${new Date().getTime()}`
     });
     const [UserData, setUserData] = useState([]);
     const [isLoading, setLoading] = useState(true);
+    const [title, setTitle] = useState(""); // State for TextInput
     const [des, setDes] = useState(""); // State for TextInput
-    const countries = ["Bioloy", "Math","English","Physic"];
+    const countries = ["Bioloy", "Math", "English", "Physic"];
+    const [selectedImage, setSelectedImage] = useState(null);
 
 
+    const openImagePicker = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            if (result.assets && result.assets.length > 0) {
+                setSelectedImage(result.assets[0].uri);
+
+                // Tạo FormData để gửi dữ liệu ảnh
+                const formData = new FormData();
+                formData.append('file', {
+                    uri: result.assets[0].uri,
+                    type: 'image/jpeg', // Loại ảnh, bạn có thể điều chỉnh tùy theo định dạng ảnh
+                    name: 'image.jpg', // Tên tệp trên máy chủ
+                });
+                if (result.assets && result.assets.length > 0) {
+                    setSelectedImage(result.assets[0].uri);
+                }
+
+            }
+        }
+    }
+
+    const HandleCancel = () =>{
+        setSelectedImage(null) ;
+    }
+
+    const addNewPost = async () => {
+        try {
+            const formData = new FormData();
+    
+            // Ensure that a valid image is selected
+            if (selectedImage) {
+                // Create a file object from the selectedImage
+                const imageFile = {
+                    uri: selectedImage,
+                    type: 'image/jpeg',
+                    name: 'image.jpg',
+                };
+    
+                // Append the image file to the FormData object
+                formData.append('file', imageFile);
+    
+                // Upload the image to the backend API
+                const uploadResponse = await fetch(URL + '/api/Post/UploadImage', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+    
+                if (uploadResponse.ok) {
+                    // Extract the image file name from the response
+                    const imageFileName = await uploadResponse.text(); // Assuming the response contains the image file name
+    
+                    // Create the postData object with the image file name and selectedItem
+                    const postData = {
+                        createBy: User,
+                        title: title,
+                        description: des,
+                        contentPost: "selectedItem", // Value from SelectDropdown
+                        image: imageFileName, // Use the imageFileName value from the response
+                    };
+    
+                    // Send the postData object to create the new post
+                    const postResponse = await fetch(URL + '/api/Post/AddNewPost', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(postData),
+                    });
+    
+                    if (postResponse.ok) {
+                        // The post was added successfully
+                        console.log('New post added successfully');
+                    } else {
+                        // Handle the case when the post addition fails
+                        console.error('Failed to add a new post');
+                    }
+                } else {
+                    Alert.alert('Lỗi', 'Cập nhật ảnh thất bại');
+                }
+            } else {
+                Alert.alert('Lỗi', 'Chưa chọn ảnh');
+            }
+        } catch (error) {
+            // Handle any network errors or exceptions
+            console.error('Error adding a new post:', error);
+        }
+    };
+    
+    
 
     useEffect(() => {
         async function getUser() {
@@ -42,58 +141,73 @@ export default function AllPostScreen() {
     }, []);
 
     return (
-        <View style={styles.container}>
-            {isLoading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
-            ) : (
-                <View>
-                    <View style={styles.header}>
-                        <Image source={imageSource} style={styles.avatar} />
-                        <Text style={styles.username}>{UserData[0]?.fullName}</Text>
-                    </View>
-                    <TextInput
-                        placeholder="Write a Title..."
-                        onChangeText={(text) => setCaption(text)}
-                    />
-                    <TextInput
-                        style={styles.textInput}
-                        placeholder="Write a description..."
-                        onChangeText={(text) => setDes(text)}
-                        defaultValue={des}
-                        value={des}
-                        multiline={true}
-                        numberOfLines={4}
-                    />
-                    <View style={styles.row}>
-                        <View style={styles.touchable}>
-                            <TouchableOpacity  >
-                                <FontAwesome name="image" size={30} color="blue" />
-                            </TouchableOpacity>
-
-                            <View style={styles.selectContainer}>
-                                <SelectDropdown
-                                    data={countries}
-                                    defaultButtonText="Choose Content "
-                                    buttonTextAfterSelection={(selectedItem, index) => {
-                                        return selectedItem;
-                                    }}
-                                    rowTextForSelection={(item, index) => {
-                                        return item;
-                                    }}
-                                    dropdownStyle={styles.dropdownStyle} // Apply custom style to the dropdown
-                                    buttonStyle={styles.buttonStyle} // Apply custom style to the button
-                                    buttonTextStyle={styles.buttonTextStyle} // Apply custom style to the button text
-                                />
-                            </View>
+        <ScrollView>
+            <View style={styles.container}>
+                {isLoading ? (
+                    <ActivityIndicator size="large" color="#0000ff" />
+                ) : (
+                    <View>
+                        <View style={styles.header}>
+                            <Image source={imageSource} style={styles.avatar} />
+                            <Text style={styles.username}>{UserData[0]?.fullName}</Text>
                         </View>
 
-                        <TouchableOpacity style={styles.touchable} >
-                            <Text style={styles.postButtonText}>Post</Text>
-                        </TouchableOpacity>
+
+                        <TextInput
+                            placeholder="Write a Title..."
+                            onChangeText={(text) => setTitle(text)}
+                        />
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder="Write a description..."
+                            onChangeText={(text) => setDes(text)}
+                            defaultValue={des}
+                            value={des}
+                            multiline={true}
+                            numberOfLines={4}
+                        />
+                        <View style={styles.row}>
+                            <View style={styles.touchable}>
+                                <TouchableOpacity onPress={openImagePicker}>
+                                    <FontAwesome name="image" size={30} color="blue" />
+                                </TouchableOpacity>
+
+                                <View style={styles.selectContainer}>
+                                    <SelectDropdown
+                                        data={countries}
+                                        ref={selectDropdownRef} // Gán tham chiếu vào SelectDropdown
+                                        defaultButtonText="Choose Content "
+                                        buttonTextAfterSelection={(selectedItem, index) => {
+                                            return selectedItem;
+                                        }}
+                                        rowTextForSelection={(item, index) => {
+                                            return item;
+                                        }}
+                                        dropdownStyle={styles.dropdownStyle} // Apply custom style to the dropdown
+                                        buttonStyle={styles.buttonStyle} // Apply custom style to the button
+                                        buttonTextStyle={styles.buttonTextStyle} // Apply custom style to the button text
+                                    />
+                                </View>
+                            </View>
+
+                            <TouchableOpacity style={styles.touchable} onPress={addNewPost}>
+                                <Text style={styles.postButtonText}>Post</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
+                )}
+            </View>
+            {selectedImage && (
+                <View>
+                    <View style={styles.centeredImageContainer}>
+                        <Image source={{ uri: selectedImage }} style={styles.centeredImage} />
+                    </View>
+                    <TouchableOpacity style={{position: 'absolute',top:-5 , marginLeft:10 }} onPress={HandleCancel}>
+                        <Text style={{ color: "blue", fontSize:12}}>Cancel</Text>
+                    </TouchableOpacity>
                 </View>
             )}
-        </View>
+        </ScrollView>
     );
 }
 
@@ -129,6 +243,7 @@ const styles = StyleSheet.create({
     textInput: {
         borderWidth: 1,
         borderColor: "#ccc",
+        backgroundColor: "#DBE1E3",
         padding: 10,
         marginTop: 10,
         height: 80,
@@ -145,7 +260,7 @@ const styles = StyleSheet.create({
     postButtonText: {
         fontSize: 17,
         color: "blue",
-        marginRight:10,
+        marginRight: 10,
     },
     buttonStyle: {
         // Add custom button style here
@@ -163,6 +278,20 @@ const styles = StyleSheet.create({
         paddingRight: 20, // Add right padding to create space from the right edge
     },
     selectContainer: {
-        marginLeft:10,
+        marginLeft: 10,
     },
+    centeredImageContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+    // Style for the centered image
+    centeredImage: {
+        width: 300,
+        height: 200,
+        borderRadius:10,
+
+    },
+
 });
