@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
         marginTop:10,
     },
     button: {
-        backgroundColor: 'white',
+        backgroundColor: '#E5E5E5',
         borderColor: '#ccc',
         borderWidth: 1,
         padding: 10,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
     },
     activeButton: {
-        backgroundColor: '#6EEF78',
+        backgroundColor: '#A1BAA2',
     },
     buttonText: {
         color: 'black', // Điều chỉnh màu chữ cho nút active
