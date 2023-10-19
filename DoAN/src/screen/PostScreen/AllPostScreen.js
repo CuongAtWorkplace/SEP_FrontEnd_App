@@ -5,9 +5,13 @@ import { FontAwesome } from '@expo/vector-icons';
 import SelectDropdown from "react-native-select-dropdown";
 import * as ImagePicker from 'expo-image-picker';
 import { useRef } from "react";
+import { SelectList } from "react-native-dropdown-select-list";
+import { Alert } from "react-native";
+
 
 import User from "../../user";
 import myGlobalVariable from "../../global";
+import PostList from "./PostList";
 
 export default function AllPostScreen() {
     const URL = myGlobalVariable;
@@ -22,6 +26,8 @@ export default function AllPostScreen() {
     const [des, setDes] = useState(""); // State for TextInput
     const countries = ["Bioloy", "Math", "English", "Physic"];
     const [selectedImage, setSelectedImage] = useState(null);
+    const [selected, setSelected] = React.useState([]);
+    const [AllPost, setAllPost] = React.useState([]);
 
 
     const openImagePicker = async () => {
@@ -49,14 +55,14 @@ export default function AllPostScreen() {
         }
     }
 
-    const HandleCancel = () =>{
-        setSelectedImage(null) ;
+    const HandleCancel = () => {
+        setSelectedImage(null);
     }
 
     const addNewPost = async () => {
         try {
             const formData = new FormData();
-    
+
             // Ensure that a valid image is selected
             if (selectedImage) {
                 // Create a file object from the selectedImage
@@ -65,10 +71,10 @@ export default function AllPostScreen() {
                     type: 'image/jpeg',
                     name: 'image.jpg',
                 };
-    
+
                 // Append the image file to the FormData object
                 formData.append('file', imageFile);
-    
+
                 // Upload the image to the backend API
                 const uploadResponse = await fetch(URL + '/api/Post/UploadImage', {
                     method: 'POST',
@@ -77,20 +83,20 @@ export default function AllPostScreen() {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-    
+
                 if (uploadResponse.ok) {
                     // Extract the image file name from the response
                     const imageFileName = await uploadResponse.text(); // Assuming the response contains the image file name
-    
+
                     // Create the postData object with the image file name and selectedItem
                     const postData = {
                         createBy: User,
                         title: title,
                         description: des,
-                        contentPost: "selectedItem", // Value from SelectDropdown
+                        contentPost: selected, // Value from SelectDropdown
                         image: imageFileName, // Use the imageFileName value from the response
                     };
-    
+
                     // Send the postData object to create the new post
                     const postResponse = await fetch(URL + '/api/Post/AddNewPost', {
                         method: 'POST',
@@ -99,10 +105,13 @@ export default function AllPostScreen() {
                         },
                         body: JSON.stringify(postData),
                     });
-    
+
                     if (postResponse.ok) {
                         // The post was added successfully
+                        setSelectedImage(null);
                         console.log('New post added successfully');
+                        Alert.alert('Notification', 'New post added successfully');
+
                     } else {
                         // Handle the case when the post addition fails
                         console.error('Failed to add a new post');
@@ -118,21 +127,30 @@ export default function AllPostScreen() {
             console.error('Error adding a new post:', error);
         }
     };
-    
-    
+
+
 
     useEffect(() => {
         async function getUser() {
             try {
                 const response = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + User);
+                const response2 = await fetch(URL + '/api/Post/GetAllPost');
 
                 if (response.ok) {
                     const user = await response.json();
                     setUserData(user);
                 }
+                if (response2.ok) {
+                    const post = await response2.json();
+                    setAllPost(post);
+                    console.log(AllPost);
+
+                }
             } catch (error) {
                 console.error(error);
             } finally {
+                console.log(AllPost);
+
                 setLoading(false);
             }
         }
@@ -173,19 +191,11 @@ export default function AllPostScreen() {
                                 </TouchableOpacity>
 
                                 <View style={styles.selectContainer}>
-                                    <SelectDropdown
+                                    <SelectList
+                                        style={styles.buttonStyle}
+                                        setSelected={(val) => setSelected(val)}
                                         data={countries}
-                                        ref={selectDropdownRef} // Gán tham chiếu vào SelectDropdown
-                                        defaultButtonText="Choose Content "
-                                        buttonTextAfterSelection={(selectedItem, index) => {
-                                            return selectedItem;
-                                        }}
-                                        rowTextForSelection={(item, index) => {
-                                            return item;
-                                        }}
-                                        dropdownStyle={styles.dropdownStyle} // Apply custom style to the dropdown
-                                        buttonStyle={styles.buttonStyle} // Apply custom style to the button
-                                        buttonTextStyle={styles.buttonTextStyle} // Apply custom style to the button text
+                                        save="value"
                                     />
                                 </View>
                             </View>
@@ -196,17 +206,18 @@ export default function AllPostScreen() {
                         </View>
                     </View>
                 )}
-            </View>
-            {selectedImage && (
-                <View>
-                    <View style={styles.centeredImageContainer}>
-                        <Image source={{ uri: selectedImage }} style={styles.centeredImage} />
+                {selectedImage && (
+                    <View>
+                        <View style={styles.centeredImageContainer}>
+                            <Image source={{ uri: selectedImage }} style={styles.centeredImage} />
+                        </View>
+                        <TouchableOpacity style={{ position: 'absolute', top: -5, marginLeft: 10 }} onPress={HandleCancel}>
+                            <Text style={{ color: "blue", fontSize: 12 }}>Cancel</Text>
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={{position: 'absolute',top:-5 , marginLeft:10 }} onPress={HandleCancel}>
-                        <Text style={{ color: "blue", fontSize:12}}>Cancel</Text>
-                    </TouchableOpacity>
-                </View>
-            )}
+                )}
+            </View>
+            <PostList posts={AllPost}/>
         </ScrollView>
     );
 }
@@ -290,7 +301,7 @@ const styles = StyleSheet.create({
     centeredImage: {
         width: 300,
         height: 200,
-        borderRadius:10,
+        borderRadius: 10,
 
     },
 
