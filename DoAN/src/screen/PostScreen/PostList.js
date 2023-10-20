@@ -3,6 +3,13 @@ import { View, Text, FlatList } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Image } from 'react-native-elements';
 import moment from 'moment';
+import { Button } from 'react-native-elements';
+import { TouchableOpacity } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+
+
+
 
 import myGlobalVariable from '../../global';
 
@@ -44,13 +51,16 @@ export default function PostList({ posts }) {
   }, [posts]);
 
   return (
-    <View>
+    <View style={{marginBottom:70}}>
       <FlatList
         data={posts}
         keyExtractor={(post) => post.postId.toString()}
         renderItem={({ item }) => (
           <View style={styles.container}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{item.title}</Text>
+            <View style={styles.buttonContainer}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{item.title}</Text>
+              <Text style={{fontWeight:'bold'}}># {item.contentPost}</Text>
+            </View>
             <Text style={{ fontSize: 15, marginTop: 10, fontWeight: 'bold' }}>{item.description}</Text>
             <View style={styles.imageContainer}>
               <Image
@@ -64,9 +74,23 @@ export default function PostList({ posts }) {
               </View>
               <View style={styles.rightText}>
                 <Text style={styles.rightTextContent}>
-                  Created By: {createdByNames[item.createBy] }
+                  Created By: {createdByNames[item.createBy]}
                 </Text>
               </View>
+            </View>
+            <View style={styles.buttonContainer}>
+
+              <TouchableOpacity style={styles.buttonRow}>
+                <AntDesign name="like2" size={24} color="blue" />
+                <Text style={{ marginLeft: 10, color: "blue" }}>Like : {item.likeAmout}</Text>
+
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.buttonRow}>
+                <FontAwesome name="comment-o" size={24} color="blue" />
+                <Text style={{ marginLeft: 10, color: "blue" }}>comment</Text>
+              </TouchableOpacity>
+
             </View>
           </View>
         )}
@@ -116,7 +140,14 @@ const styles = StyleSheet.create({
   },
   rightTextContent: {
     textAlign: 'right',
-    fontSize:10,
-
+    fontSize: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
