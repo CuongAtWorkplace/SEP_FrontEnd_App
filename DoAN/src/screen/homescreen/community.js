@@ -9,7 +9,7 @@ export default function Community({ navigation }) {
     const [isButton1Active, setIsButton1Active] = useState(true);
     const [isButton2Active, setIsButton2Active] = useState(false);
     const [isAllPostScreenVisible, setIsAllPostScreenVisible] = useState(true);
-    const [isUpdatePostScreenVisible, setIsUpdatePostScreenVisible] = useState(true);
+    const [isUpdatePostScreenVisible, setIsUpdatePostScreenVisible] = useState(false);
 
 
 
@@ -45,8 +45,8 @@ export default function Community({ navigation }) {
                 </TouchableOpacity>
             </View>
 
-            {isAllPostScreenVisible && <AllPostScreen />}
-            {isUpdatePostScreenVisible && <UpdateScreen />}
+            {isAllPostScreenVisible && !isUpdatePostScreenVisible && <AllPostScreen />}
+            {isUpdatePostScreenVisible && !isAllPostScreenVisible  && <UpdateScreen />}
 
         </View>
 
