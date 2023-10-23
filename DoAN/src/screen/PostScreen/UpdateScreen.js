@@ -1,45 +1,50 @@
-import React from "react";
-import { View, Text } from "react-native";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { View, Text, StatusBar, ScrollView, RefreshControl, ScrollViewBase } from "react-native";
 import UpdateList from "./UpdateList";
-
 import User from "../../user";
 import myGlobalVariable from "../../global";
 
 
+
+
+
+
 export default function UpdateScreen({ navigation }) {
-
-
     const URL = myGlobalVariable;
+    const [allPost, setAllPost] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
-    const [AllPost, setAllPost] = React.useState([]);
+    const fetchUserPosts = async () => {
+        try {
+            const response = await fetch(URL + '/api/Post/GetUserPost/' + User);
+            if (response.ok) {
+                const post = await response.json();
+                setAllPost(post);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setRefreshing(false);
+        }
+    };
 
-
+    const handleRefresh = () => {
+        setRefreshing(true);
+        fetchUserPosts();
+    };
 
     useEffect(() => {
-        async function getUser() {
-            try {
-                const response = await fetch(URL + '/api/Post/GetUserPost/' + User);
-                if (response.ok) {
-                    const post = await response.json();
-                    setAllPost(post);
-                }
+        // Hide the status bar when the component mounts
+        StatusBar.setHidden(true);
+        handleRefresh(); // Initial fetch when the component mounts
 
-            } catch (error) {
-                console.error(error);
-            } finally {
-                console.log(AllPost);
 
-                setLoading(false);
-            }
-        }
-
-        getUser();
     }, []);
 
     return (
-        <View>
-            <UpdateList posts={AllPost}/>
-        </View>
+        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}>
+            <UpdateList posts={allPost} />
+        </ScrollView>
     );
+
 }

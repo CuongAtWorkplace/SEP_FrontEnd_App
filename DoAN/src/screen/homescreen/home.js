@@ -17,6 +17,9 @@ import { useEffect } from 'react';
 import myGlobalVariable from '../../global';
 import ActivityIndicator from 'react-native-paper';
 import { colors } from 'react-native-elements';
+
+import { StatusBar } from 'react-native';
+
 import User from '../../user';
 
 
@@ -60,6 +63,8 @@ export default function Home() {
   };
 
   const fetchData = async () => {
+    StatusBar.setHidden(true);
+
     try {
       const response1 = await fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/4');
       const response2 = await fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/3');

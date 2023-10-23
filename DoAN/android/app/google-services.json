@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "890050038626",
+    "project_id": "chat-app-32541",
+    "storage_bucket": "chat-app-32541.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890050038626:android:1898c6b19ec344beacba3b",
+        "android_client_info": {
+          "package_name": "com.doan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_l3VZWlIY5koXzh_y5kVbrvulbm6Lh5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

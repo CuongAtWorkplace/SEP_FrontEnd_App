@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, FlatList, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { SelectList } from 'react-native-dropdown-select-list';
+
 
 import myGlobalVariable from '../../global';
 import User from '../../user';
@@ -12,6 +14,10 @@ export default function UpdateList({ posts }) {
     const [editingStatus, setEditingStatus] = useState({});
     const [editedValues, setEditedValues] = useState({});
     const [selectedImages, setSelectedImages] = useState({});
+    const countries = ["Bioloy", "Math", "English", "Physic"];
+    const [selected, setSelected] = React.useState([]);
+
+
 
     const handleEdit = (postId) => {
         setEditingStatus({
@@ -34,14 +40,14 @@ export default function UpdateList({ posts }) {
             quality: 1,
         });
 
-    
-            if (result.assets && result.assets.length > 0) {
-                setSelectedImages({
-                    ...selectedImages,
-                    [postId]: result.assets[0].uri,
-                });
-            }
-        
+
+        if (result.assets && result.assets.length > 0) {
+            setSelectedImages({
+                ...selectedImages,
+                [postId]: result.assets[0].uri,
+            });
+        }
+
     };
 
     const handleSave = async (postId) => {
@@ -90,9 +96,9 @@ export default function UpdateList({ posts }) {
                             createBy: User,
                             title: editedData.title,
                             description: editedData.description,
-                            contentPost:"aaaa",
+                            contentPost: selected,
                             likeAmout: 0,
-                            image: imageFileName, // Nếu bạn cần lưu tên tệp hình ảnh
+                            image: imageFileName,
                         }),
                     });
 
@@ -108,7 +114,7 @@ export default function UpdateList({ posts }) {
             } catch (error) {
                 console.error('Lỗi khi gửi yêu cầu cập nhật bài đăng:', error);
             }
-        } 
+        }
     };
 
     const handleCancel = (postId) => {
@@ -152,8 +158,21 @@ export default function UpdateList({ posts }) {
                                     {item.title}
                                 </Text>
                             )}
-                            <Text style={{ fontWeight: 'bold' }}># {item.contentPost}</Text>
+                            {editingStatus[item.postId] ? ( // Render SelectList in edit mode
+                                <View style={{  marginLeft: 'auto' }}>
+                                    <SelectList
+                                        style={styles.buttonStyle}
+                                        setSelected={(val) => setSelected(val)} // Set contentPost to the selected value
+                                        data={countries}
+                                        save="value"
+                                    />
+                                </View>
+
+                            ) : (
+                                <Text style={{ fontWeight: 'bold', marginLeft: 'auto' }}># {item.contentPost}</Text>
+                            )}
                         </View>
+
                         {editingStatus[item.postId] ? (
                             <TextInput
                                 style={styles.textInput}
@@ -177,12 +196,12 @@ export default function UpdateList({ posts }) {
                             {editingStatus[item.postId] ? (
                                 <Image
                                     style={styles.image}
-                                    source={{ uri: selectedImages[item.postId] || URL + '/api/Post/GetImage/' + item.postId }}
+                                    source={{ uri: selectedImages[item.postId] || URL + '/api/Post/GetImage/' + item.postId + `?t=${new Date().getTime()}` }}
                                 />
                             ) : (
                                 <Image
                                     style={styles.image}
-                                    source={{ uri: URL + '/api/Post/GetImage/' + item.postId }}
+                                    source={{ uri: URL + '/api/Post/GetImage/' + item.postId + `?t=${new Date().getTime()}` }}
                                 />
                             )}
                             {editingStatus[item.postId] && (

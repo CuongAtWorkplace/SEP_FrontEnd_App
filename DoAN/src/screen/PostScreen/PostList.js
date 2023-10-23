@@ -65,7 +65,7 @@ export default function PostList({ posts }) {
             <View style={styles.imageContainer}>
               <Image
                 style={styles.image}
-                source={{ uri: URL + '/api/Post/GetImage/' + item.postId }}
+                source={{ uri: URL + '/api/Post/GetImage/' + item.postId + `?t=${new Date().getTime()}` }}
               />
             </View>
             <View style={styles.botContent}>
