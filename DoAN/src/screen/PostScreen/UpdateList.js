@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, FlatList, TextInput, TouchableOpacity } from 'react-native';
-import { Image } from 'react-native-elements';
-import myGlobalVariable from '../../global';
+import { StyleSheet, View, Text, FlatList, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+
+import myGlobalVariable from '../../global';
+import User from '../../user';
 
 export default function UpdateList({ posts }) {
     const URL = myGlobalVariable;
@@ -27,28 +28,87 @@ export default function UpdateList({ posts }) {
         });
     };
 
-    const handleSave = (postId) => {
-        setEditingStatus({
-            ...editingStatus,
-            [postId]: false,
-        });
-        // Thực hiện các tác vụ cập nhật dữ liệu lên server ở đây
-    };
-
     const openImagePicker = async (postId) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 1,
         });
 
-        if (!result.canceled) {
+    
             if (result.assets && result.assets.length > 0) {
                 setSelectedImages({
                     ...selectedImages,
                     [postId]: result.assets[0].uri,
                 });
             }
-        }
+        
+    };
+
+    const handleSave = async (postId) => {
+        setEditingStatus({
+            ...editingStatus,
+            [postId]: false,
+        });
+
+        const editedData = editedValues[postId];
+
+
+        if (selectedImages[postId]) {
+            try {
+                const formData = new FormData();
+                const imageUri = selectedImages[postId];
+
+                const imageFile = {
+                    uri: imageUri,
+                    type: 'image/jpeg',
+                    name: 'image.jpg',
+                };
+
+                formData.append('file', imageFile);
+
+                const uploadResponse = await fetch(URL + '/api/Post/UploadImage', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+
+                if (uploadResponse.ok) {
+                    // Lấy tên tệp hình ảnh từ phản hồi (nếu cần)
+                    const imageFileName = await uploadResponse.text();
+
+                    console.log(imageFileName);
+
+                    const response = await fetch(URL + '/api/Post/UpdatePost', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            postId: postId,
+                            createBy: User,
+                            title: editedData.title,
+                            description: editedData.description,
+                            contentPost:"aaaa",
+                            likeAmout: 0,
+                            image: imageFileName, // Nếu bạn cần lưu tên tệp hình ảnh
+                        }),
+                    });
+
+                    if (response.ok) {
+                        console.log('Bài đăng đã được cập nhật thành công');
+                        Alert.alert('Notification', 'Bài đăng đã được cập nhật thành công');
+                    } else {
+                        console.error('Lỗi khi cập nhật bài đăng');
+                    }
+                } else {
+                    Alert.alert('Lỗi', 'Cập nhật ảnh thất bại');
+                }
+            } catch (error) {
+                console.error('Lỗi khi gửi yêu cầu cập nhật bài đăng:', error);
+            }
+        } 
     };
 
     const handleCancel = (postId) => {
@@ -56,8 +116,6 @@ export default function UpdateList({ posts }) {
             ...editingStatus,
             [postId]: false,
         });
-
-        // Đưa về trạng thái ban đầu bằng cách sử dụng giá trị ban đầu từ 'editedValues'
         setEditedValues({
             ...editedValues,
             [postId]: {

@@ -7,7 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRef } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
 import { Alert } from "react-native";
-
+import { RefreshControl } from "react-native";
 
 import User from "../../user";
 import myGlobalVariable from "../../global";
@@ -28,7 +28,13 @@ export default function AllPostScreen() {
     const [selectedImage, setSelectedImage] = useState(null);
     const [selected, setSelected] = React.useState([]);
     const [AllPost, setAllPost] = React.useState([]);
+    const [refreshing, setRefreshing] = useState(false); // Tạo trạng thái refreshing
 
+
+    const onRefresh = () => {
+        setRefreshing(true); // Đánh dấu trạng thái làm mới
+        getUser(); // Gọi hàm getUser để tải lại dữ liệu
+    };
 
     const openImagePicker = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -131,35 +137,37 @@ export default function AllPostScreen() {
 
 
     useEffect(() => {
-        async function getUser() {
-            try {
-                const response = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + User);
-                const response2 = await fetch(URL + '/api/Post/GetAllPost');
-
-                if (response.ok) {
-                    const user = await response.json();
-                    setUserData(user);
-                }
-                if (response2.ok) {
-                    const post = await response2.json();
-                    setAllPost(post);
-                    console.log(AllPost);
-
-                }
-            } catch (error) {
-                console.error(error);
-            } finally {
-                console.log(AllPost);
-
-                setLoading(false);
-            }
-        }
-
         getUser();
     }, []);
 
+    const getUser = async () => {
+        try {
+            const response = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + User);
+            const response2 = await fetch(URL + '/api/Post/GetAllPost');
+
+            if (response.ok) {
+                const user = await response.json();
+                setUserData(user);
+            }
+            if (response2.ok) {
+                const post = await response2.json();
+                setAllPost(post);
+                console.log(AllPost);
+
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            console.log(AllPost);
+            setRefreshing(false); // Đánh dấu trạng thái làm mới
+            setLoading(false);
+        }
+    }
+
     return (
-        <ScrollView>
+        <ScrollView
+            //refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} // Sử dụng RefreshControl ở đây
+        >
             <View style={styles.container}>
                 {isLoading ? (
                     <ActivityIndicator size="large" color="#0000ff" />
@@ -217,7 +225,7 @@ export default function AllPostScreen() {
                     </View>
                 )}
             </View>
-            <PostList posts={AllPost}/>
+            <PostList posts={AllPost} />
         </ScrollView>
     );
 }
