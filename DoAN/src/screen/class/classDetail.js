@@ -279,7 +279,7 @@ export default function classDetail(props) {
                         style={styles.image}
                         source={{ uri: URL + '/api/Course/GetImage/GetImage/' + classData[0]?.courseId }}
                     />
-                    <Text style={styles.textOnImage}>{classData[0]?.className}</Text>
+                    <Text style={styles.textOnImage}>{classData[0]?.classname}</Text>
 
                     <Text style={styles.feeText}>Fee : {classData[0]?.fee}</Text>
 

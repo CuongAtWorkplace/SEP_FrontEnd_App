@@ -34,7 +34,7 @@ const RecommendList = (props) => {
               </View>
               <View style={styles.footer}>
                 <View style={styles.titleBox}>
-                  <Text style={styles.title}>{item.className}</Text>
+                  <Text style={styles.title}>{item.classname}</Text>
                   <Text style={styles.location}>{item.courseName}</Text>
                 </View>
               </View>
