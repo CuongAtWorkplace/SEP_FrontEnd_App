@@ -24,42 +24,24 @@ export default function Chat() {
 
     const courseId = route.params.id;
     const handleHeader = () => {
-        navigation.navigate('Home');
-        console.log(courseId + ' ' + User);
-    };
+        navigation.navigate('ClassDetail', { classId: courseId });
 
-    const handleSendMessage = () => {
-        // Thêm tin nhắn vào Firebase Realtime Database
-        const messageData = {
-            userId: User,
-            text: newMessage,
-            timestamp: new Date().toLocaleString(), // Lưu ngày và giờ dưới dạng chuỗi định dạng cụ thể
-        };
-        const messagesRef = ref(db, 'chatGroups', courseId, 'messages');
-        push(messagesRef, messageData);
-
-        // Xóa nội dung tin nhắn sau khi gửi
-        setNewMessage('');
     };
 
     useEffect(() => {
-        const messagesRef = ref(db, 'chatGroups', courseId, 'messages');
-
-        const handleMessageAdded = (snapshot) => {
-            const message = snapshot.val();
-            setMessages((prevMessages) => [...prevMessages, message]);
-        };
-
-        onChildAdded(messagesRef, handleMessageAdded);
-
-        setIsLoading(false);
-
-        return () => {
-            // Remove the event listener when the component unmounts
-            // This is important to prevent memory leaks
-            off(messagesRef, 'child_added', handleMessageAdded);
-        };
+        fetch("https://cab6-123-24-217-229.ngrok-free.app/api/ChatRoom/GetAllClassMessages/6")
+            .then(response => response.json())
+            .then(data => {
+                setMessages(data);
+            })
+            .catch(error => {
+                console.error("Lỗi khi gọi API:", error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }, []);
+    
 
     return (
         <View style={styles.container}>
@@ -77,12 +59,27 @@ export default function Chat() {
                         <View style={styles.chatContainer}>
                             <ScrollView>
                                 {messages.map((message, index) => (
-                                    <View key={index} style={{ alignSelf: message.userId === User ? 'flex-end' : 'flex-start' }}>
-                                        <Text style={{ borderRadius: 20, width: 150, backgroundColor: message.userId === User ? 'lightblue' : 'lightgray', padding: 8, margin: 4 }}>
-                                            {message.text}
+                                    <View key={index} style={{ alignSelf: message.createBy === User ? 'flex-end' : 'flex-start' }}>
+                                        <Text style={{ fontSize: 12, color: 'black' }}>
+                                            {message.fullName}
                                         </Text>
+
+                                        <View style={{flexDirection:"row"}}>
+                                            <Text style={{
+                                                borderRadius: 20,
+                                                width: 150,
+                                                backgroundColor: message.createBy === User ? 'lightblue' : message.roleId === 1 ? '#C79191' : 'lightgray',
+                                                padding: 8,
+                                                margin: 4
+                                            }}>
+                                                {message.content}
+                                            </Text>
+
+                                            <Ionicons style={{justifyContent:"center"  }} name="trash-bin-outline" size={20} color="black" />
+                                        </View>
+
                                         <Text style={{ fontSize: 12, color: 'gray' }}>
-                                            {message.timestamp}
+                                            {message.createDate}
                                         </Text>
                                     </View>
                                 ))}
@@ -90,9 +87,7 @@ export default function Chat() {
                         </View>
                         <View style={styles.inputContainer}>
                             <TouchableOpacity style={{ marginLeft: 20 }}>
-                                <View style={{ backgroundColor: colors.black, width: 30, height: 30 }}>
                                     <Ionicons name="attach" size={30} color="white" />
-                                </View>
                             </TouchableOpacity>
                             <TextInput
                                 style={styles.input}
@@ -101,10 +96,8 @@ export default function Chat() {
                                 value={newMessage}
                                 onChangeText={text => setNewMessage(text)}
                             />
-                            <TouchableOpacity style={{ marginLeft: 20 }} onPress={handleSendMessage}>
-                                <View style={{ backgroundColor: colors.black, width: 30, height: 30 }}>
+                            <TouchableOpacity style={{ marginLeft: 20 }}>
                                     <FontAwesome name="send" size={24} color="white" />
-                                </View>
                             </TouchableOpacity>
                         </View>
                     </ImageBackground>
