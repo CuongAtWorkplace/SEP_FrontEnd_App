@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, View, Text, TextInput, Button, FlatList, TouchableOpacity } from "react-native";
 import { colors } from "../../../constants/theme";
 import { useNavigation } from "@react-navigation/native";
-import { FontAwesome } from '@expo/vector-icons';
 import { Image } from "react-native";
 import { ImageBackground } from "react-native";
 import { ref, set, push, onChildAdded, off } from "firebase/database"
@@ -14,6 +13,10 @@ import { ActivityIndicator } from "react-native-paper";
 import HeaderBack from "../../../component/HeaderBack";
 import User from '../../user';
 import { Ionicons } from '@expo/vector-icons';
+import myGlobalVariable from "../../global";
+import format from "date-fns/format";
+import { FontAwesome } from "@expo/vector-icons";
+
 
 export default function Chat() {
     const navigation = useNavigation();
@@ -21,6 +24,7 @@ export default function Chat() {
     const [newMessage, setNewMessage] = React.useState("");
     const route = useRoute();
     const [isLoading, setIsLoading] = React.useState(true);
+    const URL = myGlobalVariable;
 
     const courseId = route.params.id;
     const handleHeader = () => {
@@ -29,9 +33,10 @@ export default function Chat() {
     };
 
     useEffect(() => {
-        fetch("https://cab6-123-24-217-229.ngrok-free.app/api/ChatRoom/GetAllClassMessages/6")
+        fetch(URL + "/api/ChatRoom/GetAllClassMessages/" + courseId)
             .then(response => response.json())
             .then(data => {
+                console.log(courseId);
                 setMessages(data);
             })
             .catch(error => {
@@ -41,7 +46,7 @@ export default function Chat() {
                 setIsLoading(false);
             });
     }, []);
-    
+
 
     return (
         <View style={styles.container}>
@@ -64,7 +69,10 @@ export default function Chat() {
                                             {message.fullName}
                                         </Text>
 
-                                        <View style={{flexDirection:"row"}}>
+                                        <View style={{ flexDirection: "row" }}>
+                                            {message.createBy === User && (
+                                                <Ionicons style={{ margin:8 }} name="trash-bin-outline" size={24} color="black" />
+                                            )}
                                             <Text style={{
                                                 borderRadius: 20,
                                                 width: 150,
@@ -75,19 +83,18 @@ export default function Chat() {
                                                 {message.content}
                                             </Text>
 
-                                            <Ionicons style={{justifyContent:"center"  }} name="trash-bin-outline" size={20} color="black" />
                                         </View>
 
                                         <Text style={{ fontSize: 12, color: 'gray' }}>
-                                            {message.createDate}
+                                            {format(new Date(message.createDate), 'HH:mm:ss dd/MM/yyyy')}
                                         </Text>
                                     </View>
                                 ))}
                             </ScrollView>
                         </View>
                         <View style={styles.inputContainer}>
-                            <TouchableOpacity style={{ marginLeft: 20 }}>
-                                    <Ionicons name="attach" size={30} color="white" />
+                            <TouchableOpacity >
+                                <Ionicons name="attach" size={35} color="white" />
                             </TouchableOpacity>
                             <TextInput
                                 style={styles.input}
@@ -96,8 +103,8 @@ export default function Chat() {
                                 value={newMessage}
                                 onChangeText={text => setNewMessage(text)}
                             />
-                            <TouchableOpacity style={{ marginLeft: 20 }}>
-                                    <FontAwesome name="send" size={24} color="white" />
+                            <TouchableOpacity style={{margin:10}} >
+                                <FontAwesome name="send" size={30} color="white" />
                             </TouchableOpacity>
                         </View>
                     </ImageBackground>
@@ -129,7 +136,6 @@ const styles = StyleSheet.create({
         flex: 1,
         borderWidth: 1,
         height: 40,
-        marginLeft: 15,
         borderColor: colors.white,
         borderRadius: 20,
         paddingHorizontal: 8,
