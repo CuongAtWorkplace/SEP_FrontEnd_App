@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, TextInput, Button, FlatList, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TextInput, Button, FlatList, TouchableOpacity, Alert } from "react-native";
 import { colors } from "../../../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "react-native";
@@ -16,12 +16,14 @@ import { Ionicons } from '@expo/vector-icons';
 import myGlobalVariable from "../../global";
 import format from "date-fns/format";
 import { FontAwesome } from "@expo/vector-icons";
+import { useState } from "react";
 
 
 export default function Chat() {
     const navigation = useNavigation();
     const [messages, setMessages] = React.useState([]);
     const [newMessage, setNewMessage] = React.useState("");
+    const [isSendButtonDisabled, setIsSendButtonDisabled] = useState(true); // Thêm trạng thái disable cho nút gửi
     const route = useRoute();
     const [isLoading, setIsLoading] = React.useState(true);
     const URL = myGlobalVariable;
@@ -29,6 +31,16 @@ export default function Chat() {
     const courseId = route.params.id;
     const handleHeader = () => {
         navigation.navigate('ClassDetail', { classId: courseId });
+
+    };
+
+    const handleImageLoad = () => {
+        setIsLoading(false);
+    };
+
+    const handleSend = () => {
+        Alert.alert(newMessage);
+        setNewMessage("");
 
     };
 
@@ -43,6 +55,8 @@ export default function Chat() {
                 console.error("Lỗi khi gọi API:", error);
             })
             .finally(() => {
+                setNewMessage("");
+                setIsSendButtonDisabled(true);
                 setIsLoading(false);
             });
     }, []);
@@ -71,7 +85,7 @@ export default function Chat() {
 
                                         <View style={{ flexDirection: "row" }}>
                                             {message.createBy === User && (
-                                                <Ionicons style={{ margin:8 }} name="trash-bin-outline" size={24} color="black" />
+                                                <Ionicons style={{ margin: 8 }} name="trash-bin-outline" size={24} color="black" />
                                             )}
                                             <Text style={{
                                                 borderRadius: 20,
@@ -84,6 +98,26 @@ export default function Chat() {
                                             </Text>
 
                                         </View>
+
+
+
+                                        {message.photo && (
+                                            <View>
+                                                {isLoading && (
+                                                    <ActivityIndicator size="large" color="gray" />
+                                                )}
+                                                <Image
+                                                    source={{ uri: URL + '/api/ChatRoom/GetImage/' + message.messageId }}
+                                                    style={{
+                                                        width: 150,
+                                                        height: 150,
+                                                        borderRadius: 20,
+                                                        margin: 4,
+                                                    }}
+                                                    onLoad={handleImageLoad}
+                                                />
+                                            </View>
+                                        )}
 
                                         <Text style={{ fontSize: 12, color: 'gray' }}>
                                             {format(new Date(message.createDate), 'HH:mm:ss dd/MM/yyyy')}
@@ -101,11 +135,26 @@ export default function Chat() {
                                 placeholder="Type a message..."
                                 placeholderTextColor={colors.white}
                                 value={newMessage}
-                                onChangeText={text => setNewMessage(text)}
+                                onChangeText={text => {
+                                    setNewMessage(text);
+                                    setIsSendButtonDisabled(text.length === 0); // Cập nhật trạng thái disable
+                                }}
                             />
-                            <TouchableOpacity style={{margin:10}} >
-                                <FontAwesome name="send" size={30} color="white" />
+                            <TouchableOpacity
+                                style={{
+                                    margin: 10,
+
+                                }}
+                                disabled={isSendButtonDisabled}
+                                onPress={handleSend} >
+                                <FontAwesome
+                                    name="send"
+                                    size={25}
+                                    color={newMessage ? "white" : "gray"} // Màu biểu tượng tùy theo newMessage
+                                />
                             </TouchableOpacity>
+
+
                         </View>
                     </ImageBackground>
                 </React.Fragment>
