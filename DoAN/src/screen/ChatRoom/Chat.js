@@ -18,6 +18,9 @@ import format from "date-fns/format";
 import { FontAwesome } from "@expo/vector-icons";
 import { useState } from "react";
 import { useRef } from "react";
+import { HubConnectionBuilder } from "@aspnet/signalr";
+
+
 
 export default function Chat() {
     const navigation = useNavigation();
@@ -27,6 +30,8 @@ export default function Chat() {
     const route = useRoute();
     const [isLoading, setIsLoading] = React.useState(true);
     const [isImageLoading, setIsImageLoading] = React.useState(true);
+    const [connection, setConnection] = useState(null);
+
     const scrollViewRef = useRef();
     const URL = myGlobalVariable;
 
@@ -45,6 +50,30 @@ export default function Chat() {
         setNewMessage("");
 
     };
+
+    
+  useEffect(() => {
+    const newConnection = new HubConnectionBuilder()
+      .withUrl(URL+'/chatHub') // Thay YOUR_SIGNALR_HUB_URL bằng URL của SignalR Hub của bạn
+      .build();
+
+    setConnection(newConnection);
+
+    newConnection
+      .start()
+      .then(() => {
+        console.log('Connected to SignalR Hub');
+        newConnection.on('ReceiveMessage', (message) => {         
+            Alert.alert("new message");
+            console.log(message.content);
+        });
+      })
+      .catch((error) => console.log('Error connecting to SignalR Hub: ' + error));
+
+    return () => {
+      newConnection.stop();
+    };
+  }, [messages]);
 
     useEffect(() => {
         fetch(URL + "/api/ChatRoom/GetAllClassMessages/" + courseId)
@@ -128,7 +157,6 @@ export default function Chat() {
                                         </View>
 
 
-
                                         {message.photo && (
                                             <View>
                                                 <Image
@@ -146,7 +174,7 @@ export default function Chat() {
                                         )}
 
                                         <Text style={{ fontSize: 12, color: 'gray' }}>
-                                            {format(new Date(message.createDate), 'HH:mm:ss dd/MM/yyyy')}
+                                           {message.createDate}
                                         </Text>
                                     </View>
                                 ))}
