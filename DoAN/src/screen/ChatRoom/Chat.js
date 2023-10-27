@@ -17,7 +17,7 @@ import myGlobalVariable from "../../global";
 import format from "date-fns/format";
 import { FontAwesome } from "@expo/vector-icons";
 import { useState } from "react";
-
+import { useRef } from "react";
 
 export default function Chat() {
     const navigation = useNavigation();
@@ -26,6 +26,8 @@ export default function Chat() {
     const [isSendButtonDisabled, setIsSendButtonDisabled] = useState(true); // Thêm trạng thái disable cho nút gửi
     const route = useRoute();
     const [isLoading, setIsLoading] = React.useState(true);
+    const [isImageLoading, setIsImageLoading] = React.useState(true);
+    const scrollViewRef = useRef();
     const URL = myGlobalVariable;
 
     const courseId = route.params.id;
@@ -35,7 +37,7 @@ export default function Chat() {
     };
 
     const handleImageLoad = () => {
-        setIsLoading(false);
+        setIsImageLoading(false);
     };
 
     const handleSend = () => {
@@ -57,14 +59,34 @@ export default function Chat() {
             .finally(() => {
                 setNewMessage("");
                 setIsSendButtonDisabled(true);
-                setIsLoading(false);
+                setIsLoading(false); // Tắt tình trạng isLoading khi dữ liệu đã được nạp
+
+                if (scrollViewRef.current) {
+                    scrollViewRef.current.scrollToEnd({ animated: false });
+                }
             });
+    }, []);
+
+    useEffect(() => {
+        // Fetch messages and set them in the state as you currently do
+
+        // After setting messages, scroll to the end
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollToEnd({ animated: true });
+        }
+    }, [messages]); // Scroll when messages change
+
+    // Scroll to the end immediately
+    useEffect(() => {
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollToEnd({ animated: false });
+        }
     }, []);
 
 
     return (
         <View style={styles.container}>
-            {isLoading ? (
+            {isLoading && isImageLoading ? (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color={colors.primary} />
                 </View>
@@ -76,7 +98,13 @@ export default function Chat() {
                         style={styles.backgroundImage}
                     >
                         <View style={styles.chatContainer}>
-                            <ScrollView>
+                            <ScrollView
+                                ref={scrollViewRef}
+                                onContentSizeChange={(contentWidth, contentHeight) => {
+                                    scrollViewRef.current.scrollToEnd({ animated: false });
+                                }}
+                            >
+
                                 {messages.map((message, index) => (
                                     <View key={index} style={{ alignSelf: message.createBy === User ? 'flex-end' : 'flex-start' }}>
                                         <Text style={{ fontSize: 12, color: 'black' }}>
@@ -103,9 +131,6 @@ export default function Chat() {
 
                                         {message.photo && (
                                             <View>
-                                                {isLoading && (
-                                                    <ActivityIndicator size="large" color="gray" />
-                                                )}
                                                 <Image
                                                     source={{ uri: URL + '/api/ChatRoom/GetImage/' + message.messageId }}
                                                     style={{
@@ -116,6 +141,7 @@ export default function Chat() {
                                                     }}
                                                     onLoad={handleImageLoad}
                                                 />
+
                                             </View>
                                         )}
 
