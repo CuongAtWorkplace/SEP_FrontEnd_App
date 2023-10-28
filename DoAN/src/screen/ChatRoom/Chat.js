@@ -52,28 +52,27 @@ export default function Chat() {
     };
 
     
-  useEffect(() => {
-    const newConnection = new HubConnectionBuilder()
-      .withUrl(URL+'/chatHub') // Thay YOUR_SIGNALR_HUB_URL bằng URL của SignalR Hub của bạn
-      .build();
-
-    setConnection(newConnection);
-
-    newConnection
-      .start()
-      .then(() => {
-        console.log('Connected to SignalR Hub');
-        newConnection.on('ReceiveMessage', (message) => {         
-            Alert.alert("new message");
-            console.log(message.content);
-        });
-      })
-      .catch((error) => console.log('Error connecting to SignalR Hub: ' + error));
-
-    return () => {
-      newConnection.stop();
-    };
-  }, [messages]);
+    useEffect(() => {
+        const newConnection = new HubConnectionBuilder()
+          .withUrl(URL+'/chatHub')
+          .build();
+    
+        setConnection(newConnection);
+    
+        newConnection
+          .start()
+          .then(() => {
+            console.log('Connected to SignalR Hub');
+            newConnection.on('ReceiveMessage', (message) => {         
+                Alert.alert("new message");
+                setMessages(prevMessages => [...prevMessages, message]);
+            });
+          })
+          .catch((error) => console.log('Error connecting to SignalR Hub: ' + error));
+    
+        // Không cần trả về newConnection.stop();
+    }, []); // Sử dụng dependency rỗng để chỉ chạy một lần khi component mount
+    
 
     useEffect(() => {
         fetch(URL + "/api/ChatRoom/GetAllClassMessages/" + courseId)
