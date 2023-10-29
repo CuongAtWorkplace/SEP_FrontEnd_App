@@ -46,33 +46,80 @@ export default function Chat() {
     };
 
     const handleSend = () => {
-        Alert.alert(newMessage);
-        setNewMessage("");
+        // Assuming newMessage holds the message you want to send
+        const messageToSend = newMessage;
 
+        // Clear the input field
+        setNewMessage("");
+        setIsSendButtonDisabled(true);
+
+        // Make a POST request to the API endpoint
+        fetch(URL + '/api/ChatRoom/AddMessage/' + courseId + '/' + User, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                content: messageToSend,
+                photo: ""
+            }),
+        })
+            .then(response => {
+                if (response.ok) {
+                    Alert.alert('Message sent successfully');
+                    // Optionally, you can handle the successful response here
+                } else {
+                    // Handle the error or failed response
+                    Alert.alert('Failed to send message');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending message:', error);
+                Alert.alert('Error sending message');
+            });
     };
 
-    
+
+
+    // Establish the connection
     useEffect(() => {
         const newConnection = new HubConnectionBuilder()
-          .withUrl(URL+'/chatHub')
-          .build();
-    
+            .withUrl(URL + '/chatHub')
+            .build();
+
         setConnection(newConnection);
-    
+
         newConnection
-          .start()
-          .then(() => {
-            console.log('Connected to SignalR Hub');
-            newConnection.on('ReceiveMessage', (message) => {         
-                Alert.alert("new message");
-                setMessages(prevMessages => [...prevMessages, message]);
-            });
-          })
-          .catch((error) => console.log('Error connecting to SignalR Hub: ' + error));
-    
-        // Không cần trả về newConnection.stop();
-    }, []); // Sử dụng dependency rỗng để chỉ chạy một lần khi component mount
-    
+            .start()
+            .then(() => {
+                console.log('Connected to SignalR Hub');
+                newConnection.on('ReceiveMessage', (message) => {
+                    setMessages(prevMessages => [...prevMessages, message]);
+                });
+            })
+            .catch((error) => console.log('Error connecting to SignalR Hub: ' + error));
+
+        return () => {
+            // Cleanup function to close the event listener
+            if (newConnection) {
+                newConnection.off('ReceiveMessage');
+            }
+        };
+    }, []); // Run only once when the component mounts
+
+    // Handle disconnection
+    useEffect(() => {
+        return () => {
+            // Close the connection when the component unmounts
+            if (connection) {
+                connection.stop();
+            }
+        };
+    }, [connection]); // Run whenever the connection state changes
+
+    // Further logic within your component
+    // ...
+
 
     useEffect(() => {
         fetch(URL + "/api/ChatRoom/GetAllClassMessages/" + courseId)
@@ -111,6 +158,44 @@ export default function Chat() {
         }
     }, []);
 
+    const handleDelete = (messageId) => {
+        Alert.alert(
+            'Xác nhận xóa tin nhắn',
+            'Bạn có chắc muốn xóa tin nhắn này?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        fetch(URL+`/api/ChatRoom/DeleteMessage/${messageId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    Alert.alert('Tin nhắn đã được xóa thành công');
+                                    setMessages(prevMessages => prevMessages.filter(message => message.messageId !== messageId));
+                                } else {
+                                    Alert.alert('Xóa tin nhắn thất bại');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Lỗi khi xóa tin nhắn:', error);
+                                Alert.alert('Lỗi khi xóa tin nhắn');
+                            });
+                    },
+                },
+            ],
+            { cancelable: false }
+        );
+    };
+
+
 
     return (
         <View style={styles.container}>
@@ -141,7 +226,9 @@ export default function Chat() {
 
                                         <View style={{ flexDirection: "row" }}>
                                             {message.createBy === User && (
-                                                <Ionicons style={{ margin: 8 }} name="trash-bin-outline" size={24} color="black" />
+                                                 <TouchableOpacity style={{ margin: 8 }} onPress={() => handleDelete(message.messageId)}>
+                                                 <Ionicons name="trash-bin-outline" size={24} color="black" />
+                                             </TouchableOpacity>
                                             )}
                                             <Text style={{
                                                 borderRadius: 20,
@@ -173,7 +260,7 @@ export default function Chat() {
                                         )}
 
                                         <Text style={{ fontSize: 12, color: 'gray' }}>
-                                           {message.createDate}
+                                            {message.createDate}
                                         </Text>
                                     </View>
                                 ))}
@@ -183,6 +270,7 @@ export default function Chat() {
                             <TouchableOpacity >
                                 <Ionicons name="attach" size={35} color="white" />
                             </TouchableOpacity>
+
                             <TextInput
                                 style={styles.input}
                                 placeholder="Type a message..."
@@ -190,21 +278,17 @@ export default function Chat() {
                                 value={newMessage}
                                 onChangeText={text => {
                                     setNewMessage(text);
-                                    setIsSendButtonDisabled(text.length === 0); // Cập nhật trạng thái disable
+                                    setIsSendButtonDisabled(text.trim().length === 0); // Update the disabled state based on the trimmed text
                                 }}
                             />
                             <TouchableOpacity
                                 style={{
                                     margin: 10,
-
                                 }}
                                 disabled={isSendButtonDisabled}
-                                onPress={handleSend} >
-                                <FontAwesome
-                                    name="send"
-                                    size={25}
-                                    color={newMessage ? "white" : "gray"} // Màu biểu tượng tùy theo newMessage
-                                />
+                                onPress={isSendButtonDisabled ? null : handleSend} >
+                                {/* Disable onPress if isSendButtonDisabled is true */}
+                                <Ionicons name="send-outline" size={25} color={!isSendButtonDisabled ? "white" : "gray"} />
                             </TouchableOpacity>
 
 
