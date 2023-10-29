@@ -163,8 +163,8 @@ export default function classDetail(props) {
         navigation.navigate('Home');
     };
 
-    const ChatHandle = (id) => {
-        navigation.navigate('ChatClass', { id: id });
+    const ChatHandle = (id,name) => {
+        navigation.navigate('ChatClass', { id: id  , name:name});
     };
 
     const route = useRoute();
@@ -410,7 +410,7 @@ export default function classDetail(props) {
                     {showButtons && (
                         <>
                             <View style={styles.buttonContainer}>
-                                <TouchableOpacity onPress={() => ChatHandle(classData[0]?.courseId)}>
+                                <TouchableOpacity onPress={() => ChatHandle(classData[0]?.courseId , classData[0]?.classname)}>
                                     <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.linearGradient}>
                                         <Feather name="message-circle" size={24} color="white" />
                                         <Text style={styles.buttonText}>Group chat</Text>

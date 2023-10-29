@@ -19,7 +19,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useState } from "react";
 import { useRef } from "react";
 import { HubConnectionBuilder } from "@aspnet/signalr";
-
+import * as ImagePicker from 'expo-image-picker';
 
 
 export default function Chat() {
@@ -36,9 +36,10 @@ export default function Chat() {
     const URL = myGlobalVariable;
 
     const courseId = route.params.id;
+
+    const className = route.params.name;
     const handleHeader = () => {
         navigation.navigate('ClassDetail', { classId: courseId });
-
     };
 
     const handleImageLoad = () => {
@@ -170,7 +171,7 @@ export default function Chat() {
                 {
                     text: 'OK',
                     onPress: () => {
-                        fetch(URL+`/api/ChatRoom/DeleteMessage/${messageId}`, {
+                        fetch(URL + `/api/ChatRoom/DeleteMessage/${messageId}`, {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -196,6 +197,31 @@ export default function Chat() {
     };
 
 
+    const openImagePicker = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            if (result.assets && result.assets.length > 0) {
+                setSelectedImage(result.assets[0].uri);
+
+                // Tạo FormData để gửi dữ liệu ảnh
+                const formData = new FormData();
+                formData.append('file', {
+                    uri: result.assets[0].uri,
+                    type: 'image/jpeg', // Loại ảnh, bạn có thể điều chỉnh tùy theo định dạng ảnh
+                    name: 'image.jpg', // Tên tệp trên máy chủ
+                });
+                if (result.assets && result.assets.length > 0) {
+                }
+
+            }
+        }
+    }
+
+
 
     return (
         <View style={styles.container}>
@@ -205,7 +231,7 @@ export default function Chat() {
                 </View>
             ) : (
                 <React.Fragment>
-                    <HeaderBack title="Group chat" action={handleHeader} />
+                    <HeaderBack title={`Group Chat : ${className}`} action={handleHeader} />
                     <ImageBackground
                         source={{ uri: 'https://wallpapers.com/images/hd/whatsapp-chat-doodle-patterns-jyd5uvep2fdwjl97.jpg' }}
                         style={styles.backgroundImage}
@@ -226,9 +252,9 @@ export default function Chat() {
 
                                         <View style={{ flexDirection: "row" }}>
                                             {message.createBy === User && (
-                                                 <TouchableOpacity style={{ margin: 8 }} onPress={() => handleDelete(message.messageId)}>
-                                                 <Ionicons name="trash-bin-outline" size={24} color="black" />
-                                             </TouchableOpacity>
+                                                <TouchableOpacity style={{ margin: 8 }} onPress={() => handleDelete(message.messageId)}>
+                                                    <Ionicons name="trash-bin-outline" size={24} color="black" />
+                                                </TouchableOpacity>
                                             )}
                                             <Text style={{
                                                 borderRadius: 20,
@@ -267,7 +293,7 @@ export default function Chat() {
                             </ScrollView>
                         </View>
                         <View style={styles.inputContainer}>
-                            <TouchableOpacity >
+                            <TouchableOpacity onPress={openImagePicker} >
                                 <Ionicons name="attach" size={35} color="white" />
                             </TouchableOpacity>
 
