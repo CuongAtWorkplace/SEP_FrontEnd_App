@@ -31,6 +31,11 @@ export default function Chat() {
     const [isLoading, setIsLoading] = React.useState(true);
     const [isImageLoading, setIsImageLoading] = React.useState(true);
     const [connection, setConnection] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [isImageLoading2, setIsImageLoading2] = useState(false);
+    const [CheckImageLoading, SetCheckIsImageLoading] = useState(false);
+
+
 
     const scrollViewRef = useRef();
     const URL = myGlobalVariable;
@@ -45,6 +50,12 @@ export default function Chat() {
     const handleImageLoad = () => {
         setIsImageLoading(false);
     };
+
+    const handleCancelImage = () => {
+        setSelectedImage("");
+        SetCheckIsImageLoading(false);
+    };
+
 
     const handleSend = () => {
         // Assuming newMessage holds the message you want to send
@@ -198,15 +209,21 @@ export default function Chat() {
 
 
     const openImagePicker = async () => {
+
+
+
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 1,
         });
 
+        SetCheckIsImageLoading(true);
+        setIsImageLoading2(true);
+
         if (!result.canceled) {
             if (result.assets && result.assets.length > 0) {
+               
                 setSelectedImage(result.assets[0].uri);
-
                 // Tạo FormData để gửi dữ liệu ảnh
                 const formData = new FormData();
                 formData.append('file', {
@@ -216,9 +233,9 @@ export default function Chat() {
                 });
                 if (result.assets && result.assets.length > 0) {
                 }
-
             }
         }
+      
     }
 
 
@@ -292,7 +309,27 @@ export default function Chat() {
                                 ))}
                             </ScrollView>
                         </View>
+                        {CheckImageLoading && (
+                            <View style={{ position: 'absolute', bottom: 60, left: 10 }}>
+                                {isImageLoading2 && (
+                                    <ActivityIndicator size="small" color="white" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} />
+                                )}
+
+                                <View style={{ position: 'absolute', top: -10, right: -10, zIndex: 1 }}>
+                                    <TouchableOpacity onPress={handleCancelImage}>
+                                        <Ionicons name="close-circle" size={20} color="white" />
+                                    </TouchableOpacity>
+                                </View>
+                                <Image
+                                    source={{ uri: selectedImage }}
+                                    style={{ width: 50, height: 50, borderRadius: 5, position: 'relative' }}
+                                />
+                            </View>
+                        )}
+
                         <View style={styles.inputContainer}>
+
+
                             <TouchableOpacity onPress={openImagePicker} >
                                 <Ionicons name="attach" size={35} color="white" />
                             </TouchableOpacity>
@@ -316,8 +353,6 @@ export default function Chat() {
                                 {/* Disable onPress if isSendButtonDisabled is true */}
                                 <Ionicons name="send-outline" size={25} color={!isSendButtonDisabled ? "white" : "gray"} />
                             </TouchableOpacity>
-
-
                         </View>
                     </ImageBackground>
                 </React.Fragment>
