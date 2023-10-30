@@ -58,14 +58,54 @@ export default function Chat() {
 
 
     const handleSend = () => {
-        // Assuming newMessage holds the message you want to send
+        // If there's a selected image, upload it first
+        if (selectedImage) {
+            uploadImage();
+        } else {
+            sendMessage("");
+        }
+    };
+
+    const uploadImage = async () => {
+        try {
+            const formData = new FormData();
+
+            const imageFile = {
+                uri: selectedImage,
+                type: 'image/jpeg',
+                name: 'image.jpg',
+            };
+
+            formData.append('file', imageFile);
+
+            const uploadResponse = await fetch(URL + '/api/Post/UploadImage', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (uploadResponse.ok) {
+                const responseJson = await uploadResponse.text();
+                sendMessage(responseJson);
+            } else {
+                throw new Error('Failed to upload image');
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            Alert.alert('Error uploading image');
+        }
+    };
+
+    const sendMessage = (imageURL) => {
         const messageToSend = newMessage;
 
-        // Clear the input field
         setNewMessage("");
+        setSelectedImage("");
+        SetCheckIsImageLoading(false);
         setIsSendButtonDisabled(true);
 
-        // Make a POST request to the API endpoint
         fetch(URL + '/api/ChatRoom/AddMessage/' + courseId + '/' + User, {
             method: 'POST',
             headers: {
@@ -73,7 +113,7 @@ export default function Chat() {
             },
             body: JSON.stringify({
                 content: messageToSend,
-                photo: ""
+                photo: imageURL // If imageURL is empty, it will be set as an empty string for no image
             }),
         })
             .then(response => {
@@ -81,7 +121,6 @@ export default function Chat() {
                     Alert.alert('Message sent successfully');
                     // Optionally, you can handle the successful response here
                 } else {
-                    // Handle the error or failed response
                     Alert.alert('Failed to send message');
                 }
             })
@@ -222,7 +261,7 @@ export default function Chat() {
 
         if (!result.canceled) {
             if (result.assets && result.assets.length > 0) {
-               
+
                 setSelectedImage(result.assets[0].uri);
                 // Tạo FormData để gửi dữ liệu ảnh
                 const formData = new FormData();
@@ -235,7 +274,7 @@ export default function Chat() {
                 }
             }
         }
-      
+
     }
 
 
