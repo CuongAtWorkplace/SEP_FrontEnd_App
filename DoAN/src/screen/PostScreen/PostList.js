@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, SafeAreaView } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Image } from 'react-native-elements';
 import moment from 'moment';
@@ -7,8 +7,9 @@ import { Button } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-
-
+import CommentList from './CommentList';
+import { Modal } from 'react-native';
+import { StatusBar } from 'react-native';
 
 
 import myGlobalVariable from '../../global';
@@ -21,6 +22,20 @@ export default function PostList({ posts }) {
   };
 
   const [createdByNames, setCreatedByNames] = useState({});
+
+
+  const [isCommentListVisible, setIsCommentListVisible] = useState(false);
+
+  const handleCommentPress = () => {
+
+    console.log("an roi");
+    StatusBar.setHidden(true);
+    setIsCommentListVisible(true);
+  };
+
+  const handleCancelCommentPress = () => {
+    setIsCommentListVisible(false);
+  };
 
   const GetName = async (id) => {
     try {
@@ -51,7 +66,7 @@ export default function PostList({ posts }) {
   }, [posts]);
 
   return (
-    <View style={{marginBottom:70}}>
+    <SafeAreaView style={{ marginBottom: 70 }}>
       <FlatList
         data={posts}
         keyExtractor={(post) => post.postId.toString()}
@@ -59,7 +74,7 @@ export default function PostList({ posts }) {
           <View style={styles.container}>
             <View style={styles.buttonContainer}>
               <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{item.title}</Text>
-              <Text style={{fontWeight:'bold'}}># {item.contentPost}</Text>
+              <Text style={{ fontWeight: 'bold' }}># {item.contentPost}</Text>
             </View>
             <Text style={{ fontSize: 15, marginTop: 10, fontWeight: 'bold' }}>{item.description}</Text>
             <View style={styles.imageContainer}>
@@ -86,16 +101,27 @@ export default function PostList({ posts }) {
 
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.buttonRow}>
+              <TouchableOpacity style={styles.buttonRow} onPress={handleCommentPress}>
                 <FontAwesome name="comment-o" size={24} color="blue" />
                 <Text style={{ marginLeft: 10, color: "blue" }}>comment</Text>
               </TouchableOpacity>
-
             </View>
           </View>
         )}
+
       />
-    </View>
+
+      <Modal
+        transparent={true}
+        animationType='fade'
+        visible={isCommentListVisible}
+        onRequestClose={() => setIsCommentListVisible(false)}
+      >
+          <StatusBar hidden={true} />
+          <CommentList closeModal={handleCancelCommentPress} />
+      </Modal>
+
+    </SafeAreaView>
   );
 }
 
