@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import AllPostScreen from '../PostScreen/AllPostScreen';
 import UpdateScreen from '../PostScreen/UpdateScreen';
+import { StatusBar } from 'react-native';
 
+const statusBarHeight = StatusBar.currentHeight || 0; // Lấy chiều cao của StatusBar
 
 
 export default function Community({ navigation }) {
+
     const [isButton1Active, setIsButton1Active] = useState(true);
     const [isButton2Active, setIsButton2Active] = useState(false);
     const [isAllPostScreenVisible, setIsAllPostScreenVisible] = useState(true);
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop:10,
+        marginTop: statusBarHeight + 2,
     },
     button: {
         backgroundColor: '#E5E5E5',

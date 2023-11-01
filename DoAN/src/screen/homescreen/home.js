@@ -63,7 +63,7 @@ export default function Home() {
   };
 
   const fetchData = async () => {
-    StatusBar.setHidden(true);
+   // StatusBar.setHidden(true);
 
     try {
       const response1 = await fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/4');

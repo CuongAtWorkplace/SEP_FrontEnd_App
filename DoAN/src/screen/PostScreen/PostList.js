@@ -29,7 +29,6 @@ export default function PostList({ posts }) {
   const handleCommentPress = () => {
 
     console.log("an roi");
-    StatusBar.setHidden(true);
     setIsCommentListVisible(true);
   };
 
@@ -117,7 +116,6 @@ export default function PostList({ posts }) {
         visible={isCommentListVisible}
         onRequestClose={() => setIsCommentListVisible(false)}
       >
-          <StatusBar hidden={true} />
           <CommentList closeModal={handleCancelCommentPress} />
       </Modal>
 
@@ -176,4 +174,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  
 });

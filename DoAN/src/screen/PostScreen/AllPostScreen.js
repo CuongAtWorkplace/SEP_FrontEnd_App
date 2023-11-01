@@ -8,6 +8,8 @@ import { useRef } from "react";
 import { SelectList } from "react-native-dropdown-select-list";
 import { Alert } from "react-native";
 import { RefreshControl } from "react-native";
+import CommentList from "./CommentList";
+
 
 import User from "../../user";
 import myGlobalVariable from "../../global";
@@ -29,6 +31,9 @@ export default function AllPostScreen() {
     const [selected, setSelected] = React.useState([]);
     const [AllPost, setAllPost] = React.useState([]);
     const [refreshing, setRefreshing] = useState(false); // Tạo trạng thái refreshing
+
+
+    
 
 
     const onRefresh = () => {

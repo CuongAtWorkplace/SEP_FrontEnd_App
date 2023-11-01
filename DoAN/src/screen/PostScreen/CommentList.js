@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { StatusBar } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+
 
 const CommentList = ({ closeModal }) => {
     return (
         <View style={styles.container}>
-            <StatusBar hidden={true} />
             <View style={styles.modalContainer}>
-                <StatusBar hidden={true} />
                 <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-                    <Text>Close</Text>
+                    <AntDesign name="closecircleo" size={24} color="white" />
                 </TouchableOpacity>
                 <View style={styles.commentModal}>
                     <Text>Content of the modal</Text>

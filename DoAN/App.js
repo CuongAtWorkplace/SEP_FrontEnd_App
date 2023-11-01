@@ -17,7 +17,7 @@ import notification from './src/screen/homescreen/notification';
 import classSearch from './src/screen/homescreen/classSearch';
 import Chat from './src/screen/ChatRoom/Chat';
 import CommentList from './src/screen/PostScreen/CommentList';
-
+import { StatusBar } from 'react-native';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -69,7 +69,10 @@ const TabNavigator = () => (
 
 LogBox.ignoreAllLogs();//Ignore all log notifications
 
+
 const App = () => {
+
+  StatusBar.setHidden(false);
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
