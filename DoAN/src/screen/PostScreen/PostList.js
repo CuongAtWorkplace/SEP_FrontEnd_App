@@ -22,13 +22,13 @@ export default function PostList({ posts }) {
   };
 
   const [createdByNames, setCreatedByNames] = useState({});
-
-
+  const [selectedPostId, setSelectedPostId] = useState(null);
   const [isCommentListVisible, setIsCommentListVisible] = useState(false);
 
-  const handleCommentPress = () => {
+  const handleCommentPress = (postId) => {
 
     console.log("an roi");
+    setSelectedPostId(postId); 
     setIsCommentListVisible(true);
   };
 
@@ -100,7 +100,7 @@ export default function PostList({ posts }) {
 
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.buttonRow} onPress={handleCommentPress}>
+              <TouchableOpacity style={styles.buttonRow} onPress={() => handleCommentPress(item.postId)}>
                 <FontAwesome name="comment-o" size={24} color="blue" />
                 <Text style={{ marginLeft: 10, color: "blue" }}>comment</Text>
               </TouchableOpacity>
@@ -116,7 +116,7 @@ export default function PostList({ posts }) {
         visible={isCommentListVisible}
         onRequestClose={() => setIsCommentListVisible(false)}
       >
-          <CommentList closeModal={handleCancelCommentPress} />
+          <CommentList  postId={selectedPostId}  closeModal={handleCancelCommentPress} />
       </Modal>
 
     </SafeAreaView>
