@@ -21,7 +21,7 @@ import ProgressDialog from 'react-native-progress-dialog';
 import { Linking } from 'react-native';
 import { Modal } from 'react-native';
 import ReportModal from './ReportModal';
-
+import FeedBackModal from './FeedBackModal';
 
 const CARD_WIDTH = sizes.width - 20;
 const CARD_HEIGHT = 200;
@@ -178,6 +178,7 @@ export default function classDetail(props) {
     const [isLoading, setIsLoading] = useState(true);
     const [Enroll, setEnroll] = useState(false);
     const [isReportVisible, setIsReportVisible] = useState(false);
+    const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
 
 
     const URL = myGlobalVariable;
@@ -190,6 +191,16 @@ export default function classDetail(props) {
 
     const handleCancelReportPress = () => {
         setIsReportVisible(false);
+    };
+
+    const handleFeedbackPress = () => {
+
+        console.log("an roi");
+        setIsFeedbackVisible(true);
+    };
+
+    const handleCancelFeedbackPress = () => {
+        setIsFeedbackVisible(false);
     };
 
 
@@ -306,7 +317,7 @@ export default function classDetail(props) {
                                 <MaterialIcons style={styles.reportIcon} name="report" size={17} color="white" />
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={[styles.actionButton, styles.enroll]} >
+                            <TouchableOpacity style={[styles.actionButton, styles.enroll]} onPress={handleFeedbackPress}>
                                 <Text style={styles.buttonText}>Feedback </Text>
                                 <MaterialIcons style={{marginRight:5}} name="feedback" size={17} color="white" />
                             </TouchableOpacity>
@@ -470,6 +481,16 @@ export default function classDetail(props) {
                     onRequestClose={() => setIsReportVisible(false)}
                 >
                     <ReportModal closeModal={handleCancelReportPress} />
+                </Modal>
+
+
+                <Modal
+                    transparent={true}
+                    animationType='fade'
+                    visible={isFeedbackVisible}
+                    onRequestClose={() => setIsFeedbackVisible(false)}
+                >
+                    <FeedBackModal closeModal={handleCancelFeedbackPress} />
                 </Modal>
             </SafeAreaView>
         </ScrollView>
