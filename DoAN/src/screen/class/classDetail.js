@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Text, ScrollView, View, TouchableOpacity, Alert } from 'react-native';
+import { Image, Text, ScrollView, View, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -19,7 +19,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import User from '../../user';
 import ProgressDialog from 'react-native-progress-dialog';
 import { Linking } from 'react-native';
-
+import { Modal } from 'react-native';
+import ReportModal from './ReportModal';
 
 
 const CARD_WIDTH = sizes.width - 20;
@@ -163,8 +164,8 @@ export default function classDetail(props) {
         navigation.navigate('Home');
     };
 
-    const ChatHandle = (id,name) => {
-        navigation.navigate('ChatClass', { id: id  , name:name});
+    const ChatHandle = (id, name) => {
+        navigation.navigate('ChatClass', { id: id, name: name });
     };
 
     const route = useRoute();
@@ -176,9 +177,20 @@ export default function classDetail(props) {
     const [imageUrl, setImageUrl] = useState(''); // State để lưu URL hình ảnh từ API
     const [isLoading, setIsLoading] = useState(true);
     const [Enroll, setEnroll] = useState(false);
+    const [isReportVisible, setIsReportVisible] = useState(false);
 
 
     const URL = myGlobalVariable;
+
+    const handleReportPress = () => {
+
+        console.log("an roi");
+        setIsReportVisible(true);
+    };
+
+    const handleCancelReportPress = () => {
+        setIsReportVisible(false);
+    };
 
 
     const HandleBalance = async () => {
@@ -246,7 +258,7 @@ export default function classDetail(props) {
     const handleMeetingRoomPress = () => {
         const meetingRoomUrl = 'https://cliff-lovely-system.glitch.me/?room=room-vn-1-XU1AO32XCC-1697214817745&fbclid=IwAR2YgfqNcaExiAEQKigeH8oflSD51g8EwFqtCfReJxVQz_1dPFb4LnSuoDs';
         Linking.openURL(meetingRoomUrl);
-      };
+    };
 
     useEffect(() => {
         async function getClassById() {
@@ -288,11 +300,17 @@ export default function classDetail(props) {
                     </TouchableOpacity>
 
                     {showButtons && (
+                        <View>
+                            <TouchableOpacity style={[styles.actionButton, styles.report]} onPress={handleReportPress}>
+                                <Text style={styles.buttonText}>Report </Text>
+                                <MaterialIcons style={styles.reportIcon} name="report" size={17} color="white" />
+                            </TouchableOpacity>
 
-                        <TouchableOpacity style={[styles.actionButton, styles.report]}>
-                            <Text style={styles.buttonText}>Report </Text>
-                            <MaterialIcons style={styles.reportIcon} name="report" size={17} color="white" />
-                        </TouchableOpacity>
+                            <TouchableOpacity style={[styles.actionButton, styles.enroll]} >
+                                <Text style={styles.buttonText}>Feedback </Text>
+                                <MaterialIcons style={{marginRight:5}} name="feedback" size={17} color="white" />
+                            </TouchableOpacity>
+                        </View>
                     )}
                     {!showButtons && (
 
@@ -410,7 +428,7 @@ export default function classDetail(props) {
                     {showButtons && (
                         <>
                             <View style={styles.buttonContainer}>
-                                <TouchableOpacity onPress={() => ChatHandle(classData[0]?.courseId , classData[0]?.classname)}>
+                                <TouchableOpacity onPress={() => ChatHandle(classData[0]?.courseId, classData[0]?.classname)}>
                                     <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.linearGradient}>
                                         <Feather name="message-circle" size={24} color="white" />
                                         <Text style={styles.buttonText}>Group chat</Text>
@@ -444,6 +462,16 @@ export default function classDetail(props) {
                     </View>
                 </View>
             )}
+            <SafeAreaView>
+                <Modal
+                    transparent={true}
+                    animationType='fade'
+                    visible={isReportVisible}
+                    onRequestClose={() => setIsReportVisible(false)}
+                >
+                    <ReportModal closeModal={handleCancelReportPress} />
+                </Modal>
+            </SafeAreaView>
         </ScrollView>
     );
 }

@@ -6,9 +6,6 @@ import myGlobalVariable from "../../global";
 
 
 
-
-
-
 export default function UpdateScreen({ navigation }) {
     const URL = myGlobalVariable;
     const [allPost, setAllPost] = useState([]);
@@ -35,7 +32,6 @@ export default function UpdateScreen({ navigation }) {
 
     useEffect(() => {
         // Hide the status bar when the component mounts
-        StatusBar.setHidden(true);
         handleRefresh(); // Initial fetch when the component mounts
 
 
