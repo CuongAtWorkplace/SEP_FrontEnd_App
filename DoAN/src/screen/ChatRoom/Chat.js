@@ -43,6 +43,7 @@ export default function Chat() {
     const courseId = route.params.id;
 
     const className = route.params.name;
+    
     const handleHeader = () => {
         navigation.navigate('ClassDetail', { classId: courseId });
     };
