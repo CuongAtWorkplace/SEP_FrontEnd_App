@@ -8,14 +8,55 @@ import moment from 'moment';
 import { Entypo } from '@expo/vector-icons';
 import { TextInput } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
-
+import User from '../../user';
+import { Alert } from 'react-native';
 
 
 const CommentList = ({ closeModal, postId }) => {
 
     const [comments, setComments] = useState([]);
+    const [commentSend, setCommentSend] = useState([]);
+
 
     const URL = myGlobalVariable;
+
+    const handleComment = () => {
+
+        if (commentSend == "") {
+            Alert.alert("Please type your comment");
+        } else {
+            const commentData = {
+                userId: User,
+                postId: postId,
+                content: commentSend
+            };
+
+            fetch(URL + '/api/Post/AddCommentPost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(commentData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Comment added successfully:', data);
+                    // Xử lý khi comment được thêm thành công
+                    Alert.alert("Comment added successfully");
+                    setCommentSend("");
+                })
+                .catch(error => {
+                    console.error('There was a problem adding the comment:', error);
+                    // Xử lý khi có lỗi xảy ra trong quá trình thêm comment
+                });
+        }
+    };
+
 
     const fetchComments = async () => {
         try {
@@ -47,25 +88,32 @@ const CommentList = ({ closeModal, postId }) => {
 
                     <ScrollView style={{ height: '30%' }}>
                         {comments.length === 0 ? (
-                            <View style={{ justifyContent: 'center', alignItems: 'center' , marginTop:20 }}>
+                            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
                                 <Text style={{ fontSize: 30, fontWeight: 'bold', color: 'silver' }}>No comment yet</Text>
                             </View>
                         ) : (
-                            comments.map(comment => (
-                                <View key={comment.id} style={{ margin: 7 }}>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <Text style={{ fontWeight: 'bold', fontSize: 14 }}>{comment.userFullName}</Text>
-                                        <Text style={{ fontSize: 10 }}>{moment(comment.createDate).format('DD/MM/YYYY')}</Text>
+                            <FlatList
+                                data={comments}
+                                keyExtractor={(item, index) => index.toString()} // Thiết lập key cho mỗi mục
+                                renderItem={({ item }) => (
+                                    <View key={item.id} style={{ margin: 7 }}>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <Text style={{ fontWeight: 'bold', fontSize: 14 }}>{item.userFullName}</Text>
+                                            <Text style={{ fontSize: 10 }}>
+                                                {moment(item.createDate).format('DD/MM/YYYY')}
+                                            </Text>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <Text style={{ marginTop: 5, width: '70%' }}>Content: {item.content}</Text>
+                                            <TouchableOpacity style={{ flexDirection: 'row' }}>
+                                                <AntDesign name="hearto" size={24} color="black" />
+                                                <Text style={{ margin: 3 }}>{item.likeAmount}</Text>
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <Text style={{ marginTop: 5, width: '70%' }}>Content: {comment.content}</Text>
-                                        <TouchableOpacity style={{ flexDirection: 'row' }}>
-                                            <AntDesign name="hearto" size={24} color="black" />
-                                            <Text style={{ margin: 3 }}>{comment.likeAmount}</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            ))
+                                )}
+                            />
+
                         )}
                     </ScrollView>
 
@@ -73,12 +121,12 @@ const CommentList = ({ closeModal, postId }) => {
                     <View style={{ flexDirection: 'row', marginTop: 20 }}>
                         <TextInput
                             style={{ backgroundColor: 'white', borderWidth: 1, borderRadius: 5, width: '80%', height: 30 }}
-                            value={comments}
+                            value={commentSend}
                             placeholder='add your comment'
-                            onChangeText={text => setComments(text)}
+                            onChangeText={text => setCommentSend(text)}
                             multiline={true}
                         />
-                        <TouchableOpacity style={{ marginLeft: 10 }}>
+                        <TouchableOpacity style={{ marginLeft: 10 }} onPress={handleComment}>
                             <Ionicons name="send-outline" size={24} color="black" />
                         </TouchableOpacity>
                     </View>
