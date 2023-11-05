@@ -20,6 +20,7 @@ import { useState } from "react";
 import { useRef } from "react";
 import { HubConnectionBuilder } from "@aspnet/signalr";
 import * as ImagePicker from 'expo-image-picker';
+import { KeyboardAvoidingView } from "react-native";
 
 
 export default function Chat() {
@@ -131,6 +132,26 @@ export default function Chat() {
             });
     };
 
+    useEffect(() => {
+        fetch(URL + '/api/ChatRoom/GetAllClassMessages/' + courseId)
+            .then(response => response.json())
+            .then(data => {
+                console.log(courseId);
+                setMessages(data);
+            })
+            .catch(error => {
+                console.error("Lỗi khi gọi API:", error);
+            })
+            .finally(() => {
+                setNewMessage("");
+                setIsSendButtonDisabled(true);
+                setIsLoading(false); // Tắt tình trạng isLoading khi dữ liệu đã được nạp
+
+                if (scrollViewRef.current) {
+                    scrollViewRef.current.scrollToEnd({ animated: false });
+                }
+            });
+    }, []);
 
 
     // Establish the connection
@@ -173,26 +194,7 @@ export default function Chat() {
     // ...
 
 
-    useEffect(() => {
-        fetch(URL + "/api/ChatRoom/GetAllClassMessages/" + courseId)
-            .then(response => response.json())
-            .then(data => {
-                console.log(courseId);
-                setMessages(data);
-            })
-            .catch(error => {
-                console.error("Lỗi khi gọi API:", error);
-            })
-            .finally(() => {
-                setNewMessage("");
-                setIsSendButtonDisabled(true);
-                setIsLoading(false); // Tắt tình trạng isLoading khi dữ liệu đã được nạp
-
-                if (scrollViewRef.current) {
-                    scrollViewRef.current.scrollToEnd({ animated: false });
-                }
-            });
-    }, []);
+   
 
     useEffect(() => {
         // Fetch messages and set them in the state as you currently do
@@ -294,6 +296,7 @@ export default function Chat() {
                         style={styles.backgroundImage}
                     >
                         <View style={styles.chatContainer}>
+                            
                             <ScrollView
                                 ref={scrollViewRef}
                                 onContentSizeChange={(contentWidth, contentHeight) => {
