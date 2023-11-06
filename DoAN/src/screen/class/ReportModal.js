@@ -5,10 +5,13 @@ import { StatusBar } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TextInput } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-
-
+import { Alert } from 'react-native';
 const ReportModal = ({ closeModal }) => {
+
+    const HandleSend = () =>{
+        Alert.alert("send successfully");
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.modalContainer}>
@@ -19,7 +22,7 @@ const ReportModal = ({ closeModal }) => {
                     <MaterialIcons name="report-problem" size={40} color="red" />
                     <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red', marginLeft: 10 }}>Report</Text>
 
-                    <Text style={{ color: 'red' }}>Các bạn bình tĩnh trước khi report nhé !!!</Text>
+                    <Text style={ { color: 'red' , margin:10}}>Please calm before you sent report , we really care about you !!!</Text>
 
                     <Text style={{ fontWeight: 'bold', alignSelf: 'flex-start', fontSize: 18 }}>Reason</Text>
                     <TextInput
@@ -34,19 +37,27 @@ const ReportModal = ({ closeModal }) => {
                         numberOfLines={5}
                         multiline
                     />
+                    <Text style={{ fontWeight: 'bold', alignSelf: 'flex-start', fontSize: 18 }}>Evidence Photo</Text>
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <TouchableOpacity style={{ flex: 1, alignSelf: 'flex-start' }}>
-                            <Ionicons name="images-outline" size={24} color="red" />
-                        </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        width: '90%', // Set width as per your requirement
+                        height: '30%', // Set height as per your requirement
+                        borderRadius: '15%', // For a circular image, set borderRadius as half of width or height
+                        borderWidth: 2, // Border width
+                        borderColor: 'black', // Border color
+                        borderStyle: 'dashed', // Border style (dashed)
+                        marginTop:10,
+                        justifyContent: 'center', // Căn giữa theo chiều dọc
+                        alignItems: 'center', // Căn giữa theo chiều ngang
+                    }}>
+                        <AntDesign  name="camerao" size={40} color="black" />
+                        <Text style ={{fontWeight:'bold',color:'black',fontSize:17}}>Upload your image</Text>
+                    </TouchableOpacity>
 
-                        <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
-                            <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 17 }}>Send</Text>
-                        </TouchableOpacity>
-                    </View>
 
-
-
+                    <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={HandleSend}>
+                        <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 20 , marginTop:5 }}>Send</Text>
+                    </TouchableOpacity>
 
                 </View>
             </View>

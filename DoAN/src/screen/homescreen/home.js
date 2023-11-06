@@ -17,7 +17,7 @@ import { useEffect } from 'react';
 import myGlobalVariable from '../../global';
 import ActivityIndicator from 'react-native-paper';
 import { colors } from 'react-native-elements';
-
+import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'react-native';
 
 import User from '../../user';
@@ -63,7 +63,7 @@ export default function Home() {
   };
 
   const fetchData = async () => {
-   // StatusBar.setHidden(true);
+    // StatusBar.setHidden(true);
 
     try {
       const response1 = await fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/4');
@@ -106,57 +106,59 @@ export default function Home() {
 
 
   return (
-    <ScrollView
-      style={styles.container}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
-    >
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar translucent={true} backgroundColor="transparent" />
+      <ScrollView
+        style={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
 
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Knoco</Text>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Knoco</Text>
 
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <TouchableOpacity onPress={handleSearch} style={{ marginRight: 10 }}>
-            <Ionicons name="search-circle-outline" size={37} color="black" />
-          </TouchableOpacity>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <TouchableOpacity onPress={handleSearch} style={{ marginRight: 10 }}>
+              <Ionicons name="search-circle-outline" size={37} color="black" />
+            </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleNotification}>
-            <Ionicons name="notifications-circle-outline" size={35} color="black" />
-          </TouchableOpacity>
+            <TouchableOpacity onPress={handleNotification}>
+              <Ionicons name="notifications-circle-outline" size={35} color="black" />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
 
 
 
-      {!isLoading && ( // Kiểm tra isLoading, nếu false, hiển thị nội dung
-        <>
-          <ScreenHeader mainTitle='Welcome back !!!' secondTitle={UserData[0]?.fullName}/>
+        {!isLoading && ( // Kiểm tra isLoading, nếu false, hiển thị nội dung
+          <>
+            <ScreenHeader mainTitle='Welcome back !!!' secondTitle={UserData[0]?.fullName} />
 
-          <SectionHeader title="Recommend Class" />
-          <TopPlacesCarousel list={AllRecommend} onPress={handleDetailClass} />
+            <SectionHeader title="Recommend Class" />
+            <TopPlacesCarousel list={AllRecommend} onPress={handleDetailClass} />
 
-          <SectionHeader title="All Class" />
-          <RecommendList list={AllClassData} />
+            <SectionHeader title="All Class" />
+            <RecommendList list={AllClassData} />
 
-          <SectionHeader title="Studying Class" />
-          {AllStudyingClass.length === 0 ? (
-            <Text style={styles.noClassText}>No Class Studying</Text>
-          ) : (
-            <RecommendList list={AllStudyingClass} />
-          )}
-        </>
-      )}
-      {isLoading && (
-        <View>
+            <SectionHeader title="Studying Class" />
+            {AllStudyingClass.length === 0 ? (
+              <Text style={styles.noClassText}>No Class Studying</Text>
+            ) : (
+              <RecommendList list={AllStudyingClass} />
+            )}
+          </>
+        )}
+        {isLoading && (
+          <View>
 
-        </View>
-      )}
-    </ScrollView>
-
+          </View>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

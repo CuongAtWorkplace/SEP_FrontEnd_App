@@ -22,6 +22,7 @@ import { Linking } from 'react-native';
 import { Modal } from 'react-native';
 import ReportModal from './ReportModal';
 import FeedBackModal from './FeedBackModal';
+import { StatusBar } from 'expo-status-bar';
 
 const CARD_WIDTH = sizes.width - 20;
 const CARD_HEIGHT = 200;
@@ -29,6 +30,7 @@ const CARD_HEIGHT = 200;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        marginTop: StatusBar.currentHeight, // Add padding for iOS
     },
     imageBox: {
         width: CARD_WIDTH,
@@ -272,6 +274,7 @@ export default function classDetail(props) {
     };
 
     useEffect(() => {
+        console.log(StatusBar.currentHeight);
         async function getClassById() {
             const response = await fetch(URL + '/api/Class/GetClassById/GetClassById/' + classId);
             const JsonConvert = await response.json();
@@ -293,206 +296,210 @@ export default function classDetail(props) {
     });
 
     return (
-        <ScrollView style={styles.container}>
-            <ProgressDialog visible={Enroll} />
+        <SafeAreaView style={{ flex: 1 }}>
+            <StatusBar translucent={true} backgroundColor="transparent" />
+            <ScrollView style={styles.container}>
+                <ProgressDialog visible={Enroll} />
 
-            {!isLoading && (
-                <View style={styles.imageBox}>
-                    <Image
-                        style={styles.image}
-                        source={{ uri: URL + '/api/Course/GetImage/GetImage/' + classData[0]?.courseId }}
-                    />
-                    <Text style={styles.textOnImage}>{classData[0]?.classname}</Text>
-
-                    <Text style={styles.feeText}>Fee : {classData[0]?.fee}</Text>
-
-                    <TouchableOpacity style={styles.Arrowback} onPress={handleBack}>
-                        <Ionicons name="arrow-back-circle-outline" size={30} color="white" />
-                    </TouchableOpacity>
-
-                    {showButtons && (
-                        <View>
-                            <TouchableOpacity style={[styles.actionButton, styles.report]} onPress={handleReportPress}>
-                                <Text style={styles.buttonText}>Report </Text>
-                                <MaterialIcons style={styles.reportIcon} name="report" size={17} color="white" />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={[styles.actionButton, styles.enroll]} onPress={handleFeedbackPress}>
-                                <Text style={styles.buttonText}>Feedback </Text>
-                                <MaterialIcons style={{marginRight:5}} name="feedback" size={17} color="white" />
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                    {!showButtons && (
-
-                        <TouchableOpacity style={[styles.actionButton, styles.enroll]} onPress={HandleBalance}>
-                            <Text style={styles.buttonText}>Enroll </Text>
-                            <AntDesign name="pluscircleo" size={15} color="white" />
-                        </TouchableOpacity>
-                    )}
-                </View>
-            )}
-
-            {!isLoading && (
-                <>
-                    <Text style={styles.des}>Description</Text>
-                    <Text style={styles.desText}>
-                        {classData[0]?.description}
-                    </Text>
-
-
-                    <LinearGradient colors={['#F7DBA7', '#F0AB86']} style={styles.DetailContainer}>
-
-                        <Text style={[styles.des, { color: colors.white }]}>Class Deatail</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
-                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                                <MaterialIcons name="access-time" size={20} color="black" />
-                            </View>
-                            <View style={{ flexDirection: 'column' }}>
-                                <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', fontSize: 13 }]}>
-                                    Start Date: {classData[0]?.startDate ? new Date(classData[0]?.startDate).toLocaleDateString('en-GB') : ''}                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
-                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                                <MaterialIcons name="access-time" size={20} color="black" />
-                            </View>
-
-                            <View style={{ flexDirection: 'column' }}>
-                                <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', fontSize: 13 }]}>
-                                    End Date  : {classData[0]?.endDate ? new Date(classData[0]?.startDate).toLocaleDateString('en-GB') : ''}                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
-                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                                <AntDesign name="team" size={20} color="black" style={{ marginTop: 5 }} />
-                            </View>
-
-                            <View style={{ flexDirection: 'column' }}>
-                                <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', fontSize: 13 }]}>
-                                    Student In Class: {classData[0]?.numberStudent}
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
-                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                                <FontAwesome5 name="calendar-week" size={20} color="black" style={{ marginTop: 5 }} />
-                            </View>
-
-                            <View style={{ flexDirection: 'column' }}>
-                                <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', fontSize: 13 }]}>
-                                    Number Of Week :   {classData[0]?.numberOfWeek}
-                                </Text>
-                            </View>
-                        </View>
-                    </LinearGradient>
-
-                    <LinearGradient colors={['#005AA7', '#FFFDE4']} style={styles.DetailContainer}>
-
-                        <Text style={[styles.des, { color: colors.white }]}>Teacher Information</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
-                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                                <FontAwesome5 name="chalkboard-teacher" size={16} color="black" />
-                            </View>
-                            <View style={{ flexDirection: 'column' }}>
-                                <Text style={[styles.detailText, { color: colors.black, fontWeight: 'bold', fontSize: 13 }]}>
-                                    Teacher Name: {teacherData[0].fullName}
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
-                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                                <Feather name="phone" size={18} color="black" />
-                            </View>
-                            <View style={{ flexDirection: 'column' }}>
-                                <Text style={[styles.detailText, { color: colors.black, fontWeight: 'bold', fontSize: 13 }]}>
-                                    Teacher Phone: {teacherData[0].phone}
-                                </Text>
-                            </View>
-                        </View>
-
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
-                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                                <MaterialCommunityIcons name="gmail" size={18} color="black" />
-                            </View>
-                            <View style={{ flexDirection: 'column' }}>
-                                <Text style={[styles.detailText, { color: colors.black, fontWeight: 'bold', fontSize: 13 }]}>
-                                    Teacher Email: {teacherData[0].email}
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginRight: 10, marginBottom: 10 }}>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
-                                <Text style={{ color: 'black', textDecorationLine: 'underline' }}>View All</Text>
-                                <MaterialIcons name="navigate-next" size={24} color="black" />
-                            </TouchableOpacity>
-                        </View>
-
-                    </LinearGradient>
-
-                    {showButtons && (
-                        <>
-                            <View style={styles.buttonContainer}>
-                                <TouchableOpacity onPress={() => ChatHandle(classId, classData[0]?.classname)}>
-                                    <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.linearGradient}>
-                                        <Feather name="message-circle" size={24} color="white" />
-                                        <Text style={styles.buttonText}>Group chat</Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
-
-
-                                <TouchableOpacity>
-                                    <LinearGradient colors={['#FF3CAC', '#784BA0', '#2B86C5']} style={styles.linearGradient}>
-                                        <MaterialIcons name="assignment" size={24} color="white" />
-                                        <Text style={styles.buttonText}>Quiz</Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
-                            </View>
-
-                            <TouchableOpacity style={styles.meetingRoomContainer} onPress={handleMeetingRoomPress}>
-                                <LinearGradient colors={['#ED213A', '#93291E']} style={styles.meetingRoom}>
-                                    <FontAwesome5 name="chalkboard-teacher" size={24} color="white" />
-                                    <Text style={styles.buttonText}>Meeting room</Text>
-                                </LinearGradient>
-                            </TouchableOpacity>
-                        </>
-                    )}
-                </>
-            )}
-
-            {isLoading && (
-                <View>
+                {!isLoading && (
                     <View style={styles.imageBox}>
-                        <ActivityIndicator size="medium" color={colors.primary} />
+                        <Image
+                            style={styles.image}
+                            source={{ uri: URL + '/api/Course/GetImage/GetImage/' + classData[0]?.courseId }}
+                        />
+                        <Text style={styles.textOnImage}>{classData[0]?.classname}</Text>
+
+                        <Text style={styles.feeText}>Fee : {classData[0]?.fee}</Text>
+
+                        <TouchableOpacity style={styles.Arrowback} onPress={handleBack}>
+                            <Ionicons name="arrow-back-circle-outline" size={30} color="white" />
+                        </TouchableOpacity>
+
+                        {showButtons && (
+                            <View>
+                                <TouchableOpacity style={[styles.actionButton, styles.report]} onPress={handleReportPress}>
+                                    <Text style={styles.buttonText}>Report </Text>
+                                    <MaterialIcons style={styles.reportIcon} name="report" size={17} color="white" />
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={[styles.actionButton, styles.enroll]} onPress={handleFeedbackPress}>
+                                    <Text style={styles.buttonText}>Feedback </Text>
+                                    <MaterialIcons style={{ marginRight: 5 }} name="feedback" size={17} color="white" />
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                        {!showButtons && (
+
+                            <TouchableOpacity style={[styles.actionButton, styles.enroll]} onPress={HandleBalance}>
+                                <Text style={styles.buttonText}>Enroll </Text>
+                                <AntDesign name="pluscircleo" size={15} color="white" />
+                            </TouchableOpacity>
+                        )}
                     </View>
-                </View>
-            )}
-            <SafeAreaView>
-                <Modal
-                    transparent={true}
-                    animationType='fade'
-                    visible={isReportVisible}
-                    onRequestClose={() => setIsReportVisible(false)}
-                >
-                    <ReportModal closeModal={handleCancelReportPress} />
-                </Modal>
+                )}
+
+                {!isLoading && (
+                    <>
+                        <Text style={styles.des}>Description</Text>
+                        <Text style={styles.desText}>
+                            {classData[0]?.description}
+                        </Text>
 
 
-                <Modal
-                    transparent={true}
-                    animationType='fade'
-                    visible={isFeedbackVisible}
-                    onRequestClose={() => setIsFeedbackVisible(false)}
-                >
-                    <FeedBackModal closeModal={handleCancelFeedbackPress} />
-                </Modal>
-            </SafeAreaView>
-        </ScrollView>
+                        <LinearGradient colors={['#F7DBA7', '#F0AB86']} style={styles.DetailContainer}>
+
+                            <Text style={[styles.des, { color: colors.white }]}>Class Deatail</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                    <MaterialIcons name="access-time" size={20} color="black" />
+                                </View>
+                                <View style={{ flexDirection: 'column' }}>
+                                    <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', fontSize: 13 }]}>
+                                        Start Date: {classData[0]?.startDate ? new Date(classData[0]?.startDate).toLocaleDateString('en-GB') : ''}                                </Text>
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                    <MaterialIcons name="access-time" size={20} color="black" />
+                                </View>
+
+                                <View style={{ flexDirection: 'column' }}>
+                                    <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', fontSize: 13 }]}>
+                                        End Date  : {classData[0]?.endDate ? new Date(classData[0]?.startDate).toLocaleDateString('en-GB') : ''}                                </Text>
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                    <AntDesign name="team" size={20} color="black" style={{ marginTop: 5 }} />
+                                </View>
+
+                                <View style={{ flexDirection: 'column' }}>
+                                    <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', fontSize: 13 }]}>
+                                        Student In Class: {classData[0]?.numberStudent}
+                                    </Text>
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                    <FontAwesome5 name="calendar-week" size={20} color="black" style={{ marginTop: 5 }} />
+                                </View>
+
+                                <View style={{ flexDirection: 'column' }}>
+                                    <Text style={[styles.detailText, { color: colors.gray, fontWeight: 'bold', fontSize: 13 }]}>
+                                        Number Of Week :   {classData[0]?.numberOfWeek}
+                                    </Text>
+                                </View>
+                            </View>
+                        </LinearGradient>
+
+                        <LinearGradient colors={['#005AA7', '#FFFDE4']} style={styles.DetailContainer}>
+
+                            <Text style={[styles.des, { color: colors.white }]}>Teacher Information</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                    <FontAwesome5 name="chalkboard-teacher" size={16} color="black" />
+                                </View>
+                                <View style={{ flexDirection: 'column' }}>
+                                    <Text style={[styles.detailText, { color: colors.black, fontWeight: 'bold', fontSize: 13 }]}>
+                                        Teacher Name: {teacherData[0].fullName}
+                                    </Text>
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                    <Feather name="phone" size={18} color="black" />
+                                </View>
+                                <View style={{ flexDirection: 'column' }}>
+                                    <Text style={[styles.detailText, { color: colors.black, fontWeight: 'bold', fontSize: 13 }]}>
+                                        Teacher Phone: {teacherData[0].phone}
+                                    </Text>
+                                </View>
+                            </View>
+
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                    <MaterialCommunityIcons name="gmail" size={18} color="black" />
+                                </View>
+                                <View style={{ flexDirection: 'column' }}>
+                                    <Text style={[styles.detailText, { color: colors.black, fontWeight: 'bold', fontSize: 13 }]}>
+                                        Teacher Email: {teacherData[0].email}
+                                    </Text>
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginRight: 10, marginBottom: 10 }}>
+                                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                                    <Text style={{ color: 'black', textDecorationLine: 'underline' }}>View All</Text>
+                                    <MaterialIcons name="navigate-next" size={24} color="black" />
+                                </TouchableOpacity>
+                            </View>
+
+                        </LinearGradient>
+
+                        {showButtons && (
+                            <>
+                                <View style={styles.buttonContainer}>
+                                    <TouchableOpacity onPress={() => ChatHandle(classId, classData[0]?.classname)}>
+                                        <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.linearGradient}>
+                                            <Feather name="message-circle" size={24} color="white" />
+                                            <Text style={styles.buttonText}>Group chat</Text>
+                                        </LinearGradient>
+                                    </TouchableOpacity>
+
+
+                                    <TouchableOpacity>
+                                        <LinearGradient colors={['#FF3CAC', '#784BA0', '#2B86C5']} style={styles.linearGradient}>
+                                            <MaterialIcons name="assignment" size={24} color="white" />
+                                            <Text style={styles.buttonText}>Quiz</Text>
+                                        </LinearGradient>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <TouchableOpacity style={styles.meetingRoomContainer} onPress={handleMeetingRoomPress}>
+                                    <LinearGradient colors={['#ED213A', '#93291E']} style={styles.meetingRoom}>
+                                        <FontAwesome5 name="chalkboard-teacher" size={24} color="white" />
+                                        <Text style={styles.buttonText}>Meeting room</Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+                            </>
+                        )}
+                    </>
+                )}
+
+                {isLoading && (
+                    <View>
+                        <View style={styles.imageBox}>
+                            <ActivityIndicator size="medium" color={colors.primary} />
+                        </View>
+                    </View>
+                )}
+                <SafeAreaView>
+                    <Modal
+                        transparent={true}
+                        animationType='fade'
+                        visible={isReportVisible}
+                        onRequestClose={() => setIsReportVisible(false)}
+                    >
+                        <ReportModal closeModal={handleCancelReportPress} />
+                    </Modal>
+
+
+                    <Modal
+                        transparent={true}
+                        animationType='fade'
+                        visible={isFeedbackVisible}
+                        onRequestClose={() => setIsFeedbackVisible(false)}
+                    >
+                        <FeedBackModal closeModal={handleCancelFeedbackPress} />
+                    </Modal>
+                </SafeAreaView>
+            </ScrollView>
+        </SafeAreaView>
+
     );
 }
