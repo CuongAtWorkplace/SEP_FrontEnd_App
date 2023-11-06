@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import AllPostScreen from '../PostScreen/AllPostScreen';
 import UpdateScreen from '../PostScreen/UpdateScreen';
 import { StatusBar } from 'react-native';
-
+import { SafeAreaView } from 'react-native';
 const statusBarHeight = StatusBar.currentHeight || 0; // Lấy chiều cao của StatusBar
 
 
@@ -32,7 +32,8 @@ export default function Community({ navigation }) {
     };
 
     return (
-        <View>
+        <SafeAreaView style={{ flex: 1 }}>
+            <StatusBar translucent={true} backgroundColor="transparent" />
             <View style={styles.container}>
                 <TouchableOpacity
                     style={[styles.button, isButton1Active && styles.activeButton]}
@@ -49,9 +50,9 @@ export default function Community({ navigation }) {
             </View>
 
             {isAllPostScreenVisible && !isUpdatePostScreenVisible && <AllPostScreen />}
-            {isUpdatePostScreenVisible && !isAllPostScreenVisible  && <UpdateScreen />}
+            {isUpdatePostScreenVisible && !isAllPostScreenVisible && <UpdateScreen />}
 
-        </View>
+        </SafeAreaView>
 
     );
 }

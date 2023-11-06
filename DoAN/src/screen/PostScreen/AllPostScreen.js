@@ -9,8 +9,8 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { Alert } from "react-native";
 import { RefreshControl } from "react-native";
 import CommentList from "./CommentList";
-
-
+import { SafeAreaView } from "react-native";
+import { StatusBar } from "react-native";
 import User from "../../user";
 import myGlobalVariable from "../../global";
 import PostList from "./PostList";
@@ -33,7 +33,7 @@ export default function AllPostScreen() {
     const [refreshing, setRefreshing] = useState(false); // Tạo trạng thái refreshing
 
 
-    
+
 
 
     const onRefresh = () => {
@@ -142,6 +142,7 @@ export default function AllPostScreen() {
 
 
     useEffect(() => {
+        console.log(StatusBar.currentHeight)
         getUser();
     }, []);
 
@@ -170,78 +171,81 @@ export default function AllPostScreen() {
     }
 
     return (
-        <ScrollView
-            //refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} // Sử dụng RefreshControl ở đây
-        >
-            <View style={styles.container}>
-                {isLoading ? (
-                    <ActivityIndicator size="large" color="#0000ff" />
-                ) : (
-                    <View>
-                        <View style={styles.header}>
-                            <Image source={imageSource} style={styles.avatar} />
-                            <Text style={styles.username}>{UserData[0]?.fullName}</Text>
-                        </View>
 
+      
+            <ScrollView>
+                <View style={styles.container}>
 
-                        <TextInput
-                            placeholder="Write a Title..."
-                            onChangeText={(text) => setTitle(text)}
-                        />
-                        <TextInput
-                            style={styles.textInput}
-                            placeholder="Write a description..."
-                            onChangeText={(text) => setDes(text)}
-                            defaultValue={des}
-                            value={des}
-                            multiline={true}
-                            numberOfLines={4}
-                        />
-                        <View style={styles.row}>
-                            <View style={styles.touchable}>
-                                <TouchableOpacity onPress={openImagePicker}>
-                                    <FontAwesome name="image" size={30} color="blue" />
-                                </TouchableOpacity>
-
-                                <View style={styles.selectContainer}>
-                                    <SelectList
-                                        style={styles.buttonStyle}
-                                        setSelected={(val) => setSelected(val)}
-                                        data={countries}
-                                        save="value"
-                                    />
-                                </View>
+                    {isLoading ? (
+                        <ActivityIndicator size="large" color="#0000ff" />
+                    ) : (
+                        <View>
+                            <View style={styles.header}>
+                                <Image source={imageSource} style={styles.avatar} />
+                                <Text style={styles.username}>{UserData[0]?.fullName}</Text>
                             </View>
 
-                            <TouchableOpacity style={styles.touchable} onPress={addNewPost}>
-                                <Text style={styles.postButtonText}>Post</Text>
+
+                            <TextInput
+                                placeholder="Write a Title..."
+                                onChangeText={(text) => setTitle(text)}
+                            />
+                            <TextInput
+                                style={styles.textInput}
+                                placeholder="Write a description..."
+                                onChangeText={(text) => setDes(text)}
+                                defaultValue={des}
+                                value={des}
+                                multiline={true}
+                                numberOfLines={4}
+                            />
+                            <View style={styles.row}>
+                                <View style={styles.touchable}>
+                                    <TouchableOpacity onPress={openImagePicker}>
+                                        <FontAwesome name="image" size={30} color="blue" />
+                                    </TouchableOpacity>
+
+                                    <View style={styles.selectContainer}>
+                                        <SelectList
+                                            style={styles.buttonStyle}
+                                            setSelected={(val) => setSelected(val)}
+                                            data={countries}
+                                            save="value"
+                                        />
+                                    </View>
+                                </View>
+
+                                <TouchableOpacity style={styles.touchable} onPress={addNewPost}>
+                                    <Text style={styles.postButtonText}>Post</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )}
+                    {selectedImage && (
+                        <View>
+                            <View style={styles.centeredImageContainer}>
+                                <Image source={{ uri: selectedImage }} style={styles.centeredImage} />
+                            </View>
+                            <TouchableOpacity style={{ position: 'absolute', top: -5, marginLeft: 10 }} onPress={HandleCancel}>
+                                <Text style={{ color: "blue", fontSize: 12 }}>Cancel</Text>
                             </TouchableOpacity>
                         </View>
-                    </View>
-                )}
-                {selectedImage && (
-                    <View>
-                        <View style={styles.centeredImageContainer}>
-                            <Image source={{ uri: selectedImage }} style={styles.centeredImage} />
-                        </View>
-                        <TouchableOpacity style={{ position: 'absolute', top: -5, marginLeft: 10 }} onPress={HandleCancel}>
-                            <Text style={{ color: "blue", fontSize: 12 }}>Cancel</Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
-            </View>
-            <PostList posts={AllPost} />
-        </ScrollView>
+                    )}
+                </View>
+                <PostList posts={AllPost} />
+            </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1, // Sử dụng flex 1 để nội dung tràn full màn hình
         backgroundColor: "white",
         borderRadius: 10,
         margin: 10,
         padding: 10,
         shadowColor: "#000",
+        paddingTop: StatusBar.currentHeight, // Thêm paddingTop dựa trên chiều cao của StatusBar
         shadowOffset: {
             width: 0,
             height: 2,
