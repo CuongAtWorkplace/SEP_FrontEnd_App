@@ -70,24 +70,32 @@ export default function Chat() {
     };
 
     useEffect(() => {
-        fetch(URL + "/api/ChatRoom/GetAllClassMessages/" + courseId)
-            .then(response => response.json())
+        fetch(URL + '/api/ChatRoom/GetAllClassMessages/' + courseId)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
             .then(data => {
                 console.log(courseId);
                 setMessages(data);
-            })
-            .catch(error => {
-                console.error("Lỗi khi gọi API:", error);
-            })
-            .finally(() => {
                 setNewMessage("");
                 setIsSendButtonDisabled(true);
                 setIsLoading(false); // Tắt tình trạng isLoading khi dữ liệu đã được nạp
                 if (scrollViewRef.current) {
                     scrollViewRef.current.scrollToEnd({ animated: false });
                 }
+            })
+            .catch(error => {
+                console.error("Lỗi khi gọi API:", error);
+                // Xử lý lỗi nếu có
+                // Ví dụ: Hiển thị thông báo lỗi
+                Alert.alert("Error", "Failed to fetch data. Please try again.");
             });
     }, []);
+    
+
 
     const uploadImage = async () => {
         try {
@@ -153,11 +161,7 @@ export default function Chat() {
             });
     };
 
-  
-
-
-    // Establish the connection
-    useEffect(() => {
+      useEffect(() => {
         const newConnection = new HubConnectionBuilder()
             .withUrl(URL + '/chatHub')
             .build();
@@ -226,7 +230,7 @@ export default function Chat() {
                 {
                     text: 'OK',
                     onPress: () => {
-                        fetch(URL + `/api/ChatRoom/DeleteMessage/${messageId}`, {
+                        fetch(URL + '/api/ChatRoom/DeleteMessage/'+messageId, {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -294,7 +298,7 @@ export default function Chat() {
                 <React.Fragment>
                     <HeaderBack title={`Group Chat : ${className}`} action={handleHeader} />
                     <ImageBackground
-                        source={{ uri: 'https://wallpapers.com/images/hd/whatsapp-chat-doodle-patterns-jyd5uvep2fdwjl97.jpg' }}
+                        source={{ uri: 'https://i.pinimg.com/originals/b9/1d/c2/b91dc2113881469c07ac99ad9a024a01.jpg' }}
                         style={styles.backgroundImage}
                     >
                         <View style={styles.chatContainer}>
@@ -308,14 +312,14 @@ export default function Chat() {
 
                                 {messages.map((message, index) => (
                                     <View key={index} style={{ alignSelf: message.createBy === User ? 'flex-end' : 'flex-start' }}>
-                                        <Text style={{ fontSize: 12, color: 'black' }}>
+                                        <Text style={{ fontSize: 12, color: 'white' }}>
                                             {message.fullName}
                                         </Text>
 
                                         <View style={{ flexDirection: "row" }}>
                                             {message.createBy === User && (
                                                 <TouchableOpacity style={{ margin: 8 }} onPress={() => handleDelete(message.messageId)}>
-                                                    <Ionicons name="trash-bin-outline" size={24} color="black" />
+                                                    <Ionicons name="trash-bin-outline" size={24} color="white" />
                                                 </TouchableOpacity>
                                             )}
                                             <Text style={{
