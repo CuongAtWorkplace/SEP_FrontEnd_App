@@ -87,8 +87,6 @@ export default function Chat() {
             try {
                 const response = await fetch(URL + '/api/ChatRoom/GetAllClassMessages/' + courseId);
 
-
-
                 const data = await response.json();
                 setMessages(data);
                 setNewMessage("");
@@ -300,11 +298,53 @@ export default function Chat() {
 
     }
 
+    const renderMessageItem = ({ item, index }) => {
+        return (
+          <View style={{ alignSelf: item.createBy === User ? 'flex-end' : 'flex-start' }}>
+            <Text style={{ fontSize: 12, color: 'white' }}>{item.fullName}</Text>
+            
+            <View style={{ flexDirection: 'row' }}>
+              {item.createBy === User && (
+                <TouchableOpacity style={{ margin: 8 }} onPress={() => handleDelete(item.messageId)}>
+                  <Ionicons name="trash-bin-outline" size={24} color="white" />
+                </TouchableOpacity>
+              )}
+              <View style={{
+                borderRadius: 20,
+                width: 150,
+                backgroundColor: item.createBy === User ? 'lightblue' : item.roleId === 1 ? '#C79191' : 'lightgray',
+                padding: 8,
+                margin: 4
+              }}>
+                <Text>{item.content}</Text>
+              </View>
+            </View>
+            
+            {item.photo && (
+              <View>
+                <Image
+                  source={{ uri: URL + '/api/ChatRoom/GetImage/' + item.messageId }}
+                  style={{
+                    width: 150,
+                    height: 150,
+                    borderRadius: 20,
+                    margin: 4
+                  }}
+                  onLoad={handleImageLoad}
+                />
+              </View>
+            )}
+      
+            <Text style={{ fontSize: 12, color: 'gray' }}>{item.createDate}</Text>
+          </View>
+        );
+      };
+      
 
 
     return (
         <View style={styles.container}>
-            {isLoading&&isImageLoading ? (
+            {isLoading && !isImageLoading ? (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color={colors.primary} />
                 </View>
@@ -316,60 +356,13 @@ export default function Chat() {
                         style={styles.backgroundImage}
                     >
                         <View style={styles.chatContainer}>
-
-                            <ScrollView
+                            <FlatList
                                 ref={scrollViewRef}
-                                onContentSizeChange={(contentWidth, contentHeight) => {
-                                    scrollViewRef.current.scrollToEnd({ animated: false });
-                                }}
-                            >
-
-                                {messages.map((message, index) => (
-                                    <View key={index} style={{ alignSelf: message.createBy === User ? 'flex-end' : 'flex-start' }}>
-                                        <Text style={{ fontSize: 12, color: 'white' }}>
-                                            {message.fullName}
-                                        </Text>
-
-                                        <View style={{ flexDirection: "row" }}>
-                                            {message.createBy === User && (
-                                                <TouchableOpacity style={{ margin: 8 }} onPress={() => handleDelete(message.messageId)}>
-                                                    <Ionicons name="trash-bin-outline" size={24} color="white" />
-                                                </TouchableOpacity>
-                                            )}
-                                            <Text style={{
-                                                borderRadius: 20,
-                                                width: 150,
-                                                backgroundColor: message.createBy === User ? 'lightblue' : message.roleId === 1 ? '#C79191' : 'lightgray',
-                                                padding: 8,
-                                                margin: 4
-                                            }}>
-                                                {message.content}
-                                            </Text>
-
-                                        </View>
-
-
-                                        {message.photo && (
-                                            <View>
-                                                <Image
-                                                    source={{ uri: URL + '/api/ChatRoom/GetImage/' + message.messageId }}
-                                                    style={{
-                                                        width: 150,
-                                                        height: 150,
-                                                        borderRadius: 20,
-                                                        margin: 4,
-                                                    }}
-                                                    onLoad={handleImageLoad} // Gọi hàm khi hình ảnh đã tải xong
-                                                />
-                                            </View>
-                                        )}
-
-                                        <Text style={{ fontSize: 12, color: 'gray' }}>
-                                            {message.createDate}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </ScrollView>
+                                data={messages}
+                                keyExtractor={(item) => item.messageId}
+                                renderItem={renderMessageItem}
+                                onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: false })}
+                            />
                         </View>
                         {CheckImageLoading && (
                             <View style={{ position: 'absolute', bottom: 60, left: 10 }}>
@@ -390,7 +383,6 @@ export default function Chat() {
                         )}
 
                         <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={100}>
-
                             <View style={styles.inputContainer}>
 
                                 <TouchableOpacity onPress={openImagePicker} >
