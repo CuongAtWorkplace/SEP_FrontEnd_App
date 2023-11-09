@@ -21,7 +21,7 @@ import { useRef } from "react";
 import { HubConnectionBuilder } from "@aspnet/signalr";
 import * as ImagePicker from 'expo-image-picker';
 import { KeyboardAvoidingView } from "react-native";
-
+import { Permission } from "react-native";
 
 
 export default function Chat() {
@@ -42,13 +42,39 @@ export default function Chat() {
     const scrollViewRef = useRef();
     const URL = myGlobalVariable;
 
+    const prevCourseId = useRef(null);
+
+    useEffect(() => {
+        if (prevCourseId.current !== courseId) {
+            // Nếu courseId khác với prevCourseId, fetch dữ liệu mới
+            fetchDataAndScroll();
+            // Cập nhật prevCourseId để sử dụng trong lần render tiếp theo
+            prevCourseId.current = courseId;
+        }
+    }, [courseId]);
+
+
     const courseId = route.params.id;
 
     const className = route.params.name;
 
     const handleHeader = () => {
+        handleDisconnectSignalR();
         navigation.navigate('ClassDetail', { classId: courseId });
+
     };
+
+    const handleDisconnectSignalR = () => {
+        if (connection) {
+            connection.stop();
+        }
+    };
+
+    useEffect(() => {
+        // Clean up the connection when the component unmounts
+        return handleDisconnectSignalR;
+    }, [connection]);
+
 
     const handleImageLoad = () => {
         setLoadedImages(loadedImages + 1);
@@ -82,29 +108,26 @@ export default function Chat() {
         }
     };
 
+    async function fetchDataAndScroll() {
+        try {
+            const response = await fetch('https://testdoan.ngrok.dev/api/ChatRoom/GetAllClassMessages/' + courseId);
+            console.log(URL + " " + courseId);
+            const data = await response.json();
+            setMessages(data);
+            setNewMessage("");
+            setIsSendButtonDisabled(true);
+            setIsLoading(false);
+        
+        } catch (error) {
+            console.error("Error fetching messages:", error);
+            // Retry the fetch request after 5 seconds
+            setTimeout(fetchDataAndScroll, 5000);
+        }
+    };
+
     useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const response = await fetch(URL + '/api/ChatRoom/GetAllClassMessages/' + courseId);
-
-                const data = await response.json();
-                setMessages(data);
-                setNewMessage("");
-                setIsSendButtonDisabled(true);
-                setIsLoading(false);
-
-                if (scrollViewRef.current) {
-                    scrollViewRef.current.scrollToEnd({ animated: false });
-                }
-            } catch (error) {
-                console.error("Error fetching messages:", error);
-                Alert.alert("Error", "Failed to fetch messages. Please try again.");
-            }
-        };
-
-        fetchMessages();
-    }, [courseId]);
-
+        fetchDataAndScroll();
+    }, []);
 
 
     const uploadImage = async () => {
@@ -300,46 +323,46 @@ export default function Chat() {
 
     const renderMessageItem = ({ item, index }) => {
         return (
-          <View style={{ alignSelf: item.createBy === User ? 'flex-end' : 'flex-start' }}>
-            <Text style={{ fontSize: 12, color: 'white' }}>{item.fullName}</Text>
-            
-            <View style={{ flexDirection: 'row' }}>
-              {item.createBy === User && (
-                <TouchableOpacity style={{ margin: 8 }} onPress={() => handleDelete(item.messageId)}>
-                  <Ionicons name="trash-bin-outline" size={24} color="white" />
-                </TouchableOpacity>
-              )}
-              <View style={{
-                borderRadius: 20,
-                width: 150,
-                backgroundColor: item.createBy === User ? 'lightblue' : item.roleId === 1 ? '#C79191' : 'lightgray',
-                padding: 8,
-                margin: 4
-              }}>
-                <Text>{item.content}</Text>
-              </View>
+            <View style={{ alignSelf: item.createBy === User ? 'flex-end' : 'flex-start' }}>
+                <Text style={{ fontSize: 12, color: 'white' }}>{item.fullName}</Text>
+
+                <View style={{ flexDirection: 'row' }}>
+                    {item.createBy === User && (
+                        <TouchableOpacity style={{ margin: 8 }} onPress={() => handleDelete(item.messageId)}>
+                            <Ionicons name="trash-bin-outline" size={24} color="white" />
+                        </TouchableOpacity>
+                    )}
+                    <View style={{
+                        borderRadius: 20,
+                        width: 150,
+                        backgroundColor: item.createBy === User ? 'lightblue' : item.roleId === 1 ? '#C79191' : 'lightgray',
+                        padding: 8,
+                        margin: 4
+                    }}>
+                        <Text>{item.content}</Text>
+                    </View>
+                </View>
+
+                {item.photo && (
+                    <View>
+                        <Image
+                            source={{ uri: URL + '/api/ChatRoom/GetImage/' + item.messageId }}
+                            style={{
+                                width: 150,
+                                height: 150,
+                                borderRadius: 20,
+                                margin: 4
+                            }}
+                            onLoad={handleImageLoad}
+                        />
+                    </View>
+                )}
+
+                <Text style={{ fontSize: 12, color: 'gray' }}>{item.createDate}</Text>
             </View>
-            
-            {item.photo && (
-              <View>
-                <Image
-                  source={{ uri: URL + '/api/ChatRoom/GetImage/' + item.messageId }}
-                  style={{
-                    width: 150,
-                    height: 150,
-                    borderRadius: 20,
-                    margin: 4
-                  }}
-                  onLoad={handleImageLoad}
-                />
-              </View>
-            )}
-      
-            <Text style={{ fontSize: 12, color: 'gray' }}>{item.createDate}</Text>
-          </View>
         );
-      };
-      
+    };
+
 
 
     return (

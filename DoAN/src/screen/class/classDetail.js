@@ -167,7 +167,8 @@ export default function classDetail(props) {
     };
 
     const ChatHandle = (id, name) => {
-        navigation.navigate('ChatClass', { id: id, name: name });
+        navigation.navigate('Chat', { id: id, name: name });
+
     };
 
     const route = useRoute();
@@ -262,7 +263,6 @@ export default function classDetail(props) {
                 console.log(response.status);
             }
         } catch (error) {
-            console.error(error);
             Alert.alert('Error', 'Something must wrong');
         }
     };
@@ -274,27 +274,36 @@ export default function classDetail(props) {
     };
 
     useEffect(() => {
-        console.log(StatusBar.currentHeight);
-        async function getClassById() {
-            const response = await fetch(URL + '/api/Class/GetClassById/GetClassById/' + classId);
-            const JsonConvert = await response.json();
-            setClassData(JsonConvert);
-            const response1 = await fetch(URL + '/api/User/GetTeacherById/GetUserById/' + JsonConvert[0].teacherId);
-            const JsonConvert1 = await response1.json();
-            setTeacherData(JsonConvert1);
-            const response2 = await fetch(URL + '/api/ListStudentClass/CheckClassExists/CheckClassExists/' + classId + '/' + User);
-            const response3 = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + User);
-            const JsonConvert2 = await response3.json();
-            setUserData(JsonConvert2)
-            if (response2.ok) {
-                setShowButtons(true);
+        async function getData() {
+            try {
+                const classResponse = await fetch(URL + '/api/Class/GetClassById/GetClassById/' + classId);
+                const classJsonConvert = await classResponse.json();
+                setClassData(classJsonConvert);
+    
+                const teacherResponse = await fetch(URL + '/api/User/GetTeacherById/GetUserById/' + classJsonConvert[0].teacherId);
+                const teacherJsonConvert = await teacherResponse.json();
+                setTeacherData(teacherJsonConvert);
+    
+                const studentClassResponse = await fetch(URL + '/api/ListStudentClass/CheckClassExists/CheckClassExists/' + classId + '/' + User);
+                if (studentClassResponse.ok) {
+                    setShowButtons(true);
+                }
+    
+                const studentResponse = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + User);
+                const studentJsonConvert = await studentResponse.json();
+                setUserData(studentJsonConvert);
+    
+                setIsLoading(false);
+            } catch (error) {
+                // Xử lý lỗi
             }
-            setIsLoading(false);
-
         }
-        getClassById();
-    });
-
+    
+        if (isLoading) {
+            getData();
+        }
+    }, [isLoading, classId, User]);
+    
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar translucent={true} backgroundColor="transparent" />

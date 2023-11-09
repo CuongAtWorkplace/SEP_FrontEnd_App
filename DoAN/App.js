@@ -88,8 +88,7 @@ const App = () => {
         <Stack.Screen name="UpdateProfile" component={updateProfile} options={{ headerShown: false }} />
         <Stack.Screen name="Notification" component={notification} options={{ headerShown: false }} />
         <Stack.Screen name="ClassSearch" component={classSearch} options={{ headerShown: false }} />
-        <Stack.Screen name="ChatClass" component={Chat} options={{ headerShown: false }} />
-
+        <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
