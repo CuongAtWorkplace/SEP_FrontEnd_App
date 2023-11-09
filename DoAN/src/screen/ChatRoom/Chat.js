@@ -23,6 +23,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { KeyboardAvoidingView } from "react-native";
 
 
+
 export default function Chat() {
     const navigation = useNavigation();
     const [messages, setMessages] = React.useState([]);
@@ -44,7 +45,7 @@ export default function Chat() {
     const courseId = route.params.id;
 
     const className = route.params.name;
-    
+
     const handleHeader = () => {
         navigation.navigate('ClassDetail', { classId: courseId });
     };
@@ -52,7 +53,7 @@ export default function Chat() {
     const handleImageLoad = () => {
         setLoadedImages(loadedImages + 1);
     };
-    
+
     useEffect(() => {
         if (loadedImages === messages.filter(message => message.photo).length) {
             setIsImageLoading(false);
@@ -64,8 +65,14 @@ export default function Chat() {
         SetCheckIsImageLoading(false);
     };
 
+    const inputRef = useRef(null);
 
-    
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, []);
+
     const handleSend = () => {
         // If there's a selected image, upload it first
         if (selectedImage) {
@@ -78,16 +85,16 @@ export default function Chat() {
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                const response = await fetch(URL+'/api/ChatRoom/GetAllClassMessages/'+courseId);
+                const response = await fetch(URL + '/api/ChatRoom/GetAllClassMessages/' + courseId);
 
-              
-    
+
+
                 const data = await response.json();
                 setMessages(data);
                 setNewMessage("");
                 setIsSendButtonDisabled(true);
                 setIsLoading(false);
-    
+
                 if (scrollViewRef.current) {
                     scrollViewRef.current.scrollToEnd({ animated: false });
                 }
@@ -96,10 +103,10 @@ export default function Chat() {
                 Alert.alert("Error", "Failed to fetch messages. Please try again.");
             }
         };
-    
+
         fetchMessages();
     }, [courseId]);
-    
+
 
 
     const uploadImage = async () => {
@@ -166,7 +173,7 @@ export default function Chat() {
             });
     };
 
-      useEffect(() => {
+    useEffect(() => {
         const newConnection = new HubConnectionBuilder()
             .withUrl(URL + '/chatHub')
             .build();
@@ -207,7 +214,7 @@ export default function Chat() {
     // ...
 
 
-   
+
 
     useEffect(() => {
         // Fetch messages and set them in the state as you currently do
@@ -237,7 +244,7 @@ export default function Chat() {
                 {
                     text: 'OK',
                     onPress: () => {
-                        fetch(URL + '/api/ChatRoom/DeleteMessage/'+messageId, {
+                        fetch(URL + '/api/ChatRoom/DeleteMessage/' + messageId, {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -297,7 +304,7 @@ export default function Chat() {
 
     return (
         <View style={styles.container}>
-            {isLoading  ? (
+            {isLoading&&isImageLoading ? (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color={colors.primary} />
                 </View>
@@ -309,7 +316,7 @@ export default function Chat() {
                         style={styles.backgroundImage}
                     >
                         <View style={styles.chatContainer}>
-                            
+
                             <ScrollView
                                 ref={scrollViewRef}
                                 onContentSizeChange={(contentWidth, contentHeight) => {
@@ -382,37 +389,41 @@ export default function Chat() {
                             </View>
                         )}
 
-                        <View style={styles.inputContainer}>
+                        <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={100}>
 
+                            <View style={styles.inputContainer}>
 
-                            <TouchableOpacity onPress={openImagePicker} >
-                                <Ionicons name="attach" size={35} color="white" />
-                            </TouchableOpacity>
+                                <TouchableOpacity onPress={openImagePicker} >
+                                    <Ionicons name="attach" size={35} color="white" />
+                                </TouchableOpacity>
 
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Type a message..."
-                                placeholderTextColor={colors.white}
-                                value={newMessage}
-                                onChangeText={text => {
-                                    setNewMessage(text);
-                                    setIsSendButtonDisabled(text.trim().length === 0); // Update the disabled state based on the trimmed text
-                                }}
-                            />
-                            <TouchableOpacity
-                                style={{
-                                    margin: 10,
-                                }}
-                                disabled={isSendButtonDisabled}
-                                onPress={isSendButtonDisabled ? null : handleSend} >
-                                {/* Disable onPress if isSendButtonDisabled is true */}
-                                <Ionicons name="send-outline" size={25} color={!isSendButtonDisabled ? "white" : "gray"} />
-                            </TouchableOpacity>
-                        </View>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Type a message..."
+                                    placeholderTextColor={colors.white}
+                                    value={newMessage}
+                                    onChangeText={text => {
+                                        setNewMessage(text);
+                                        setIsSendButtonDisabled(text.trim().length === 0); // Update the disabled state based on the trimmed text
+                                    }}
+                                />
+                                <TouchableOpacity
+                                    style={{
+                                        margin: 10,
+                                    }}
+                                    disabled={isSendButtonDisabled}
+                                    onPress={isSendButtonDisabled ? null : handleSend} >
+                                    {/* Disable onPress if isSendButtonDisabled is true */}
+                                    <Ionicons name="send-outline" size={25} color={!isSendButtonDisabled ? "white" : "gray"} />
+                                </TouchableOpacity>
+                            </View>
+                        </KeyboardAvoidingView>
+
                     </ImageBackground>
                 </React.Fragment>
-            )}
-        </View>
+            )
+            }
+        </View >
     );
 }
 
