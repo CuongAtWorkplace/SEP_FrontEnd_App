@@ -35,7 +35,7 @@ export default function Chat() {
     const [selectedImage, setSelectedImage] = useState(null);
     const [isImageLoading2, setIsImageLoading2] = useState(false);
     const [CheckImageLoading, SetCheckIsImageLoading] = useState(false);
-
+    const [loadedImages, setLoadedImages] = useState(0);
 
 
     const scrollViewRef = useRef();
@@ -50,8 +50,14 @@ export default function Chat() {
     };
 
     const handleImageLoad = () => {
-        setIsImageLoading(false);
+        setLoadedImages(loadedImages + 1);
     };
+    
+    useEffect(() => {
+        if (loadedImages === messages.filter(message => message.photo).length) {
+            setIsImageLoading(false);
+        }
+    }, [loadedImages, messages]);
 
     const handleCancelImage = () => {
         setSelectedImage("");
@@ -70,30 +76,29 @@ export default function Chat() {
     };
 
     useEffect(() => {
-        fetch(URL + '/api/ChatRoom/GetAllClassMessages/' + courseId)
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error('Network response was not ok.');
-            })
-            .then(data => {
-                console.log(courseId);
+        const fetchMessages = async () => {
+            try {
+                const response = await fetch(URL+'/api/ChatRoom/GetAllClassMessages/'+courseId);
+
+              
+    
+                const data = await response.json();
                 setMessages(data);
                 setNewMessage("");
                 setIsSendButtonDisabled(true);
-                setIsLoading(false); // Tắt tình trạng isLoading khi dữ liệu đã được nạp
+                setIsLoading(false);
+    
                 if (scrollViewRef.current) {
                     scrollViewRef.current.scrollToEnd({ animated: false });
                 }
-            })
-            .catch(error => {
-                console.error("Lỗi khi gọi API:", error);
-                // Xử lý lỗi nếu có
-                // Ví dụ: Hiển thị thông báo lỗi
-                Alert.alert("Error", "Failed to fetch data. Please try again.");
-            });
-    }, []);
+            } catch (error) {
+                console.error("Error fetching messages:", error);
+                Alert.alert("Error", "Failed to fetch messages. Please try again.");
+            }
+        };
+    
+        fetchMessages();
+    }, [courseId]);
     
 
 
@@ -182,6 +187,8 @@ export default function Chat() {
             // Cleanup function to close the event listener
             if (newConnection) {
                 newConnection.off('ReceiveMessage');
+                newConnection.stop(); // Đóng kết nối khi component bị unmount
+
             }
         };
     }, []); // Run only once when the component mounts
@@ -290,7 +297,7 @@ export default function Chat() {
 
     return (
         <View style={styles.container}>
-            {isLoading && isImageLoading ? (
+            {isLoading  ? (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color={colors.primary} />
                 </View>
@@ -345,9 +352,8 @@ export default function Chat() {
                                                         borderRadius: 20,
                                                         margin: 4,
                                                     }}
-                                                    onLoad={handleImageLoad}
+                                                    onLoad={handleImageLoad} // Gọi hàm khi hình ảnh đã tải xong
                                                 />
-
                                             </View>
                                         )}
 
