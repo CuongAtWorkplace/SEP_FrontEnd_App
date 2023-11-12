@@ -1,13 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { TouchableOpacity, StyleSheet, View, ScrollView } from 'react-native';
-import { Text, TextInput } from 'react-native-paper'; // Thêm TextInput và Button vào import
-
-
+import { Text, TextInput } from 'react-native-paper'; // Thêm TextInput và Button vào impor
 import Background from '../../../component/Background';
 import LoginButton from '../../../component/LoginButton';
 import LottieView from 'lottie-react-native';
 import { colors } from '../../../constants/theme';
-
+import Video from 'react-native-video';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
@@ -17,20 +15,17 @@ export default function Login({ navigation }) {
 
 
   const onLoginPressed = () => {
-    // Xử lý logic đăng nhập ở đây
-
-    // Sau khi xử lý logic, focus vào email input
     emailInputRef.current.focus();
   };
 
   return (
-    <ScrollView  >
-      <View >
+    <ScrollView style={{ marginTop: 100 }} >
+      <View style={{ marginBottom: 50 }}>
         <LottieView
-          style={{ flex: 1, width: 300, height: 300, justifyContent: 'center', alignSelf: 'center' }}
-        //  source={require('../Login.json')}
-          autoPlay={true}
-          loop={true}
+          style={{ flex: 1, width: 200, height: 200, justifyContent: 'center', alignSelf: 'center' }}
+          source={require('../../assets/login.json')}
+          autoPlay
+          loop
         />
       </View>
 
@@ -102,21 +97,21 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   row: {
-    justifyContent: 'center', 
+    justifyContent: 'center',
     alignSelf: 'center',
     flexDirection: 'row',
     marginTop: 4,
   },
   forgot: {
     fontSize: 13,
-    marginRight:15,
+    marginRight: 15,
   },
   link: {
     fontWeight: 'bold',
-    color:'#3E427B'
+    color: '#3E427B'
   },
   Input: {
-    margin:15,
+    margin: 15,
     backgroundColor: colors.white,
     borderWidth: 1, // Độ rộng của border
     borderColor: 'black', // Màu của border

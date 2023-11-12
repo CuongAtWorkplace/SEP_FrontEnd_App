@@ -17,6 +17,7 @@ import notification from './src/screen/homescreen/notification';
 import classSearch from './src/screen/homescreen/classSearch';
 import Chat from './src/screen/ChatRoom/Chat';
 import CommentList from './src/screen/PostScreen/CommentList';
+import OnboardingScreen from './src/screen/onBoarding/onBoardingScreen';
 import { StatusBar } from 'react-native';
 
 const Stack = createStackNavigator();
@@ -89,6 +90,7 @@ const App = () => {
         <Stack.Screen name="Notification" component={notification} options={{ headerShown: false }} />
         <Stack.Screen name="ClassSearch" component={classSearch} options={{ headerShown: false }} />
         <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
+        <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

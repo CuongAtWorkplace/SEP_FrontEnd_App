@@ -14,6 +14,9 @@ export default function setting() {
         navigation.navigate('Login')
     };
 
+    const OnboardingScreen = () => {
+        navigation.navigate('OnboardingScreen')
+    };
 
 
     return (
@@ -24,7 +27,7 @@ export default function setting() {
             <View style={styles.option}>
                 <SettingItem text="Profile" iconName="user" action={handleProfile} />
                 <SettingItem text="Help with manager" iconName="contacts" />
-                <SettingItem text="About us" iconName="profile" />
+                <SettingItem text="About us" iconName="profile" action={OnboardingScreen}/>
                 <SettingItem text="Logout" iconName="logout" action={handleLogout} />
             </View>
         </ScrollView>
