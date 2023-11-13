@@ -15,7 +15,7 @@ const onboardingData = [
       id: 3,
       title: 'Get Started Now',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      lottie: require('../src/assets/onboarding1.json'),
+      lottie: require('../src/assets/onboarding3.json'),
     },
   ];
   

@@ -5,16 +5,26 @@ import Swiper from 'react-native-swiper';
 import onboardingData from '../../onboardingData';
 import { useEffect } from 'react';
 import { useRef } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
-const OnboardingScreen = ({ navigation }) => {
+const OnboardingScreen = () => {
     const [currentId, setCurrentId] = useState(0);
     const swiperRef = useRef(null);
+    const navigation = useNavigation();
 
 
     useEffect(() => {
         // Xử lý khi currentId thay đổi
         console.log('Current ID:', currentId);
     }, [currentId]);
+
+    const handleNextPage = () => {
+        swiperRef.current.scrollBy(1);
+    };
+
+    const handleSetting = () => {
+        navigation.navigate('Setting')
+    };
 
     const renderItem = ({ item }) => (
         <View style={styles.slide}>
@@ -28,8 +38,8 @@ const OnboardingScreen = ({ navigation }) => {
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.description}>{item.description}</Text>
 
-            {currentId === onboardingData.length - 1 ? (
-                <TouchableOpacity onPress={() => console.log('Get Started Pressed')}>
+            {item.id === 3 ? (
+                <TouchableOpacity onPress={handleSetting}>
                     <View style={{ width: 130, height: 130 }}>
                         <LottieView
                             source={require('../onBoarding/finbtn.json')}
@@ -39,7 +49,7 @@ const OnboardingScreen = ({ navigation }) => {
                     </View>
                 </TouchableOpacity>
             ) : (
-                <TouchableOpacity onPress={() => swiperRef.current.scrollBy(1)}>
+                <TouchableOpacity onPress={handleNextPage}>
                     <View style={{ width: 100, height: 100 }}>
                         <LottieView
                             source={require('../onBoarding/nextbtn.json')}
@@ -55,21 +65,14 @@ const OnboardingScreen = ({ navigation }) => {
     return (
         <Swiper
             ref={swiperRef}
-            onIndexChanged={(index) => {
-                console.log('New Index:', index);
-                setCurrentId(index);
-            }}
+
             showsPagination={true}
             activeDotColor="black"
             style={{ backgroundColor: 'white' }}
-            index={currentId} // Đặt index là currentId
-           
         >
             {onboardingData.map((item) => (
                 <View key={item.id} style={{ flex: 1 }}>
-                    {console.log('Current ID:', currentId, 'Item ID:', item.id - 1)}
-
-                    {item.id - 1 === currentId && renderItem({ item })}
+                    {renderItem({ item })}
                 </View>
             ))}
         </Swiper>
