@@ -8,6 +8,10 @@ import { colors } from '../../../constants/theme';
 import { SafeAreaView } from 'react-native';
 import { Modal } from 'react-native';
 import ForgetPaswordModal from './ForgetPaswordModal';
+import { KeyboardAvoidingView } from 'react-native';
+
+
+
 export default function Login({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
@@ -39,50 +43,52 @@ export default function Login({ navigation }) {
           loop
         />
       </View>
+      <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={5}>
 
-      <TextInput
-        ref={emailInputRef}
-        style={styles.Input}
-        label="Email"
-        value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-        onFocus={() => {
-          // Xử lý logic khi email input được focus
-        }}
-        labelStyle={{
-          color: colors.gray, // Màu của label
-          marginBottom: 8, // Khoảng cách giữa label và input
-        }}
-        underlineColor="#3E427B" // Màu của đường outline bên dưới
-      />
+        <TextInput
+          ref={emailInputRef}
+          style={styles.Input}
+          label="Email"
+          value={email.value}
+          onChangeText={(text) => setEmail({ value: text, error: '' })}
+          error={!!email.error}
+          errorText={email.error}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+          onFocus={() => {
+            // Xử lý logic khi email input được focus
+          }}
+          labelStyle={{
+            color: colors.gray, // Màu của label
+            marginBottom: 8, // Khoảng cách giữa label và input
+          }}
+          underlineColor="#3E427B" // Màu của đường outline bên dưới
+        />
 
-      <TextInput
-        ref={emailInputRef}
-        style={styles.Input}
-        label="Password"
-        value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-        onFocus={() => {
-          // Xử lý logic khi email input được focus
-        }}
-        labelStyle={{
-          color: colors.gray, // Màu của label
-          marginBottom: 8, // Khoảng cách giữa label và input
-        }}
-        underlineColor="#3E427B" // Màu của đường outline bên dưới
-      />
+        <TextInput
+          ref={emailInputRef}
+          style={styles.Input}
+          label="Password"
+          value={email.value}
+          onChangeText={(text) => setEmail({ value: text, error: '' })}
+          error={!!email.error}
+          errorText={email.error}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+          onFocus={() => {
+            // Xử lý logic khi email input được focus
+          }}
+          labelStyle={{
+            color: colors.gray, // Màu của label
+            marginBottom: 8, // Khoảng cách giữa label và input
+          }}
+          underlineColor="#3E427B" // Màu của đường outline bên dưới
+        />
+      </KeyboardAvoidingView>
       <View style={styles.forgotPassword}>
         <TouchableOpacity onPress={handleForgetPass}>
           <Text style={styles.forgot}>Forgot your password?</Text>

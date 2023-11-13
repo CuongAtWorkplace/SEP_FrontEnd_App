@@ -19,6 +19,8 @@ const ForgetPaswordModal = ({ closeModal }) => {
                     <AntDesign name="closecircleo" size={24} color="white" />
                 </TouchableOpacity>
 
+                <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={5}>
+
                 <View style={styles.commentModal}>
                     <View style={{ width: 200, height: 200 }}>
                         <LottieView
@@ -28,17 +30,19 @@ const ForgetPaswordModal = ({ closeModal }) => {
                         />
                     </View>
                     <Text style={{ fontWeight: 'bold', alignSelf: 'flex-start', fontSize: 18 }}>Type your email here:</Text>
-                    <TextInput
-                        style={styles.textInput}
-                        placeholder="Email"
-                        numberOfLines={5}
-                        multiline
-                    />
 
-                    <TouchableOpacity style={{ width: 70, height: 50, backgroundColor: '#FE7104', borderRadius: 30, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ fontWeight: 'bold', color: 'white' }}>Send</Text>
-                    </TouchableOpacity>
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder="Email"
+                            numberOfLines={5}
+                            multiline
+                        />
+
+                        <TouchableOpacity style={{ width: 70, height: 50, backgroundColor: '#FE7104', borderRadius: 30, alignItems: 'center', justifyContent: 'center' }}>
+                            <Text style={{ fontWeight: 'bold', color: 'white' }}>Send</Text>
+                        </TouchableOpacity>
                 </View>
+                </KeyboardAvoidingView>
             </View>
         </View>
     );
@@ -64,7 +68,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
         backgroundColor: 'white',
-        width: '80%',
+        width: 300,
         borderRadius: 8,
         marginBottom: 10,
         justifyContent: 'center',

@@ -6,6 +6,9 @@ import LoginButton from '../../../component/LoginButton';
 import LottieView from 'lottie-react-native';
 import { colors } from '../../../constants/theme';
 import Video from 'react-native-video';
+import { KeyboardAvoidingView } from 'react-native';
+
+
 
 export default function register({ navigation }) {
     const [email, setEmail] = useState({ value: '', error: '' });
@@ -20,102 +23,102 @@ export default function register({ navigation }) {
 
     return (
         <ScrollView style={{ backgroundColor: 'white', height: '100%' }} >
-            <View style={{ marginBottom: 10, marginTop: 100 }}>
-                <LottieView
-                    style={{ flex: 1, width: 200, height: 200, justifyContent: 'center', alignSelf: 'center' }}
-                    source={require('../../assets/register.json')}
-                    autoPlay
-                    loop
+            <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={5}>
+                <View style={{ marginBottom: 10, marginTop: 100 }}>
+                    <LottieView
+                        style={{ flex: 1, width: 200, height: 200, justifyContent: 'center', alignSelf: 'center' }}
+                        source={require('../../assets/register.json')}
+                        autoPlay
+                        loop
+                    />
+                </View>
+
+                <TextInput
+                    ref={emailInputRef}
+                    style={styles.Input}
+                    label="Email"
+                    value={email.value}
+                    onChangeText={(text) => setEmail({ value: text, error: '' })}
+                    error={!!email.error}
+                    errorText={email.error}
+                    autoCapitalize="none"
+                    autoCompleteType="email"
+                    textContentType="emailAddress"
+                    keyboardType="email-address"
+                    onFocus={() => {
+                    }}
+                    labelStyle={{
+                        color: colors.gray, // Màu của label
+                        marginBottom: 8, // Khoảng cách giữa label và input
+                    }}
+                    underlineColor="#3E427B" // Màu của đường outline bên dưới
                 />
-            </View>
 
-            <TextInput
-                ref={emailInputRef}
-                style={styles.Input}
-                label="Email"
-                value={email.value}
-                onChangeText={(text) => setEmail({ value: text, error: '' })}
-                error={!!email.error}
-                errorText={email.error}
-                autoCapitalize="none"
-                autoCompleteType="email"
-                textContentType="emailAddress"
-                keyboardType="email-address"
-                onFocus={() => {
-                }}
-                labelStyle={{
-                    color: colors.gray, // Màu của label
-                    marginBottom: 8, // Khoảng cách giữa label và input
-                }}
-                underlineColor="#3E427B" // Màu của đường outline bên dưới
-            />
-
-            <TextInput
-                ref={emailInputRef}
-                style={styles.Input}
-                label="Phone"
-                value={email.value}
-                onChangeText={(text) => setEmail({ value: text, error: '' })}
-                error={!!email.error}
-                errorText={email.error}
-                autoCapitalize="none"
-                autoCompleteType="email"
-                textContentType="emailAddress"
-                keyboardType="email-address"
-                onFocus={() => {
-                }}
-                labelStyle={{
-                    color: colors.gray, // Màu của label
-                    marginBottom: 8, // Khoảng cách giữa label và input
-                }}
-                underlineColor="#3E427B" // Màu của đường outline bên dưới
-            />
+                <TextInput
+                    ref={emailInputRef}
+                    style={styles.Input}
+                    label="Phone"
+                    value={email.value}
+                    onChangeText={(text) => setEmail({ value: text, error: '' })}
+                    error={!!email.error}
+                    errorText={email.error}
+                    autoCapitalize="none"
+                    autoCompleteType="email"
+                    textContentType="emailAddress"
+                    keyboardType="email-address"
+                    onFocus={() => {
+                    }}
+                    labelStyle={{
+                        color: colors.gray, // Màu của label
+                        marginBottom: 8, // Khoảng cách giữa label và input
+                    }}
+                    underlineColor="#3E427B" // Màu của đường outline bên dưới
+                />
 
 
-            <TextInput
-                ref={emailInputRef}
-                style={styles.Input}
-                label="Password"
-                value={email.value}
-                onChangeText={(text) => setEmail({ value: text, error: '' })}
-                error={!!email.error}
-                errorText={email.error}
-                autoCapitalize="none"
-                autoCompleteType="email"
-                textContentType="emailAddress"
-                keyboardType="email-address"
-                onFocus={() => {
-                    // Xử lý logic khi email input được focus
-                }}
-                labelStyle={{
-                    color: colors.gray, // Màu của label
-                    marginBottom: 8, // Khoảng cách giữa label và input
-                }}
-                underlineColor="#3E427B" // Màu của đường outline bên dưới
-            />
+                <TextInput
+                    ref={emailInputRef}
+                    style={styles.Input}
+                    label="Password"
+                    value={email.value}
+                    onChangeText={(text) => setEmail({ value: text, error: '' })}
+                    error={!!email.error}
+                    errorText={email.error}
+                    autoCapitalize="none"
+                    autoCompleteType="email"
+                    textContentType="emailAddress"
+                    keyboardType="email-address"
+                    onFocus={() => {
+                        // Xử lý logic khi email input được focus
+                    }}
+                    labelStyle={{
+                        color: colors.gray, // Màu của label
+                        marginBottom: 8, // Khoảng cách giữa label và input
+                    }}
+                    underlineColor="#3E427B" // Màu của đường outline bên dưới
+                />
 
-            <TextInput
-                ref={emailInputRef}
-                style={styles.Input}
-                label="Confirm your Password"
-                value={email.value}
-                onChangeText={(text) => setEmail({ value: text, error: '' })}
-                error={!!email.error}
-                errorText={email.error}
-                autoCapitalize="none"
-                autoCompleteType="email"
-                textContentType="emailAddress"
-                keyboardType="email-address"
-                onFocus={() => {
-                    // Xử lý logic khi email input được focus
-                }}
-                labelStyle={{
-                    color: colors.gray, // Màu của label
-                    marginBottom: 8, // Khoảng cách giữa label và input
-                }}
-                underlineColor="#3E427B" // Màu của đường outline bên dưới
-            />
-
+                <TextInput
+                    ref={emailInputRef}
+                    style={styles.Input}
+                    label="Confirm your Password"
+                    value={email.value}
+                    onChangeText={(text) => setEmail({ value: text, error: '' })}
+                    error={!!email.error}
+                    errorText={email.error}
+                    autoCapitalize="none"
+                    autoCompleteType="email"
+                    textContentType="emailAddress"
+                    keyboardType="email-address"
+                    onFocus={() => {
+                    }}
+                    labelStyle={{
+                        color: colors.gray, // Màu của label
+                        marginBottom: 8, // Khoảng cách giữa label và input
+                    }}
+                    underlineColor="#3E427B" // Màu của đường outline bên dưới
+                />
+            </KeyboardAvoidingView>
             <LoginButton mode="contained" style={{ justifyContent: 'center', alignSelf: 'center' }} onPress={onLoginPressed}>
                 Register
             </LoginButton>
