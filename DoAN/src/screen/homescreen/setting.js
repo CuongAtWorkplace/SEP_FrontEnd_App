@@ -20,7 +20,7 @@ export default function setting() {
 
 
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.setting}>
                 Settings
             </Text>
@@ -35,13 +35,16 @@ export default function setting() {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1,
+        justifyContent: 'center',
+    },
     setting: {
         fontWeight: "bold",
         fontSize: 50,
-        marginTop: 30,
-        marginLeft: 20,
+        textAlign: 'center', // Canh giữa theo chiều ngang
     },
-    option:{
-        marginTop:30,
+    option: {
+        marginTop: 30,
     }
 });

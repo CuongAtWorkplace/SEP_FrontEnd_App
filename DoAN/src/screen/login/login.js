@@ -5,11 +5,13 @@ import Background from '../../../component/Background';
 import LoginButton from '../../../component/LoginButton';
 import LottieView from 'lottie-react-native';
 import { colors } from '../../../constants/theme';
-import Video from 'react-native-video';
-
+import { SafeAreaView } from 'react-native';
+import { Modal } from 'react-native';
+import ForgetPaswordModal from './ForgetPaswordModal';
 export default function Login({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
+  const [isPassVisible, setIsPassVisible] = useState(false);
 
   const emailInputRef = useRef();
 
@@ -18,9 +20,18 @@ export default function Login({ navigation }) {
     emailInputRef.current.focus();
   };
 
+
+  const handleCancelforget = () => {
+    setIsPassVisible(false);
+  };
+
+  const handleForgetPass = () => {
+    setIsPassVisible(true);
+  };
+
   return (
-    <ScrollView style={{ marginTop: 100 }} >
-      <View style={{ marginBottom: 50 }}>
+    <ScrollView style={{ backgroundColor: 'white', height: '100%' }} >
+      <View style={{ marginBottom: 50, marginTop: 100 }}>
         <LottieView
           style={{ flex: 1, width: 200, height: 200, justifyContent: 'center', alignSelf: 'center' }}
           source={require('../../assets/login.json')}
@@ -73,7 +84,7 @@ export default function Login({ navigation }) {
         underlineColor="#3E427B" // Màu của đường outline bên dưới
       />
       <View style={styles.forgotPassword}>
-        <TouchableOpacity onPress={() => navigation.navigate('ResetPasswordScreen')}>
+        <TouchableOpacity onPress={handleForgetPass}>
           <Text style={styles.forgot}>Forgot your password?</Text>
         </TouchableOpacity>
       </View>
@@ -86,6 +97,20 @@ export default function Login({ navigation }) {
           <Text style={styles.link}>Sign up</Text>
         </TouchableOpacity>
       </View>
+
+
+      <SafeAreaView>
+        <Modal
+          transparent={true}
+          animationType='fade'
+          visible={isPassVisible}
+          onRequestClose={handleCancelforget}>
+          <ForgetPaswordModal closeModal={handleCancelforget} />
+        </Modal>
+
+      </SafeAreaView>
+
+
     </ScrollView>
   );
 }

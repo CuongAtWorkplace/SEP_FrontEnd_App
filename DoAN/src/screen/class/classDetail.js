@@ -464,7 +464,7 @@ export default function classDetail(props) {
                                     <TouchableOpacity>
                                         <LinearGradient colors={['#FF3CAC', '#784BA0', '#2B86C5']} style={styles.linearGradient}>
                                             <MaterialIcons name="assignment" size={24} color="white" />
-                                            <Text style={styles.buttonText}>Quiz</Text>
+                                            <Text style={styles.buttonText}>file</Text>
                                         </LinearGradient>
                                     </TouchableOpacity>
                                 </View>
