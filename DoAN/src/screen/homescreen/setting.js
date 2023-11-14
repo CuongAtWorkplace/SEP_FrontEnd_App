@@ -18,6 +18,10 @@ export default function setting() {
         navigation.navigate('OnboardingScreen')
     };
 
+    const ManagerHelpScreen = () => {
+        navigation.navigate('ManagerHelp')
+    };
+
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -26,7 +30,7 @@ export default function setting() {
             </Text>
             <View style={styles.option}>
                 <SettingItem text="Profile" iconName="user" action={handleProfile} />
-                <SettingItem text="Help with manager" iconName="contacts" />
+                <SettingItem text="Help with manager" iconName="contacts" action={ManagerHelpScreen} />
                 <SettingItem text="About us" iconName="profile" action={OnboardingScreen}/>
                 <SettingItem text="Logout" iconName="logout" action={handleLogout} />
             </View>

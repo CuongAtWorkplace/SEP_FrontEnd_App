@@ -3,15 +3,19 @@ import { StyleSheet } from "react-native";
 import { Text, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "react-native";
+import { SafeAreaView } from "react-native";
+
 
 const HeaderBack = (props) => {
   return (
-    <View style={[styles.header, { marginTop: StatusBar.currentHeight +30 }]}>
+    <SafeAreaView style={{ backgroundColor: 'white' }}>
+    <View style={styles.header}>
       <TouchableOpacity style={styles.iconContainer} onPress={props.action}>
         <Ionicons name="ios-arrow-back" size={24} color="black" />
       </TouchableOpacity>
       <Text style={styles.title}>{props.title}</Text>
     </View>
+    </SafeAreaView>
   );
 }
 
@@ -21,8 +25,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white', // Màu nền của tiêu đề
-    height: 70, // Chiều cao của tiêu đề
-    marginTop: StatusBar.height,
+    height:50, // Chiều cao của tiêu đề
   },
   iconContainer: {
     position: 'absolute',

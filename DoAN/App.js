@@ -19,6 +19,7 @@ import Chat from './src/screen/ChatRoom/Chat';
 import CommentList from './src/screen/PostScreen/CommentList';
 import OnboardingScreen from './src/screen/onBoarding/onBoardingScreen';
 import { StatusBar } from 'react-native';
+import ManagerHelp from './src/screen/ManagerHelp/ManagerHelp';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -87,6 +88,7 @@ const App = () => {
         <Stack.Screen name="ClassSearch" component={classSearch} options={{ headerShown: false }} />
         <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
         <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="ManagerHelp" component={ManagerHelp} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
