@@ -9,21 +9,63 @@ import { SafeAreaView } from 'react-native';
 import { Modal } from 'react-native';
 import ForgetPaswordModal from './ForgetPaswordModal';
 import { KeyboardAvoidingView } from 'react-native';
-
-
+import myGlobalVariable from '../../global';
+import { jwtDecode } from 'jwt-decode';
+import { decode } from 'base-64';
+import { Alert } from 'react-native';
+import IconButton from 'react-native-paper';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
   const [isPassVisible, setIsPassVisible] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(true);
 
+
+  const URL = myGlobalVariable;
   const emailInputRef = useRef();
 
 
-  const onLoginPressed = () => {
-    emailInputRef.current.focus();
+  const onLoginPressed = async () => {
+    try {
+      const response = await fetch(URL + '/api/Login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.value,
+          password: password.value,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      // Xử lý phản hồi từ API (nếu cần)
+      const result = await response.json();
+      const base64Payload = result.token.split('.')[1];
+
+      try {
+        const decodedPayload = decode(base64Payload);
+        const decodedPayloadObject = JSON.parse(decodedPayload);
+        console.log(decodedPayloadObject.userid);
+      } catch (error) {
+        console.error('Error decoding payload:', error);
+      }
+
+      //  navigation.replace('Home')  
+    } catch (error) {
+      console.error('Error during login:', error);
+      Alert.alert('Wrong email or password');
+    }
   };
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   const handleCancelforget = () => {
     setIsPassVisible(false);
@@ -35,6 +77,7 @@ export default function Login({ navigation }) {
 
   return (
     <ScrollView style={{ backgroundColor: 'white', height: '100%' }} >
+
       <View style={{ marginBottom: 50, marginTop: 100 }}>
         <LottieView
           style={{ flex: 1, width: 200, height: 200, justifyContent: 'center', alignSelf: 'center' }}
@@ -44,7 +87,6 @@ export default function Login({ navigation }) {
         />
       </View>
       <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={5}>
-
         <TextInput
           ref={emailInputRef}
           style={styles.Input}
@@ -68,26 +110,19 @@ export default function Login({ navigation }) {
         />
 
         <TextInput
-          ref={emailInputRef}
           style={styles.Input}
           label="Password"
-          value={email.value}
-          onChangeText={(text) => setEmail({ value: text, error: '' })}
-          error={!!email.error}
-          errorText={email.error}
+          value={password.value}
+          onChangeText={(text) => setPassword({ value: text, error: '' })}
+          secureTextEntry={passwordVisible}
           autoCapitalize="none"
-          autoCompleteType="email"
-          textContentType="emailAddress"
-          keyboardType="email-address"
-          onFocus={() => {
-            // Xử lý logic khi email input được focus
-          }}
-          labelStyle={{
-            color: colors.gray, // Màu của label
-            marginBottom: 8, // Khoảng cách giữa label và input
-          }}
-          underlineColor="#3E427B" // Màu của đường outline bên dưới
+          autoCompleteType="password"
+          textContentType="password"
+          keyboardType="default"
+          underlineColor="#3E427B"
+          right={<TextInput.Icon name="eye" />}
         />
+
       </KeyboardAvoidingView>
       <View style={styles.forgotPassword}>
         <TouchableOpacity onPress={handleForgetPass}>
@@ -144,6 +179,7 @@ const styles = StyleSheet.create({
   Input: {
     margin: 15,
     backgroundColor: colors.white,
+
     borderWidth: 1, // Độ rộng của border
     borderColor: 'black', // Màu của border
     borderRadius: 5, // Độ cong của góc (tùy chỉnh theo mong muốn)

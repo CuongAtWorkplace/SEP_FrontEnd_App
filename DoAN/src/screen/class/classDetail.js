@@ -502,8 +502,7 @@ export default function classDetail(props) {
                         transparent={true}
                         animationType='fade'
                         visible={isFeedbackVisible}
-                        onRequestClose={() => setIsFeedbackVisible(false)}
-                    >
+                        onRequestClose={() => setIsFeedbackVisible(false)}>
                         <FeedBackModal closeModal={handleCancelFeedbackPress} />
                     </Modal>
                 </SafeAreaView>

@@ -6,6 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TextInput } from 'react-native';
 import { Alert } from 'react-native';
+
 const ReportModal = ({ closeModal }) => {
 
     const HandleSend = () =>{
@@ -67,7 +68,6 @@ const ReportModal = ({ closeModal }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-
     },
     commentContainer: {
         paddingHorizontal: 10,
