@@ -19,7 +19,7 @@ import ActivityIndicator from 'react-native-paper';
 import { colors } from 'react-native-elements';
 import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'react-native';
-
+import { useSelector } from 'react-redux';
 import User from '../../user';
 
 
@@ -50,7 +50,9 @@ export default function Home() {
 
 
   const URL = myGlobalVariable;
-  const UserID = User;
+
+  const UserID = useSelector((state) => state.user.userId);
+
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -65,6 +67,7 @@ export default function Home() {
   const fetchData = async () => {
     // StatusBar.setHidden(true);
 
+    console.log(UserID);
     try {
       const response1 = await fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/4');
       const response2 = await fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/3');

@@ -16,13 +16,16 @@ import { ActivityIndicator } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import myGlobalVariable from '../../global';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import User from '../../user';
 import ProgressDialog from 'react-native-progress-dialog';
 import { Linking } from 'react-native';
 import { Modal } from 'react-native';
 import ReportModal from './ReportModal';
 import FeedBackModal from './FeedBackModal';
 import { StatusBar } from 'expo-status-bar';
+import { useSelector } from 'react-redux';
+
+
+
 
 const CARD_WIDTH = sizes.width - 20;
 const CARD_HEIGHT = 200;
@@ -162,6 +165,8 @@ export default function classDetail(props) {
     const [showButtons, setShowButtons] = useState(false);
 
 
+    const UserID = useSelector((state) => state.user.userId);
+
     const handleBack = () => {
         navigation.navigate('Home');
     };
@@ -213,7 +218,7 @@ export default function classDetail(props) {
             setEnroll(false);
             Alert.alert('Notification', 'Ok');
             try {
-                const response = await fetch(URL + '/api/User/UpdateBalanceStudent/UpdateBalanceStudent/' + classData[0]?.fee + '/' + User, {
+                const response = await fetch(URL + '/api/User/UpdateBalanceStudent/UpdateBalanceStudent/' + classData[0]?.fee + '/' + UserID, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -243,7 +248,7 @@ export default function classDetail(props) {
             // Dữ liệu cần gửi đến API, với các tên thuộc tính phù hợp với backend
             const dataToSend = {
                 ClassId: classId, // Thay thế bằng classId thực tế
-                UserId: User, // Thay thế bằng userId thực tế
+                UserId: UserID, // Thay thế bằng userId thực tế
             };
 
             const response = await fetch(URL + '/api/ListStudentClass/AddStudentsToClass/AddStudentsToClass', {
@@ -284,12 +289,12 @@ export default function classDetail(props) {
                 const teacherJsonConvert = await teacherResponse.json();
                 setTeacherData(teacherJsonConvert);
     
-                const studentClassResponse = await fetch(URL + '/api/ListStudentClass/CheckClassExists/CheckClassExists/' + classId + '/' + User);
+                const studentClassResponse = await fetch(URL + '/api/ListStudentClass/CheckClassExists/CheckClassExists/' + classId + '/' + UserID);
                 if (studentClassResponse.ok) {
                     setShowButtons(true);
                 }
     
-                const studentResponse = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + User);
+                const studentResponse = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + UserID);
                 const studentJsonConvert = await studentResponse.json();
                 setUserData(studentJsonConvert);
     
@@ -302,7 +307,7 @@ export default function classDetail(props) {
         if (isLoading) {
             getData();
         }
-    }, [isLoading, classId, User]);
+    }, [isLoading, classId, UserID]);
     
     return (
         <SafeAreaView style={{ flex: 1 }}>

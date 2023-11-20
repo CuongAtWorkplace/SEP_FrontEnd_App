@@ -17,19 +17,23 @@ export default function Community({ navigation }) {
 
 
     const handleButton1Click = () => {
-        setIsButton1Active(!isButton1Active);
-        setIsButton2Active(false);
-        setIsAllPostScreenVisible(true);
-        setIsUpdatePostScreenVisible(false);
+        if (!isButton1Active) {
+            setIsButton1Active(true);
+            setIsButton2Active(false);
+            setIsAllPostScreenVisible(true);
+            setIsUpdatePostScreenVisible(false);
+        }
     };
-
+    
     const handleButton2Click = () => {
-        setIsButton2Active(!isButton2Active);
-        setIsButton1Active(false);
-        setIsAllPostScreenVisible(false);
-        setIsUpdatePostScreenVisible(true);
-
+        if (!isButton2Active) {
+            setIsButton2Active(true);
+            setIsButton1Active(false);
+            setIsAllPostScreenVisible(false);
+            setIsUpdatePostScreenVisible(true);
+        }
     };
+    
 
     return (
         <SafeAreaView style={{ flex: 1 }}>

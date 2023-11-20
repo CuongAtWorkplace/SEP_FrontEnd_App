@@ -8,8 +8,8 @@ import moment from 'moment';
 import { Entypo } from '@expo/vector-icons';
 import { TextInput } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
-import User from '../../user';
 import { Alert } from 'react-native';
+import { useSelector } from 'react-redux';
 
 
 const CommentList = ({ closeModal, postId }) => {
@@ -17,6 +17,8 @@ const CommentList = ({ closeModal, postId }) => {
     const [comments, setComments] = useState([]);
     const [commentSend, setCommentSend] = useState([]);
 
+
+    const UserID = useSelector((state) => state.user.userId);
 
     const URL = myGlobalVariable;
 
@@ -26,7 +28,7 @@ const CommentList = ({ closeModal, postId }) => {
             Alert.alert("Please type your comment");
         } else {
             const commentData = {
-                userId: User,
+                userId: UserID,
                 postId: postId,
                 content: commentSend
             };

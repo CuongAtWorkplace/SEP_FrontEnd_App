@@ -11,6 +11,8 @@ import HeaderBack from "../../../component/HeaderBack";
 import { colors } from "react-native-elements";
 import User from "../../user";
 
+import { useSelector } from 'react-redux';
+
 
 export default function UpdateProfile() {
     const navigation = useNavigation();
@@ -21,8 +23,10 @@ export default function UpdateProfile() {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+
     const URL = myGlobalVariable;
-    const UserID = User;
+    const UserID = useSelector((state) => state.user.userId);
+
 
     useEffect(() => {
         (async () => {
@@ -33,7 +37,7 @@ export default function UpdateProfile() {
 
             async function getUser() {
                 try {
-                    const response = await fetch(URL + '/api/User/GetStudentById/' + UserID);
+                    const response = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + UserID);
                     if (response.ok) {
                         const user = await response.json();
                         setUserData(user);
@@ -67,7 +71,7 @@ export default function UpdateProfile() {
                 address: address
             };
 
-            const response = await fetch(URL + '/api/User/UpdateStudentById/' + UserID, {
+            const response = await fetch(URL + '/api/User/UpdateUserInfo/UpdateStudentById/' + UserID, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -76,7 +80,6 @@ export default function UpdateProfile() {
             });
 
             if (response.ok) {
-                Alert.alert('Thông báo', 'Cập nhật thông tin thành công');
             } else {
                 Alert.alert('Lỗi', 'Cập nhật thông tin thất bại');
             }

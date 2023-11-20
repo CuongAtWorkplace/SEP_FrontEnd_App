@@ -13,6 +13,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
 import User from '../../user';
+import { useSelector } from 'react-redux';
+
 
 
 export default function Profile() {
@@ -28,8 +30,7 @@ export default function Profile() {
     };
 
     const URL = myGlobalVariable;
-
-    const UserID = User;
+    const UserID = useSelector((state) => state.user.userId);
     const [isImageLoading, setImageLoading] = useState(true);
     const [UserData, setUserData] = useState([]);
     const [isLoading, setLoading] = useState(true); // Trạng thái tải dữ liệu người dùng
@@ -47,30 +48,31 @@ export default function Profile() {
     };
 
 
-
     useEffect(() => {
-        async function getUser() {
+        const getUser = async () => {
             try {
                 const response = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + UserID);
                 const response4 = await fetch(URL + '/api/ListStudentClass/AllUserClassRegister/AllUserClassRegister/' + UserID);
-
+    
                 if (response.ok) {
                     const user = await response.json();
                     setUserData(user);
                 }
+    
                 if(response4.ok){
                     const listData = await response4.json();
-                    setListCount(listData); // Cập nhật số lượng danh sách từ dữ liệu API
+                    setListCount(listData);
                 }
             } catch (error) {
                 console.error(error);
             } finally {
-                setLoading(false); // Khi tải dữ liệu xong hoặc gặp lỗi, đặt isLoading thành false
+                setLoading(false);
             }
         }
+    
         getUser();
-    });
-
+    }, [navigation]);
+    
 
 
     return (
@@ -162,6 +164,10 @@ export default function Profile() {
 const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+    container:{
+        backgroundColor: colors.white,
+
+    },
     imageContainer: {
         flex: 1,
         alignItems: 'center',

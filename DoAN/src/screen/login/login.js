@@ -15,6 +15,8 @@ import { decode } from 'base-64';
 import { Alert } from 'react-native';
 import IconButton from 'react-native-paper';
 import { AntDesign } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import { setUserId } from '../../userSlice.js';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
@@ -25,6 +27,8 @@ export default function Login({ navigation }) {
 
   const URL = myGlobalVariable;
   const emailInputRef = useRef();
+  const dispatch = useDispatch();
+
 
 
   const onLoginPressed = async () => {
@@ -52,6 +56,12 @@ export default function Login({ navigation }) {
         const decodedPayload = decode(base64Payload);
         const decodedPayloadObject = JSON.parse(decodedPayload);
         console.log(decodedPayloadObject.userid);
+
+        const userIdFromAPI = decodedPayloadObject.userid;
+        dispatch(setUserId(userIdFromAPI));
+
+        navigation.replace('Home');
+
       } catch (error) {
         console.error('Error decoding payload:', error);
       }

@@ -133,119 +133,125 @@ export default function UpdateList({ posts }) {
 
     return (
         <View style={{ marginBottom: 70 }}>
-            <FlatList
-                data={posts}
-                keyExtractor={(post) => post.postId.toString()}
-                renderItem={({ item }) => (
-                    <View style={styles.container}>
-                        <View style={styles.buttonContainer}>
+            {posts.length === 0 ? (
+                <View style={{flex:1 , justifyContent:'center' , alignItems:'center' , marginTop:50}}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 30 }}>No post yet</Text>
+                </View>
+            ) : (
+                <FlatList
+                    data={posts}
+                    keyExtractor={(post) => post.postId.toString()}
+                    renderItem={({ item }) => (
+                        <View style={styles.container}>
+                            <View style={styles.buttonContainer}>
+                                {editingStatus[item.postId] ? (
+                                    <TextInput
+                                        style={styles.textInput}
+                                        value={editedValues[item.postId].title}
+                                        onChangeText={(text) =>
+                                            setEditedValues({
+                                                ...editedValues,
+                                                [item.postId]: {
+                                                    ...editedValues[item.postId],
+                                                    title: text,
+                                                },
+                                            })
+                                        }
+                                    />
+                                ) : (
+                                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                                        {item.title}
+                                    </Text>
+                                )}
+                                {editingStatus[item.postId] ? ( // Render SelectList in edit mode
+                                    <View style={{ marginLeft: 'auto' }}>
+                                        <SelectList
+                                            style={styles.buttonStyle}
+                                            setSelected={(val) => setSelected(val)} // Set contentPost to the selected value
+                                            data={countries}
+                                            save="value"
+                                        />
+                                    </View>
+
+                                ) : (
+                                    <Text style={{ fontWeight: 'bold', marginLeft: 'auto' }}># {item.contentPost}</Text>
+                                )}
+                            </View>
+
                             {editingStatus[item.postId] ? (
                                 <TextInput
                                     style={styles.textInput}
-                                    value={editedValues[item.postId].title}
+                                    value={editedValues[item.postId].description}
                                     onChangeText={(text) =>
                                         setEditedValues({
                                             ...editedValues,
                                             [item.postId]: {
                                                 ...editedValues[item.postId],
-                                                title: text,
+                                                description: text,
                                             },
                                         })
                                     }
                                 />
                             ) : (
-                                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                                    {item.title}
+                                <Text style={{ fontSize: 15, marginTop: 10, fontWeight: 'bold' }}>
+                                    {item.description}
                                 </Text>
                             )}
-                            {editingStatus[item.postId] ? ( // Render SelectList in edit mode
-                                <View style={{  marginLeft: 'auto' }}>
-                                    <SelectList
-                                        style={styles.buttonStyle}
-                                        setSelected={(val) => setSelected(val)} // Set contentPost to the selected value
-                                        data={countries}
-                                        save="value"
-                                    />
-                                </View>
-
-                            ) : (
-                                <Text style={{ fontWeight: 'bold', marginLeft: 'auto' }}># {item.contentPost}</Text>
-                            )}
-                        </View>
-
-                        {editingStatus[item.postId] ? (
-                            <TextInput
-                                style={styles.textInput}
-                                value={editedValues[item.postId].description}
-                                onChangeText={(text) =>
-                                    setEditedValues({
-                                        ...editedValues,
-                                        [item.postId]: {
-                                            ...editedValues[item.postId],
-                                            description: text,
-                                        },
-                                    })
-                                }
-                            />
-                        ) : (
-                            <Text style={{ fontSize: 15, marginTop: 10, fontWeight: 'bold' }}>
-                                {item.description}
-                            </Text>
-                        )}
-                        <View style={styles.imageContainer}>
-                            {editingStatus[item.postId] ? (
-                                <Image
-                                    style={styles.image}
-                                    source={{ uri: selectedImages[item.postId] || URL + '/api/Post/GetImage/' + item.postId + `?t=${new Date().getTime()}` }}
-                                />
-                            ) : (
-                                <Image
-                                    style={styles.image}
-                                    source={{ uri: URL + '/api/Post/GetImage/' + item.postId + `?t=${new Date().getTime()}` }}
-                                />
-                            )}
-                            {editingStatus[item.postId] && (
-                                <TouchableOpacity
-                                    style={styles.customButton}
-                                    onPress={() => openImagePicker(item.postId)}>
-                                    <AntDesign name="picture" size={40} color="black" />
-                                </TouchableOpacity>
-                            )}
-                            <View style={styles.touchable}>
+                            <View style={styles.imageContainer}>
                                 {editingStatus[item.postId] ? (
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <TouchableOpacity
-                                            style={styles.saveButton}
-                                            onPress={() => handleSave(item.postId)}>
-                                            <Text style={{ fontSize: 17, color: "blue", marginRight: 10 }}>
-                                                Save
-                                            </Text>
-                                        </TouchableOpacity>
-
-                                        <TouchableOpacity
-                                            style={styles.cancelButton}
-                                            onPress={() => handleCancel(item.postId)}>
-                                            <Text style={{ fontSize: 17, color: "red", marginRight: 10 }}>
-                                                Cancel
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
+                                    <Image
+                                        style={styles.image}
+                                        source={{ uri: selectedImages[item.postId] || URL + '/api/Post/GetImage/' + item.postId + `?t=${new Date().getTime()}` }}
+                                    />
                                 ) : (
-                                    <View style={styles.editCancelContainer}>
-                                        <TouchableOpacity
-                                            style={styles.editButton}
-                                            onPress={() => handleEdit(item.postId)}>
-                                            <Text style={{ fontSize: 17, color: "blue", marginRight: 10 }}>
-                                                Edit
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
+                                    <Image
+                                        style={styles.image}
+                                        source={{ uri: URL + '/api/Post/GetImage/' + item.postId + `?t=${new Date().getTime()}` }}
+                                    />
                                 )}
+                                {editingStatus[item.postId] && (
+                                    <TouchableOpacity
+                                        style={styles.customButton}
+                                        onPress={() => openImagePicker(item.postId)}>
+                                        <AntDesign name="picture" size={40} color="black" />
+                                    </TouchableOpacity>
+                                )}
+                                <View style={styles.touchable}>
+                                    {editingStatus[item.postId] ? (
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <TouchableOpacity
+                                                style={styles.saveButton}
+                                                onPress={() => handleSave(item.postId)}>
+                                                <Text style={{ fontSize: 17, color: "blue", marginRight: 10 }}>
+                                                    Save
+                                                </Text>
+                                            </TouchableOpacity>
+
+                                            <TouchableOpacity
+                                                style={styles.cancelButton}
+                                                onPress={() => handleCancel(item.postId)}>
+                                                <Text style={{ fontSize: 17, color: "red", marginRight: 10 }}>
+                                                    Cancel
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    ) : (
+                                        <View style={styles.editCancelContainer}>
+                                            <TouchableOpacity
+                                                style={styles.editButton}
+                                                onPress={() => handleEdit(item.postId)}>
+                                                <Text style={{ fontSize: 17, color: "blue", marginRight: 10 }}>
+                                                    Edit
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    )}
+                                </View>
                             </View>
                         </View>
-                    </View>
-                )}
-            />
+                    )}
+                />
+            )}
         </View>
     );
 }

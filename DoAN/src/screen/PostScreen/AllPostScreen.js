@@ -14,13 +14,17 @@ import { StatusBar } from "react-native";
 import User from "../../user";
 import myGlobalVariable from "../../global";
 import PostList from "./PostList";
+import { useSelector } from 'react-redux';
+
 
 export default function AllPostScreen() {
     const URL = myGlobalVariable;
     const selectDropdownRef = useRef(); // Tạo một tham chiếu
 
+    const UserID = useSelector((state) => state.user.userId);
+
     const [imageSource, setImageSource] = useState({
-        uri: URL + '/api/User/GetUserImage/GetImage/' + User + `?t=${new Date().getTime()}`
+        uri: URL + '/api/User/GetUserImage/GetImage/' + UserID + `?t=${new Date().getTime()}`
     });
     const [UserData, setUserData] = useState([]);
     const [isLoading, setLoading] = useState(true);
@@ -31,9 +35,6 @@ export default function AllPostScreen() {
     const [selected, setSelected] = React.useState([]);
     const [AllPost, setAllPost] = React.useState([]);
     const [refreshing, setRefreshing] = useState(false); // Tạo trạng thái refreshing
-
-
-
 
 
     const onRefresh = () => {
@@ -148,7 +149,7 @@ export default function AllPostScreen() {
 
     const getUser = async () => {
         try {
-            const response = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + User);
+            const response = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + UserID);
             const response2 = await fetch(URL + '/api/Post/GetAllPost');
 
             if (response.ok) {
