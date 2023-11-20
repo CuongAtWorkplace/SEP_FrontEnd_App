@@ -55,12 +55,18 @@ export default function Login({ navigation }) {
       try {
         const decodedPayload = decode(base64Payload);
         const decodedPayloadObject = JSON.parse(decodedPayload);
-        console.log(decodedPayloadObject.userid);
 
         const userIdFromAPI = decodedPayloadObject.userid;
-        dispatch(setUserId(userIdFromAPI));
+        const role = decodedPayloadObject.roleid;
 
+        if(role != 2){
+          Alert.alert('Your account is not for student ');
+          return ; 
+        }
+        else{
+        dispatch(setUserId(userIdFromAPI));
         navigation.replace('Home');
+        }
 
       } catch (error) {
         console.error('Error decoding payload:', error);

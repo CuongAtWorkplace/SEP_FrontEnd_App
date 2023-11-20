@@ -2,15 +2,18 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import SettingItem from '../../../component/SettingItem';
 import { useNavigation } from '@react-navigation/native';
+import { resetUserId } from '../../userSlice.js';
+import { useDispatch } from 'react-redux';
 
 export default function setting() {
 
     const navigation = useNavigation();
-
+    const dispatch = useDispatch();
     const handleProfile = () => {
         navigation.navigate('Profile')
     };
     const handleLogout = () => {
+        dispatch(resetUserId());
         navigation.navigate('Login')
     };
 
@@ -31,7 +34,7 @@ export default function setting() {
             <View style={styles.option}>
                 <SettingItem text="Profile" iconName="user" action={handleProfile} />
                 <SettingItem text="Help with manager" iconName="contacts" action={ManagerHelpScreen} />
-                <SettingItem text="About us" iconName="profile" action={OnboardingScreen}/>
+                <SettingItem text="About us" iconName="profile" action={OnboardingScreen} />
                 <SettingItem text="Logout" iconName="logout" action={handleLogout} />
             </View>
         </ScrollView>
