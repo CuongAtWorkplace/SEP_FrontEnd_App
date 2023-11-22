@@ -17,12 +17,18 @@ import IconButton from 'react-native-paper';
 import { AntDesign } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { setUserId } from '../../userSlice.js';
+import CodeVerifyModal from './CodeVerifyModal.js';
+
+
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
   const [isPassVisible, setIsPassVisible] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(true);
+  const [isCodeVerifyModalVisible, setCodeVerifyModalVisible] = useState(false);
+  const [emailSend, setEmailSend] = useState("");
+
 
 
   const URL = myGlobalVariable;
@@ -59,13 +65,13 @@ export default function Login({ navigation }) {
         const userIdFromAPI = decodedPayloadObject.userid;
         const role = decodedPayloadObject.roleid;
 
-        if(role != 2){
+        if (role != 2) {
           Alert.alert('Your account is not for student ');
-          return ; 
+          return;
         }
-        else{
-        dispatch(setUserId(userIdFromAPI));
-        navigation.replace('Home');
+        else {
+          dispatch(setUserId(userIdFromAPI));
+          navigation.replace('Home');
         }
 
       } catch (error) {
@@ -79,6 +85,8 @@ export default function Login({ navigation }) {
     }
   };
 
+
+
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -89,6 +97,11 @@ export default function Login({ navigation }) {
 
   const handleForgetPass = () => {
     setIsPassVisible(true);
+  };
+
+  const handleSend = () => {
+    setIsPassVisible(false);
+    setCodeVerifyModalVisible(true);
   };
 
   return (
@@ -162,9 +175,17 @@ export default function Login({ navigation }) {
           animationType='fade'
           visible={isPassVisible}
           onRequestClose={handleCancelforget}>
-          <ForgetPaswordModal closeModal={handleCancelforget} />
+          <ForgetPaswordModal closeModal={handleCancelforget} sendModal={handleSend} email={emailSend} setEmail={setEmailSend} />
         </Modal>
 
+        <Modal
+          transparent={true}
+          animationType='fade'
+          visible={isCodeVerifyModalVisible}
+          onRequestClose={() => setCodeVerifyModalVisible(false)}
+        >
+          <CodeVerifyModal closeModal={() => setCodeVerifyModalVisible(false)} email={emailSend} />
+        </Modal>
       </SafeAreaView>
 
 

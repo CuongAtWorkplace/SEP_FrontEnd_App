@@ -10,35 +10,51 @@ import { useEffect } from "react";
 import { ScrollView } from "react-native";
 import { useState } from "react";
 import myGlobalVariable from "../../global";
+import { Alert } from "react-native";
 
 
-const ForgetPaswordModal = ({ closeModal , sendModal ,email, setEmail}) => {
+const CodeVerifyModal = ({ closeModal, email }) => {
+    const URL = myGlobalVariable ;
+    const [code, setCode] = useState("");
 
-    const URL = myGlobalVariable;
+    const handleConfirmCode = () => {
+        const apiUrl =  URL+"/api/Email/confirm-code";
 
-    const handleSend = () => {
+        Alert.alert(email);
+
         // Gửi yêu cầu POST đến API
-        fetch(URL + "/api/Email", {
+        fetch(apiUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                To: email,
-                Subject: "Forgot Password",
+                to: email, // Sử dụng email truyền từ ForgetPaswordModal
+                code: code,
             }),
+        }).then(response => {
+            if (!response.ok) {
+                Alert.alert("code not  successfully");
+
+                throw new Error(`HTTP error! Status: ${response.status}`);
+                
+            }
+            Alert.alert("code successfully");
+            return response.json();
         })
-            .then(response => {
-                sendModal();
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+            .then(data => {
+                // Xử lý dữ liệu phản hồi từ API nếu cần
+                console.log(data);
+
+                // Đóng modal sau khi xác nhận thành công
+                closeModal();
             })
             .catch(error => {
                 // Xử lý lỗi nếu có
-                console.error("Error sending email:", error);
+                console.error("Error confirming code:", error);
             });
     };
+
 
 
     return (
@@ -51,28 +67,22 @@ const ForgetPaswordModal = ({ closeModal , sendModal ,email, setEmail}) => {
                 <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={5}>
 
                     <View style={styles.commentModal}>
-                        <View style={{ width: 200, height: 200 }}>
-                            <LottieView
-                                source={require('../login/email.json')}
-                                autoPlay
-                                loop
-                            />
-                        </View>
-                        <Text style={{ fontWeight: 'bold', alignSelf: 'flex-start', fontSize: 18 }}>Type your email here:</Text>
+                        <Text style={{ fontWeight: 'bold', alignSelf: 'flex-start', fontSize: 18 }}>Enter your code:</Text>
 
                         <TextInput
                             style={styles.textInput}
-                            placeholder="Email"
+                            placeholder="Your code"
                             numberOfLines={5}
                             multiline
-                            onChangeText={text => setEmail(text)}
+                            onChangeText={text => setCode(text)}
+
                         />
 
-
                         <TouchableOpacity style={{ width: 70, height: 50, backgroundColor: '#FE7104', borderRadius: 30, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ fontWeight: 'bold', color: 'white' }} onPress={handleSend}>Send</Text>
+                            <Text style={{ fontWeight: 'bold', color: 'white' }} onPress={handleConfirmCode}>Check</Text>
                         </TouchableOpacity>
                     </View>
+
                 </KeyboardAvoidingView>
             </View>
         </View>
@@ -117,4 +127,5 @@ const styles = StyleSheet.create({
 
 })
 
-export default ForgetPaswordModal;
+
+export default CodeVerifyModal;
