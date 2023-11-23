@@ -13,15 +13,12 @@ import myGlobalVariable from "../../global";
 import { Alert } from "react-native";
 
 
-const CodeVerifyModal = ({ closeModal, email }) => {
+const CodeVerifyModal = ({ closeModal, email , sendModal }) => {
     const URL = myGlobalVariable ;
     const [code, setCode] = useState("");
 
     const handleConfirmCode = () => {
         const apiUrl =  URL+"/api/Email/confirm-code";
-
-        Alert.alert(email);
-
         // Gửi yêu cầu POST đến API
         fetch(apiUrl, {
             method: "POST",
@@ -39,7 +36,7 @@ const CodeVerifyModal = ({ closeModal, email }) => {
                 throw new Error(`HTTP error! Status: ${response.status}`);
                 
             }
-            Alert.alert("code successfully");
+            sendModal();
             return response.json();
         })
             .then(data => {

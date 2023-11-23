@@ -18,7 +18,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { setUserId } from '../../userSlice.js';
 import CodeVerifyModal from './CodeVerifyModal.js';
-
+import ChangePassModal from './ChangePassModal.js';
 
 
 export default function Login({ navigation }) {
@@ -27,6 +27,8 @@ export default function Login({ navigation }) {
   const [isPassVisible, setIsPassVisible] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(true);
   const [isCodeVerifyModalVisible, setCodeVerifyModalVisible] = useState(false);
+  const [isChangePassVisible, setChangePassVisible] = useState(false);
+
   const [emailSend, setEmailSend] = useState("");
 
 
@@ -93,6 +95,8 @@ export default function Login({ navigation }) {
 
   const handleCancelforget = () => {
     setIsPassVisible(false);
+    setCodeVerifyModalVisible(false);
+    setChangePassVisible(false);
   };
 
   const handleForgetPass = () => {
@@ -102,6 +106,12 @@ export default function Login({ navigation }) {
   const handleSend = () => {
     setIsPassVisible(false);
     setCodeVerifyModalVisible(true);
+  };
+
+  const handleCode = () => {
+    setIsPassVisible(false);
+    setCodeVerifyModalVisible(false);
+    setChangePassVisible(true);
   };
 
   return (
@@ -184,8 +194,18 @@ export default function Login({ navigation }) {
           visible={isCodeVerifyModalVisible}
           onRequestClose={() => setCodeVerifyModalVisible(false)}
         >
-          <CodeVerifyModal closeModal={() => setCodeVerifyModalVisible(false)} email={emailSend} />
+          <CodeVerifyModal closeModal={handleCancelforget} sendModal={handleCode} email={emailSend} />
         </Modal>
+
+        <Modal
+          transparent={true}
+          animationType='fade'
+          visible={isChangePassVisible}
+          onRequestClose={() => setCodeVerifyModalVisible(false)}
+        >
+          <ChangePassModal closeModal={handleCancelforget} email={emailSend} />
+        </Modal>
+
       </SafeAreaView>
 
 
