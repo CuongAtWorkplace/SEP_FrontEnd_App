@@ -294,9 +294,6 @@ export default function Chat() {
 
 
     const openImagePicker = async () => {
-
-
-
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 1,
@@ -320,7 +317,6 @@ export default function Chat() {
                 }
             }
         }
-
     }
 
     const renderMessageItem = ({ item, index }) => {
