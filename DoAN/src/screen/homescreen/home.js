@@ -69,7 +69,7 @@ export default function Home() {
 
     console.log(UserID);
     try {
-      const response1 = await fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/4');
+      const response1 = await fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/5');
       const response2 = await fetch(URL + '/api/Class/GetAllClassWithCourse/GetAllClass/3');
       const response3 = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + UserID);
       const response4 = await fetch(URL + '/api/ListStudentClass/AllUserClassRegister/AllUserClassRegister/' + UserID);

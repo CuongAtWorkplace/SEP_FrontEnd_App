@@ -321,7 +321,7 @@ export default function classDetail(props) {
                             style={styles.image}
                             source={{ uri: URL + '/api/Course/GetImage/GetImage/' + classData[0]?.courseId }}
                         />
-                        <Text style={styles.textOnImage}>{classData[0]?.classname}</Text>
+                        <Text style={styles.textOnImage}>{classData[0]?.className}</Text>
 
                         <Text style={styles.feeText}>Fee : {classData[0]?.fee}</Text>
 
@@ -458,7 +458,7 @@ export default function classDetail(props) {
                         {showButtons && (
                             <>
                                 <View style={styles.buttonContainer}>
-                                    <TouchableOpacity onPress={() => ChatHandle(classData[0]?.classId, classData[0]?.classname)}>
+                                    <TouchableOpacity onPress={() => ChatHandle(classData[0]?.classId, classData[0]?.className)}>
                                         <LinearGradient colors={['#0093E9', '#80D0C7']} style={styles.linearGradient}>
                                             <Feather name="message-circle" size={24} color="white" />
                                             <Text style={styles.buttonText}>Group chat</Text>

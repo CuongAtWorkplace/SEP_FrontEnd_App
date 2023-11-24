@@ -51,6 +51,7 @@ export default function Chat() {
             // Cập nhật prevCourseId để sử dụng trong lần render tiếp theo
             prevCourseId.current = courseId;
         }
+        console.log(courseId);
     }, [courseId]);
 
 
@@ -185,6 +186,7 @@ export default function Chat() {
                     Alert.alert('Message sent successfully');
                     // Optionally, you can handle the successful response here
                 } else {
+
                     Alert.alert('Failed to send message');
                 }
             })

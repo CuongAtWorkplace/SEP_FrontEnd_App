@@ -6,20 +6,51 @@ import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { TextInput } from 'react-native';
 import StarRating from 'react-native-star-rating';
+import { useSelector } from 'react-redux';
+import myGlobalVariable from '../../global';
+
+
 
 const FeedBackModal = ({ closeModal }) => {
 
     const [feedbackText, setFeedbackText] = useState('');
     const [rating, setRating] = useState(0);
 
+    const URL = myGlobalVariable ;
+    const UserID = useSelector((state) => state.user.userId);
+
+
     const onStarRatingPress = (rating) => {
         setRating(rating);
     };
 
-    const handleSend = () =>{
-        Alert.alert('send successfully');
-    }
+    const handleSend = async () => {
+        try {
+            const response = await fetch(URL+'/api/Report/AddFeedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    fromUserId : UserID ,
+                    rating: rating,
+                    description: feedbackText,
+                    createDate : new Date().toISOString(),
+                    modifileDate : new Date().toISOString(),
+                    isDelete : false
+                }),
+            });
 
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+         
+            Alert.alert('Feedback sent successfully');
+        } catch (error) {
+            console.error('Error sending feedback:', error);
+            Alert.alert('Error sending feedback. Please try again later.');
+        }
+    };
 
 
     return (
@@ -53,7 +84,7 @@ const FeedBackModal = ({ closeModal }) => {
                         starStyle={{ marginRight: 8 }} // Tùy chỉnh style của mỗi sao
                     />
                     <TouchableOpacity style={{alignSelf: 'flex-end'}}>
-                        <Text style={{fontWeight:'bold' , fontSize:20 , color:'blue'}}>Send</Text>
+                        <Text style={{fontWeight:'bold' , fontSize:20 , color:'blue'}} onPress={handleSend}>Send</Text>
                     </TouchableOpacity>
                 </View>
             </View>

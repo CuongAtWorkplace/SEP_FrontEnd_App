@@ -44,8 +44,7 @@ const ChangePassModal = ({ closeModal, email }) => {
 
     const updatePasswordApi = async (email, newPassword) => {
         try {
-            const apiUrl = URL + `/api/User/UpdateUserPassword/UpdateStudentById/${email}/${newPassword}`;
-
+            const apiUrl = URL + `/api/User/UpdateUserPassword/UpdateUserPassword/${email}/${newPassword}`;
             const response = await fetch(apiUrl, {
                 method: 'PUT', // hoặc 'POST' tùy vào API
                 headers: {
