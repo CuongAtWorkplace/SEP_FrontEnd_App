@@ -22,6 +22,8 @@ import { StatusBar } from 'react-native';
 import ManagerHelp from './src/screen/ManagerHelp/ManagerHelp';
 import { Provider } from 'react-redux';
 import store from './src/store';
+import chargeScreen from './src/screen/homescreen/chargeScreen';
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -92,6 +94,8 @@ const App = () => {
           <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
           <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }} />
           <Stack.Screen name="ManagerHelp" component={ManagerHelp} options={{ headerShown: false }} />
+          <Stack.Screen name="chargeScreen" component={chargeScreen} options={{ headerShown: false }} />
+
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

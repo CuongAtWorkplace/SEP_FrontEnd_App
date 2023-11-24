@@ -29,6 +29,10 @@ export default function Profile() {
         navigation.navigate('UpdateProfile')
     };
 
+    const handleRecharge = () => {
+        navigation.navigate('chargeScreen')
+    };
+
     const URL = myGlobalVariable;
     const UserID = useSelector((state) => state.user.userId);
     const [isImageLoading, setImageLoading] = useState(true);
@@ -139,7 +143,7 @@ export default function Profile() {
                     <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
                         <Text style={styles.buttonText}>Update</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => console.log('Nút Mới đã được nhấn')}>
+                    <TouchableOpacity style={styles.button} onPress={handleRecharge}>
                         <Text style={styles.buttonText}>Recharge</Text>
                     </TouchableOpacity>
                 </View>

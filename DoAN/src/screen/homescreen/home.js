@@ -40,8 +40,6 @@ export default function Home() {
   };
 
 
-
-
   const [AllClassData, setAllClassData] = useState([]);
   const [AllStudyingClass, setAllStudyingClass] = useState([]);
   const [AllRecommend, setAllRecommend] = useState([]);
