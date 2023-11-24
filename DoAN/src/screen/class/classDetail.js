@@ -187,6 +187,7 @@ export default function classDetail(props) {
     const [Enroll, setEnroll] = useState(false);
     const [isReportVisible, setIsReportVisible] = useState(false);
     const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
+    const [teacherId, setteacherId] = useState(0);
 
 
     const URL = myGlobalVariable;
@@ -216,7 +217,6 @@ export default function classDetail(props) {
         setEnroll(true);
         if (UserData[0].balance >= classData[0]?.fee) {
             setEnroll(false);
-            Alert.alert('Notification', 'Ok');
             try {
                 const response = await fetch(URL + '/api/User/UpdateBalanceStudent/UpdateBalanceStudent/' + classData[0]?.fee + '/' + UserID, {
                     method: 'PUT',
@@ -284,7 +284,7 @@ export default function classDetail(props) {
                 const classResponse = await fetch(URL + '/api/Class/GetClassById/GetClassById/' + classId);
                 const classJsonConvert = await classResponse.json();
                 setClassData(classJsonConvert);
-    
+                setteacherId(classJsonConvert[0].teacherId);
                 const teacherResponse = await fetch(URL + '/api/User/GetTeacherById/GetUserById/' + classJsonConvert[0].teacherId);
                 const teacherJsonConvert = await teacherResponse.json();
                 setTeacherData(teacherJsonConvert);
@@ -499,7 +499,7 @@ export default function classDetail(props) {
                         visible={isReportVisible}
                         onRequestClose={() => setIsReportVisible(false)}
                     >
-                        <ReportModal closeModal={handleCancelReportPress} />
+                        <ReportModal closeModal={handleCancelReportPress} teacherId={teacherId} />
                     </Modal>
 
 
