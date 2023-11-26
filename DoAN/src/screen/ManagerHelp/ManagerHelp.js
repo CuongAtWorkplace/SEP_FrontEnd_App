@@ -34,72 +34,81 @@ const ManagerHelp = ({ navigation }) => {
     };
 
 
+
     const createChatRoom = async () => {
-    try {
-        const response = await fetch(URL + '/api/RequestManager/CreateChatRoom', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                chatRoomName: 'New Chat Room',
-                description: 'Description of the chat room',
-                isManagerChat: false,
-                classId: 0,
-            }),
-        });
+        try {
+            const response = await fetch(URL + '/api/RequestManager/CreateChatRoom', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chatRoomName: 'New Chat Room',
+                    description: 'Description of the chat room',
+                    isManagerChat: false,
+                    classId: 0,
+                }),
+            });
 
-        if (response.ok) {
-            const data = await response.json();
-            Alert.alert('Success', `Chat room created with ID: ${data}`);
+            if (response.ok) {
+                const data = await response.json();
+                Alert.alert('Success', `Chat room created with ID: ${data}`);
 
-            // Gọi hàm checkManagerChatRoom mỗi 10 giây
-            const intervalId = setInterval(() => {
-                checkManagerChatRoom(data);
-            }, 10000);
+                // Đặt biến flag để theo dõi trạng thái kiểm tra
+                let continueChecking = true;
 
-            // Dừng việc kiểm tra sau 60 giây
-            setTimeout(() => {
-                clearInterval(intervalId);
-            }, 60000);
+                // Gọi hàm checkManagerChatRoom mỗi 10 giây
+                const intervalId = setInterval(async () => {
+                    if (continueChecking) {
+                        const isManagerChatRoomExist = await checkManagerChatRoom(data);
+                        if (isManagerChatRoomExist) {
+                            Alert.alert('Alert', 'oke luôn');
+                            ChatHandle(0,'ManagerHelp');
+                            clearInterval(intervalId);
+                            continueChecking = false;
+                        }
+                    }
+                }, 10000);
 
-        } else {
-            const errorData = await response.json();
-            Alert.alert('Error', `Failed to create chat room: ${errorData.message}`);
-        }
-    } catch (error) {
-        console.error('Error calling createchatroom API:', error.message);
-    }
-};
-
-const checkManagerChatRoom = async (classId) => {
-    try {
-        const response = await fetch(`${URL}/api/RequestManager/CheckManagerChatRoom/CheckManagerChatRoom/${classId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (response.ok) {
-            const isManagerChatRoomExist = await response.json();
-            if (isManagerChatRoomExist) {
-                Alert.alert('Alert', 'oke luôn');
+                // Dừng việc kiểm tra sau 60 giây
+                setTimeout(() => {
+                    clearInterval(intervalId);
+                }, 600000);
             } else {
-                // Tiếp tục xử lý theo ý của bạn
+                const errorData = await response.json();
+                Alert.alert('Error', `Failed to create chat room: ${errorData.message}`);
             }
-        } else {
-            const errorData = await response.json();
-            Alert.alert('Error', `Failed to check manager chat room: ${errorData.message}`);
+        } catch (error) {
+            console.error('Error calling createchatroom API:', error.message);
         }
-    } catch (error) {
-        Alert.alert('Error', 'An unexpected error occurred');
-    }
-};
+    };
 
-    // Gọi hàm để kiểm tra mỗi 10 giây
+    const checkManagerChatRoom = async (classId) => {
+        try {
+            const response = await fetch(`${URL}/api/RequestManager/CheckManagerChatRoom/CheckManagerChatRoom/${classId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
+            if (response.ok) {
+                const isManagerChatRoomExist = await response.json();
+                return isManagerChatRoomExist;
+            } else {
+                const errorData = await response.json();
+                Alert.alert('Error', `Failed to check manager chat room: ${errorData.message}`);
+                return false;
+            }
+        } catch (error) {
+            Alert.alert('Error', 'An unexpected error occurred');
+            return false;
+        }
+    };
 
+    const ChatHandle = (id, name) => {
+        navigation.navigate('Chat', { id: id, name: name });
+    };
 
     const handleBack = () => {
         navigation.navigate("Home")
