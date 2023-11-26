@@ -173,7 +173,10 @@ export default function classDetail(props) {
 
     const ChatHandle = (id, name) => {
         navigation.navigate('Chat', { id: id, name: name });
+    };
 
+    const FileHandle = (id, name) => {
+        navigation.navigate('classFile', { id: id, name: name });
     };
 
     const route = useRoute();
@@ -466,7 +469,7 @@ export default function classDetail(props) {
                                     </TouchableOpacity>
 
 
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => FileHandle(classData[0]?.classId, classData[0]?.className)}>
                                         <LinearGradient colors={['#FF3CAC', '#784BA0', '#2B86C5']} style={styles.linearGradient}>
                                             <MaterialIcons name="assignment" size={24} color="white" />
                                             <Text style={styles.buttonText}>file</Text>
