@@ -33,6 +33,7 @@ const ManagerHelp = ({ navigation }) => {
         setRequestSent(true);
     };
 
+    let dynamicClassId; // Khai báo dynamicClassId ở đầu hàm hoặc ngoài hàm để có thể sử dụng ở nhiều nơi
 
 
     const createChatRoom = async () => {
@@ -46,30 +47,33 @@ const ManagerHelp = ({ navigation }) => {
                     chatRoomName: 'New Chat Room',
                     description: 'Description of the chat room',
                     isManagerChat: false,
-                    classId: 0,
+                    classId: dynamicClassId, // Thay đổi giá trị thành biến động
                 }),
             });
-
+    
             if (response.ok) {
                 const data = await response.json();
                 Alert.alert('Success', `Chat room created with ID: ${data}`);
-
+    
+                // Set dynamicClassId to the value from data
+                const dynamicClassId = data;
+    
                 // Đặt biến flag để theo dõi trạng thái kiểm tra
                 let continueChecking = true;
-
+    
                 // Gọi hàm checkManagerChatRoom mỗi 10 giây
                 const intervalId = setInterval(async () => {
                     if (continueChecking) {
-                        const isManagerChatRoomExist = await checkManagerChatRoom(data);
+                        const isManagerChatRoomExist = await checkManagerChatRoom(dynamicClassId);
                         if (isManagerChatRoomExist) {
                             Alert.alert('Alert', 'oke luôn');
-                            ChatHandle(0,'ManagerHelp');
+                            ChatHandle(0, 'ManagerHelp', dynamicClassId);
                             clearInterval(intervalId);
                             continueChecking = false;
                         }
                     }
                 }, 10000);
-
+    
                 // Dừng việc kiểm tra sau 60 giây
                 setTimeout(() => {
                     clearInterval(intervalId);
@@ -82,7 +86,7 @@ const ManagerHelp = ({ navigation }) => {
             console.error('Error calling createchatroom API:', error.message);
         }
     };
-
+    
     const checkManagerChatRoom = async (classId) => {
         try {
             const response = await fetch(`${URL}/api/RequestManager/CheckManagerChatRoom/CheckManagerChatRoom/${classId}`, {
@@ -106,8 +110,8 @@ const ManagerHelp = ({ navigation }) => {
         }
     };
 
-    const ChatHandle = (id, name) => {
-        navigation.navigate('Chat', { id: id, name: name });
+    const ChatHandle = (id, name,ManagerId) => {
+        navigation.navigate('Chat', { id: id, name: name , ManagerId:ManagerId });
     };
 
     const handleBack = () => {

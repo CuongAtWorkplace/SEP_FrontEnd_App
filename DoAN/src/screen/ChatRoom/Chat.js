@@ -55,14 +55,18 @@ export default function Chat() {
     }, [courseId]);
 
 
-    const courseId = route.params.id;
+    let courseId = route.params.id;
+
+    if (courseId === 0) {
+        courseId = route.params.ManagerId;
+    }
+
 
     const className = route.params.name;
 
     const handleHeader = () => {
         handleDisconnectSignalR();
         navigation.navigate('ClassDetail', { classId: courseId });
-
     };
 
     const handleDisconnectSignalR = () => {
@@ -118,7 +122,7 @@ export default function Chat() {
             setNewMessage("");
             setIsSendButtonDisabled(true);
             setIsLoading(false);
-        
+
         } catch (error) {
             console.error("Error fetching messages:", error);
             // Retry the fetch request after 5 seconds
