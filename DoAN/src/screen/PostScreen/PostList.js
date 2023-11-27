@@ -14,7 +14,7 @@ import { StatusBar } from 'react-native';
 
 import myGlobalVariable from '../../global';
 
-export default function PostList({ posts }) {
+export default function PostList({ posts, updateLikes }) {
   const URL = myGlobalVariable;
 
   const formatDate = (dateString) => {
@@ -24,16 +24,57 @@ export default function PostList({ posts }) {
   const [createdByNames, setCreatedByNames] = useState({});
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [isCommentListVisible, setIsCommentListVisible] = useState(false);
+  const [likedPosts, setLikedPosts] = useState({}); // State mới để lưu trữ thông tin Like
+
 
   const handleCommentPress = (postId) => {
 
     console.log("an roi");
-    setSelectedPostId(postId); 
+    setSelectedPostId(postId);
     setIsCommentListVisible(true);
   };
 
   const handleCancelCommentPress = () => {
     setIsCommentListVisible(false);
+  };
+
+  const handleLikeUpdate = (id) => {
+    setLikedPosts((prevLikedPosts) => {
+      const newLikedPosts = {
+        ...prevLikedPosts,
+        [id]: (prevLikedPosts[id] || 0) + 1,
+      };
+      console.log('New liked posts:', newLikedPosts);
+      return newLikedPosts;
+    });
+  };
+
+
+  const handleLike = async (id) => {
+    try {
+      const response = await fetch(`${URL}/api/Post/UpdateLikePost?Post=${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+
+        handleLikeUpdate(id);
+
+        //updateLikes(id);
+
+        console.log('Post liked successfully');
+      } else {
+        // Xử lý khi API gọi không thành công
+        const errorData = await response.json();
+        console.error('Failed to update like for post:', errorData.message);
+      }
+    } catch (error) {
+      // Xử lý lỗi khi gọi API
+      console.error('Error calling UpdateLikePost API:', error.message);
+    }
   };
 
   const GetName = async (id) => {
@@ -79,7 +120,7 @@ export default function PostList({ posts }) {
             <View style={styles.imageContainer}>
               <Image
                 style={styles.image}
-                source={{ uri: URL + '/api/Post/GetImage/' + item.postId  }}
+                source={{ uri: URL + '/api/Post/GetImage/' + item.postId }}
               />
             </View>
             <View style={styles.botContent}>
@@ -94,10 +135,25 @@ export default function PostList({ posts }) {
             </View>
             <View style={styles.buttonContainer}>
 
-              <TouchableOpacity style={styles.buttonRow}>
-                <AntDesign name="like2" size={24} color="blue" />
-                <Text style={{ marginLeft: 10, color: "blue" }}>Like : {item.likeAmout}</Text>
+              <TouchableOpacity style={styles.buttonRow}
+                onPress={() => handleLike(item.postId)}
+                disabled={likedPosts[item.postId]} // Disable nếu đã thích
+              >
+                <AntDesign
+                  name={likedPosts[item.postId] ? 'like1' : 'like2'} // Chọn icon tương ứng
+                  size={24}
+                  color={likedPosts[item.postId] ? 'blue' : 'black'} // Chọn màu tương ứng
+                />
 
+                {likedPosts[item.postId] > 0 ? (
+                  <Text style={{ marginLeft: 10, color: 'blue' }}>
+                    Like : {item.likeAmout + likedPosts[item.postId]}
+                  </Text>
+                ) : (
+                  <Text style={{ marginLeft: 10, color: 'blue' }}>
+                    Like : {item.likeAmout}
+                  </Text>
+                )}
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.buttonRow} onPress={() => handleCommentPress(item.postId)}>
@@ -116,7 +172,7 @@ export default function PostList({ posts }) {
         visible={isCommentListVisible}
         onRequestClose={() => setIsCommentListVisible(false)}
       >
-          <CommentList  postId={selectedPostId}  closeModal={handleCancelCommentPress} />
+        <CommentList postId={selectedPostId} closeModal={handleCancelCommentPress} />
       </Modal>
 
     </SafeAreaView>
@@ -174,5 +230,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  
+
 });

@@ -69,6 +69,21 @@ export default function AllPostScreen() {
         }
     }
 
+    const updateLikes = (postId) => {
+        // Sao chép danh sách bài đăng và tìm bài đăng cần cập nhật
+        const updatedPosts = [...AllPost];
+        const updatedPostIndex = updatedPosts.findIndex(post => post.postId === postId);
+      
+        // Cập nhật số lượt thích cho bài đăng
+        if (updatedPostIndex !== -1) {
+          updatedPosts[updatedPostIndex].likeAmount += 1; // hoặc giảm đi 1 tùy thuộc vào trạng thái thích hay không thích
+        }
+      
+        // Cập nhật lại danh sách bài đăng
+        setAllPost(updatedPosts);
+      };
+      
+
     const HandleCancel = () => {
         setSelectedImage(null);
     }
@@ -242,7 +257,8 @@ export default function AllPostScreen() {
                     </View>
                 )}
             </View>
-            <PostList posts={AllPost} />
+            <PostList posts={AllPost} updateLikes={updateLikes} />
+
         </ScrollView>
     );
 }
