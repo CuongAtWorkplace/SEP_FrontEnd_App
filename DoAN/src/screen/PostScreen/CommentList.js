@@ -16,6 +16,7 @@ const CommentList = ({ closeModal, postId }) => {
 
     const [comments, setComments] = useState([]);
     const [commentSend, setCommentSend] = useState([]);
+    const [likedComments, setLikedComments] = useState([]);
 
 
     const UserID = useSelector((state) => state.user.userId);
@@ -59,6 +60,34 @@ const CommentList = ({ closeModal, postId }) => {
         }
     };
 
+
+    const updateCommentLike = async (id) => {
+
+        try {
+            const response = await fetch(`${URL}/api/Post/UpdateLikeComment?CommentId=${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+
+                setLikedComments((prevLikedComments) => ({
+                    ...prevLikedComments,
+                    [id]: true,
+                }));
+
+            } else {
+                // Xử lý khi API gọi không thành công
+                const errorData = await response.json();
+                console.error('Failed to update like for post:', errorData.message);
+            }
+        } catch (error) {
+            // Xử lý lỗi khi gọi API
+            console.error('Error calling UpdateLikePost API:', error.message);
+        }
+    }
 
     const fetchComments = async () => {
         try {
@@ -107,9 +136,14 @@ const CommentList = ({ closeModal, postId }) => {
                                         </View>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                             <Text style={{ marginTop: 5, width: '70%' }}>Content: {item.content}</Text>
-                                            <TouchableOpacity style={{ flexDirection: 'row' }}>
-                                                <AntDesign name="hearto" size={24} color="black" />
-                                                <Text style={{ margin: 3 }}>{item.likeAmount}</Text>
+                                            <TouchableOpacity style={{ flexDirection: 'row' }}
+                                                onPress={() => updateCommentLike(item.userCommentPostId)}
+                                                disabled={likedComments[item.userCommentPostId]}
+                                            >
+                                                <AntDesign name={likedComments[item.userCommentPostId] ? 'heart' : 'hearto'} size={24} color={likedComments[item.userCommentPostId] ? 'red' : 'black'} />
+                                                <Text style={{ margin: 3 }}>
+                                                     {item.likeAmount + (likedComments[item.userCommentPostId] ? 1 : 0)}
+                                                </Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
