@@ -375,9 +375,12 @@ export default function Chat() {
                 </View>
             ) : (
                 <React.Fragment>
-                    <HeaderBack title={`Group Chat : ${className}`} action={handleHeader} />
+                    <HeaderBack
+                        title={route.params.id === 0 ? 'Manager Help' : `Group Chat: ${className}`}
+                        action={handleHeader}
+                    />
                     <ImageBackground
-                        source={{ uri: 'https://i.pinimg.com/originals/b9/1d/c2/b91dc2113881469c07ac99ad9a024a01.jpg' }}
+                        source={{ uri: route.params.id === 0 ? 'https://images.unsplash.com/photo-1553095066-5014bc7b7f2d?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d2FsbCUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D' : 'https://i.pinimg.com/originals/b9/1d/c2/b91dc2113881469c07ac99ad9a024a01.jpg' }}
                         style={styles.backgroundImage}
                     >
                         <View style={styles.chatContainer}>
