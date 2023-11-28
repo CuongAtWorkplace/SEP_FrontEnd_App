@@ -66,7 +66,12 @@ export default function Chat() {
 
     const handleHeader = () => {
         handleDisconnectSignalR();
-        navigation.navigate('ClassDetail', { classId: courseId });
+        if (route.params.id === 0) {
+            navigation.navigate('Home');
+        }
+        else {
+            navigation.navigate('ClassDetail', { classId: courseId });
+        }
     };
 
     const handleDisconnectSignalR = () => {

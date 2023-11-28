@@ -9,20 +9,23 @@ import Video from 'react-native-video';
 import { KeyboardAvoidingView } from 'react-native';
 import { useEffect } from 'react';
 import { Alert } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 
-export default function register({ navigation }) {
-    const [email, setEmail] = useState({ value: '', error: '' });
-    const [phone, setPhone] = useState({ value: '', error: '' });
-    const [password, setPassword] = useState({ value: '', error: '' });
+
+export default function registeProfile() {
 
     const emailInputRef = useRef();
+
+    const route = useRoute();
+
+    const { email, phone, password } = route.params || {};
 
     
 
     const onLoginPressed = () => {
-        Alert.alert(email.value+" "+phone.value+" "+password.value);
+        Alert.alert(email+" "+phone+" "+password);
 
-      navigation.navigate('registeProfile', { email: email.value, phone: phone.value , password:password.value });
+        emailInputRef.current.focus();
     };
 
     return (
@@ -31,19 +34,17 @@ export default function register({ navigation }) {
                 <View style={{ marginBottom: 10, marginTop: 100 }}>
                     <LottieView
                         style={{ flex: 1, width: 200, height: 200, justifyContent: 'center', alignSelf: 'center' }}
-                        source={require('../../assets/register.json')}
+                        source={require('./profile.json')}
                         autoPlay
                         loop
                     />
                 </View>
 
                 <TextInput
+                    ref={emailInputRef}
                     style={styles.Input}
-                    label="Email"
-                    value={email.value}
-                    onChangeText={(text) => setEmail({ value: text, error: '' })}
-                    error={!!email.error}
-                    errorText={email.error}
+                    label="Fullname"
+                  
                     autoCapitalize="none"
                     autoCompleteType="email"
                     textContentType="emailAddress"
@@ -58,12 +59,10 @@ export default function register({ navigation }) {
                 />
 
                 <TextInput
+                    ref={emailInputRef}
                     style={styles.Input}
-                    label="Phone"
-                    value={phone.value}
-                    onChangeText={(text) => setPhone({ value: text, error: '' })}
-                    error={!!email.error}
-                    errorText={email.error}
+                    label="Address"
+                    
                     autoCapitalize="none"
                     autoCompleteType="email"
                     textContentType="emailAddress"
@@ -79,12 +78,10 @@ export default function register({ navigation }) {
 
 
                 <TextInput
+                    ref={emailInputRef}
                     style={styles.Input}
-                    label="Password"
-                    value={password.value}
-                    onChangeText={(text) => setPassword({ value: text, error: '' })}
-                    error={!!email.error}
-                    errorText={email.error}
+                    label="Description"
+                   
                     autoCapitalize="none"
                     autoCompleteType="email"
                     textContentType="emailAddress"
@@ -98,36 +95,11 @@ export default function register({ navigation }) {
                     }}
                     underlineColor="#3E427B" // Màu của đường outline bên dưới
                 />
-
-                <TextInput
-                    style={styles.Input}
-                    label="Confirm your Password"
-                    value={email.value}
-                    onChangeText={(text) => setEmail({ value: text, error: '' })}
-                    error={!!email.error}
-                    errorText={email.error}
-                    autoCapitalize="none"
-                    autoCompleteType="email"
-                    textContentType="emailAddress"
-                    keyboardType="email-address"
-                    onFocus={() => {
-                    }}
-                    labelStyle={{
-                        color: colors.gray, // Màu của label
-                        marginBottom: 8, // Khoảng cách giữa label và input
-                    }}
-                    underlineColor="#3E427B" // Màu của đường outline bên dưới
-                />
             </KeyboardAvoidingView>
+
             <LoginButton mode="contained" style={{ justifyContent: 'center', alignSelf: 'center' }} onPress={onLoginPressed}>
-                Register
+                Finish
             </LoginButton>
-            <View style={styles.row}>
-                <Text>Already have an account? </Text>
-                <TouchableOpacity onPress={() => navigation.replace('Login')}>
-                    <Text style={styles.link}>Login</Text>
-                </TouchableOpacity>
-            </View>
         </ScrollView>
     );
 }

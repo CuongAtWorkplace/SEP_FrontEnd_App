@@ -24,6 +24,7 @@ import { Provider } from 'react-redux';
 import store from './src/store';
 import chargeScreen from './src/screen/homescreen/chargeScreen';
 import classFile from './src/screen/class/classFile';
+import registeProfile from './src/screen/register/registeProfile';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -96,6 +97,8 @@ const App = () => {
           <Stack.Screen name="ManagerHelp" component={ManagerHelp} options={{ headerShown: false }} />
           <Stack.Screen name="chargeScreen" component={chargeScreen} options={{ headerShown: false }} />
           <Stack.Screen name="classFile" component={classFile} options={{ headerShown: false }} />
+          <Stack.Screen name="registeProfile" component={registeProfile} options={{ headerShown: false }} />
+
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
