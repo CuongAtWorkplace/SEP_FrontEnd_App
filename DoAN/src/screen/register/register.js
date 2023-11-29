@@ -20,8 +20,7 @@ export default function register({ navigation }) {
     
 
     const onLoginPressed = () => {
-        Alert.alert(email.value+" "+phone.value+" "+password.value);
-
+      Alert.alert(email.value+" "+phone.value+" "+password.value);
       navigation.navigate('registeProfile', { email: email.value, phone: phone.value , password:password.value });
     };
 

@@ -11,6 +11,9 @@ const OnboardingScreen = () => {
     const [currentId, setCurrentId] = useState(0);
     const swiperRef = useRef(null);
     const navigation = useNavigation();
+    const route = useRoute();
+
+    const { register } = route.params || {};
 
 
     useEffect(() => {
@@ -23,6 +26,9 @@ const OnboardingScreen = () => {
     };
 
     const handleSetting = () => {
+        if(register === true){
+            navigation.navigate('Home');
+        }
         navigation.navigate('Setting')
     };
 

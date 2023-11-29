@@ -35,26 +35,34 @@ export default function classFile() {
     const className = route.params.name;
     const navigation = useNavigation();
 
-    const fileList = [
-        { fileId: 1, fileName: 'File1.pdf', fileUrl: 'https://www.marxists.org/archive/marx/works/download/pdf/Capital-Volume-I.pdf' },
-        { fileId: 2, fileName: 'File2.pdf', fileUrl: 'https://example.com/file2.pdf' },
-        { fileId: 3, fileName: 'File2.pdf', fileUrl: 'https://example.com/file2.pdf' },
-        { fileId: 4, fileName: 'File2.pdf', fileUrl: 'https://example.com/file2.pdf' },
-        { fileId: 5, fileName: 'File2.pdf', fileUrl: 'https://example.com/file2.pdf' },
-        { fileId: 6, fileName: 'File2.pdf', fileUrl: 'https://example.com/file2.pdf' },
-        { fileId: 7, fileName: 'File2.pdf', fileUrl: 'https://example.com/file2.pdf' },
-        { fileId: 8, fileName: 'File2.pdf', fileUrl: 'https://example.com/file2.pdf' },
-        { fileId: 9, fileName: 'File2.pdf', fileUrl: 'https://example.com/file2.pdf' },
+    const URL = myGlobalVariable ;
 
-    ];
+    const [fileList, setFileList] = useState([]);
+
+    const fetchFiles = async () => {
+        try {
+          const response = await fetch(URL+"/api/File/GetAllFiles?classId="+courseId);
+          const data = await response.json();
+          setFileList(data);
+        } catch (error) {
+          console.error('Error fetching files:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      useEffect(() => {
+        fetchFiles();
+      }, []); // Empty dependency array means this effect runs once when the component mounts
+    
 
 
     const handleHeader = () => {
         navigation.navigate('ClassDetail', { classId: courseId });
     };
 
-    const handleFilePress =(URL) =>{
-        Linking.openURL(URL);
+    const handleFilePress =(name) =>{
+        Linking.openURL(URL+"/api/File/GetFileByNameInWeb?fileName="+name);
     }
 
     return (
@@ -64,9 +72,9 @@ export default function classFile() {
             <FlatList
                 style={styles.fileStyle}
                 data={fileList}
-                keyExtractor={(item) => item.fileId.toString()}
+                keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => handleFilePress(item.fileUrl)}>
+                    <TouchableOpacity onPress={() => handleFilePress(item.fileName)}>
                         <View style={styles.fileItem}>
                             <FontAwesome5 name="file-alt" size={24} color={colors.primary} />
                             <Text style={styles.fileName}>{item.fileName}</Text>

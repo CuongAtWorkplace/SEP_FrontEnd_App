@@ -9,24 +9,117 @@ import Video from 'react-native-video';
 import { KeyboardAvoidingView } from 'react-native';
 import { useEffect } from 'react';
 import { Alert } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import myGlobalVariable from '../../global';
+import { useDispatch } from 'react-redux';
 
 
 export default function registeProfile() {
 
     const emailInputRef = useRef();
 
+    const URL = myGlobalVariable;
     const route = useRoute();
 
     const { email, phone, password } = route.params || {};
 
+    const dispatch = useDispatch();
+
+
+    const navigation = useNavigation();
+    const [fullname, setFullname] = useState({ value: '', error: '' });
+    const [address, setAddress] = useState({ value: '', error: '' });
+    const [description, setDescription] = useState({ value: '', error: '' });
+
+    const onLoginPressed = async () => {
+        // Prepare the data to be sent to the API
+        const userData = {
+            email: email,
+            password: password,
+            fullname: fullname.value,
+            phone: phone,
+            address: address.value,
+            description: description.value
+        };
+
+        // Alert.alert(email + " " + password + " " + fullname.value + " " + phone + " " + address.value + " " + description.value);
+
+        try {
+            // Make the API request
+            const response = await fetch(URL + '/api/Login/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+
+            if (!response.ok) {
+                // Handle non-2xx response
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            onLoginPressed2();
+            navigation.navigate('OnboardingScreen', { register: true });
+            // Handle the response from the server
+            console.log('Registration successful:', data);
+            // You can navigate to the next screen or show a success message here
+        } catch (error) {
+            // Handle errors that occur during the API request
+            console.error('Error during registration:', error);
+        }
+    };
+
+    const onLoginPressed2 = async () => {
+        try {
+          const response = await fetch(URL + '/api/Login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password,
+            }),
+          });
+    
+          if (!response.ok) {
+            throw new Error('Login failed');
+          }
+    
+          // Xử lý phản hồi từ API (nếu cần)
+          const result = await response.json();
+          const base64Payload = result.token.split('.')[1];
+    
+          try {
+            const decodedPayload = decode(base64Payload);
+            const decodedPayloadObject = JSON.parse(decodedPayload);
+    
+            const userIdFromAPI = decodedPayloadObject.userid;
+            const role = decodedPayloadObject.roleid;
+    
+            if (role != 2) {
+              Alert.alert('Your account is not for student ');
+              return;
+            }
+            else {
+              dispatch(setUserId(userIdFromAPI));
+              navigation.replace('Home');
+            }
+    
+          } catch (error) {
+            console.error('Error decoding payload:', error);
+          }
+    
+          //  navigation.replace('Home')  
+        } catch (error) {
+          console.error('Error during login:', error);
+          Alert.alert('Wrong email or password');
+        }
+      };
     
 
-    const onLoginPressed = () => {
-        Alert.alert(email+" "+phone+" "+password);
-
-        emailInputRef.current.focus();
-    };
 
     return (
         <ScrollView style={{ backgroundColor: 'white', height: '100%' }} >
@@ -44,7 +137,8 @@ export default function registeProfile() {
                     ref={emailInputRef}
                     style={styles.Input}
                     label="Fullname"
-                  
+                    value={fullname.value}
+                    onChangeText={(text) => setFullname({ value: text, error: '' })}
                     autoCapitalize="none"
                     autoCompleteType="email"
                     textContentType="emailAddress"
@@ -62,7 +156,8 @@ export default function registeProfile() {
                     ref={emailInputRef}
                     style={styles.Input}
                     label="Address"
-                    
+                    value={address.value}
+                    onChangeText={(text) => setAddress({ value: text, error: '' })}
                     autoCapitalize="none"
                     autoCompleteType="email"
                     textContentType="emailAddress"
@@ -81,7 +176,8 @@ export default function registeProfile() {
                     ref={emailInputRef}
                     style={styles.Input}
                     label="Description"
-                   
+                    value={description.value}
+                    onChangeText={(text) => setDescription({ value: text, error: '' })}
                     autoCapitalize="none"
                     autoCompleteType="email"
                     textContentType="emailAddress"
@@ -134,3 +230,6 @@ const styles = StyleSheet.create({
 
     }
 });
+
+
+
