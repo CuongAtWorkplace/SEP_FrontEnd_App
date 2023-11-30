@@ -48,7 +48,7 @@ export default function Login({ navigation }) {
         },
         body: JSON.stringify({
           email: email.value,
-          password: password.value,
+          password: password.value
         }),
       });
 
