@@ -15,13 +15,26 @@ export default function register({ navigation }) {
     const [phone, setPhone] = useState({ value: '', error: '' });
     const [password, setPassword] = useState({ value: '', error: '' });
 
+    const [ConPassword, setConPassword] = useState({ value: '', error: '' });
+
+
     const emailInputRef = useRef();
 
-    
+    const checkPasswordMatch = () => {
+        if (password.value !== ConPassword.value) {
+            Alert.alert("Please check your password");
+
+            return false;
+        }
+        return true;
+    };
+
+
 
     const onLoginPressed = () => {
-      Alert.alert(email.value+" "+phone.value+" "+password.value);
-      navigation.navigate('registeProfile', { email: email.value, phone: phone.value , password:password.value });
+        if (checkPasswordMatch()) {
+            navigation.navigate('registeProfile', { email: email.value, phone: phone.value, password: password.value });
+        }
     };
 
     return (
@@ -82,41 +95,30 @@ export default function register({ navigation }) {
                     label="Password"
                     value={password.value}
                     onChangeText={(text) => setPassword({ value: text, error: '' })}
-                    error={!!email.error}
-                    errorText={email.error}
+                    secureTextEntry={true}
                     autoCapitalize="none"
-                    autoCompleteType="email"
-                    textContentType="emailAddress"
-                    keyboardType="email-address"
-                    onFocus={() => {
-                        // Xử lý logic khi email input được focus
-                    }}
-                    labelStyle={{
-                        color: colors.gray, // Màu của label
-                        marginBottom: 8, // Khoảng cách giữa label và input
-                    }}
-                    underlineColor="#3E427B" // Màu của đường outline bên dưới
+                    autoCompleteType="password"
+                    textContentType="password"
+                    keyboardType="default"
+                    underlineColor="#3E427B"
+                    right={<TextInput.Icon name="eye" />}
                 />
+
 
                 <TextInput
                     style={styles.Input}
                     label="Confirm your Password"
-                    value={email.value}
-                    onChangeText={(text) => setEmail({ value: text, error: '' })}
-                    error={!!email.error}
-                    errorText={email.error}
+                    value={ConPassword.value}
+                    onChangeText={(text) => setConPassword({ value: text, error: '' })}
+                    secureTextEntry={true}
                     autoCapitalize="none"
-                    autoCompleteType="email"
-                    textContentType="emailAddress"
-                    keyboardType="email-address"
-                    onFocus={() => {
-                    }}
-                    labelStyle={{
-                        color: colors.gray, // Màu của label
-                        marginBottom: 8, // Khoảng cách giữa label và input
-                    }}
-                    underlineColor="#3E427B" // Màu của đường outline bên dưới
+                    autoCompleteType="password"
+                    textContentType="password"
+                    keyboardType="default"
+                    underlineColor="#3E427B"
+                    right={<TextInput.Icon name="eye" />}
                 />
+
             </KeyboardAvoidingView>
             <LoginButton mode="contained" style={{ justifyContent: 'center', alignSelf: 'center' }} onPress={onLoginPressed}>
                 Register
