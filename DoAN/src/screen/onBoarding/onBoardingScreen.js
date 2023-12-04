@@ -6,6 +6,7 @@ import onboardingData from '../../onboardingData';
 import { useEffect } from 'react';
 import { useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 
 const OnboardingScreen = () => {
     const [currentId, setCurrentId] = useState(0);
@@ -27,7 +28,7 @@ const OnboardingScreen = () => {
 
     const handleSetting = () => {
         if(register === true){
-            navigation.navigate('Home');
+            navigation.navigate('Login');
         }
         navigation.navigate('Setting')
     };

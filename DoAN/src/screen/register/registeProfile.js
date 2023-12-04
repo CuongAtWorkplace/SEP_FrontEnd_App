@@ -56,11 +56,12 @@ export default function registeProfile() {
 
             if (!response.ok) {
                 // Handle non-2xx response
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                const errorData = await response.json(); // Parse JSON response
+                Alert.alert(errorData.message); // Access the 'message' property
+                throw new Error(`HTTP error! Status: ${response.message}`);
             }
 
             const data = await response.json();
-            onLoginPressed2();
             navigation.navigate('OnboardingScreen', { register: true });
             // Handle the response from the server
             console.log('Registration successful:', data);
@@ -70,54 +71,6 @@ export default function registeProfile() {
             console.error('Error during registration:', error);
         }
     };
-
-    const onLoginPressed2 = async () => {
-        try {
-          const response = await fetch(URL + '/api/Login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: email,
-              password: password,
-            }),
-          });
-    
-          if (!response.ok) {
-            throw new Error('Login failed');
-          }
-    
-          // Xử lý phản hồi từ API (nếu cần)
-          const result = await response.json();
-          const base64Payload = result.token.split('.')[1];
-    
-          try {
-            const decodedPayload = decode(base64Payload);
-            const decodedPayloadObject = JSON.parse(decodedPayload);
-    
-            const userIdFromAPI = decodedPayloadObject.userid;
-            const role = decodedPayloadObject.roleid;
-    
-            if (role != 2) {
-              Alert.alert('Your account is not for student ');
-              return;
-            }
-            else {
-              dispatch(setUserId(userIdFromAPI));
-              navigation.replace('Home');
-            }
-    
-          } catch (error) {
-            console.error('Error decoding payload:', error);
-          }
-    
-          //  navigation.replace('Home')  
-        } catch (error) {
-          console.error('Error during login:', error);
-          Alert.alert('Wrong email or password');
-        }
-      };
     
 
 
@@ -196,6 +149,12 @@ export default function registeProfile() {
             <LoginButton mode="contained" style={{ justifyContent: 'center', alignSelf: 'center' }} onPress={onLoginPressed}>
                 Finish
             </LoginButton>
+            <View style={styles.row}>
+                <Text>Already have an account? </Text>
+                <TouchableOpacity onPress={() => navigation.replace('Login')}>
+                    <Text style={styles.link}>Login</Text>
+                </TouchableOpacity>
+            </View>
         </ScrollView>
     );
 }

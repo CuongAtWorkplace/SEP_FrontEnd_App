@@ -18,7 +18,8 @@ export default function setting() {
     };
 
     const OnboardingScreen = () => {
-        navigation.navigate('OnboardingScreen')
+        navigation.navigate('OnboardingScreen', { register: false });
+
     };
 
     const ManagerHelpScreen = () => {
