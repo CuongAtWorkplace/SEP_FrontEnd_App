@@ -31,6 +31,24 @@ export default function registeProfile() {
     const [address, setAddress] = useState({ value: '', error: '' });
     const [description, setDescription] = useState({ value: '', error: '' });
 
+
+
+    function validateLocationString(inputString) {
+        // Biểu thức chính quy để kiểm tra tên thành phố và tên đất nước của Việt Nam
+        const regex =/^[^\d,]+,\s*Việt Nam$/;
+        return regex.test(inputString);
+    }
+
+    function validateFullName(fullName){
+        // Regular expression for a full name without special characters
+        const fullNameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ']+([ A-Za-zÀ-ÖØ-öø-ÿ']+)*$/;
+      
+        return fullNameRegex.test(fullName);
+      };
+      
+
+
+
     const onLoginPressed = async () => {
         // Prepare the data to be sent to the API
         const userData = {

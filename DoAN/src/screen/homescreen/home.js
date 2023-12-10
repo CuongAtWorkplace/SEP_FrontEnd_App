@@ -31,9 +31,6 @@ export default function Home() {
     navigation.navigate('ClassDetail')
   };
 
-  const handleNotification = () => {
-    navigation.navigate('Notification')
-  };
 
   const handleSearch = () => {
     navigation.navigate('ClassSearch')
@@ -125,10 +122,6 @@ export default function Home() {
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
             <TouchableOpacity onPress={handleSearch} style={{ marginRight: 10 }}>
               <Ionicons name="search-circle-outline" size={37} color="black" />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={handleNotification}>
-              <Ionicons name="notifications-circle-outline" size={35} color="black" />
             </TouchableOpacity>
           </View>
         </View>

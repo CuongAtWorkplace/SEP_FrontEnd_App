@@ -29,6 +29,24 @@ export default function register({ navigation }) {
         return true;
     };
 
+    function validateEmail(email) {
+        // Sử dụng biểu thức chính quy để kiểm tra định dạng email
+        const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        return regex.test(email);
+    }
+
+    function validatePhoneNumber(phoneNumber) {
+        // Sử dụng biểu thức chính quy để kiểm tra định dạng số điện thoại
+        const regex = /^\d{10}$/; // Ví dụ: 10 chữ số liên tiếp
+        return regex.test(phoneNumber);
+    }
+
+    
+
+
+
+      
+
 
 
     const onLoginPressed = () => {
