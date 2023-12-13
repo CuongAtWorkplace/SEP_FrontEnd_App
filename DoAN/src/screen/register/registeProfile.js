@@ -46,6 +46,28 @@ export default function registeProfile() {
         return fullNameRegex.test(fullName);
       };
       
+      function Test() {
+        let isValid = true; // Biến để kiểm tra xem tất cả đều hợp lệ
+        let noti = '';
+        if (!validateLocationString(address.value)) {
+            isValid = false;
+            noti = noti + "Location Format "
+        }
+
+        if (!validateFullName(fullname.value)) {
+            isValid = false;
+            noti = noti + "Fullname Format"
+        }
+
+        if (isValid) {
+            Alert.alert('Notification', 'Your account has created successfully');
+            onLoginPressed();
+        } else {
+            Alert.alert('Error', 'Wrong ' + noti);
+        }
+    }
+
+
 
 
 
@@ -164,7 +186,7 @@ export default function registeProfile() {
                 />
             </KeyboardAvoidingView>
 
-            <LoginButton mode="contained" style={{ justifyContent: 'center', alignSelf: 'center' }} onPress={onLoginPressed}>
+            <LoginButton mode="contained" style={{ justifyContent: 'center', alignSelf: 'center' }} onPress={Test}>
                 Finish
             </LoginButton>
             <View style={styles.row}>

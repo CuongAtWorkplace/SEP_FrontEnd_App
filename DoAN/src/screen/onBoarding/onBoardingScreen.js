@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import LottieView from 'lottie-react-native';
 import Swiper from 'react-native-swiper';
 import onboardingData from '../../onboardingData';
@@ -19,7 +19,7 @@ const OnboardingScreen = () => {
 
     useEffect(() => {
         // Xử lý khi currentId thay đổi
-        console.log('Current ID:', currentId);
+        console.log('Current ID:', register);
     }, [currentId]);
 
     const handleNextPage = () => {
@@ -27,7 +27,7 @@ const OnboardingScreen = () => {
     };
 
     const handleSetting = () => {
-        if(register === true){
+        if(register == true){
             navigation.navigate('Login');
         }
         navigation.navigate('Setting')

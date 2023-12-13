@@ -277,7 +277,7 @@ export default function classDetail(props) {
 
 
     const handleMeetingRoomPress = () => {
-        const meetingRoomUrl = 'https://cliff-lovely-system.glitch.me/?room=room-vn-1-XU1AO32XCC-1697214817745&fbclid=IwAR2YgfqNcaExiAEQKigeH8oflSD51g8EwFqtCfReJxVQz_1dPFb4LnSuoDs';
+        const meetingRoomUrl = 'https://2f96-2405-4802-ff-b5f0-e4e8-53a1-46ea-b29a.ngrok-free.app/videocall/Math_101';
         Linking.openURL(meetingRoomUrl);
     };
 

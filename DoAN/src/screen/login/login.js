@@ -41,7 +41,7 @@ export default function Login({ navigation }) {
 
   const onLoginPressed = async () => {
     try {
-      const response = await fetch(URL + '/api/Login', {
+      const response = await fetch(URL + '/api/Login/AuthenticateLogin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

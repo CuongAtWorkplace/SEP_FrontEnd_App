@@ -41,8 +41,29 @@ export default function register({ navigation }) {
         return regex.test(phoneNumber);
     }
 
-    
+    function Test() {
+        let isValid = true; // Biến để kiểm tra xem tất cả đều hợp lệ
+        let noti = '';
+        if (!validateEmail(email.value)) {
+            isValid = false;
+            noti = noti + "Email Format "
+        }
 
+        if (!validatePhoneNumber(phone.value)) {
+            isValid = false;
+            noti = noti + "Phone Format"
+        }
+
+        if (isValid) {
+            onLoginPressed();
+        } else {
+            Alert.alert('Error', 'Wrong ' + noti);
+        }
+    }
+
+
+
+    
 
 
       
@@ -138,7 +159,7 @@ export default function register({ navigation }) {
                 />
 
             </KeyboardAvoidingView>
-            <LoginButton mode="contained" style={{ justifyContent: 'center', alignSelf: 'center' }} onPress={onLoginPressed}>
+            <LoginButton mode="contained" style={{ justifyContent: 'center', alignSelf: 'center' }} onPress={Test}>
                 Register
             </LoginButton>
             <View style={styles.row}>
