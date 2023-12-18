@@ -25,6 +25,12 @@ const FeedBackModal = ({ closeModal }) => {
     };
 
     const handleSend = async () => {
+
+        if(feedbackText == '' || rating == 0){
+            Alert.alert("Please fill out all text input");
+            return ;
+        }
+
         try {
             const response = await fetch(URL+'/api/Report/AddFeedback', {
                 method: 'POST',

@@ -86,6 +86,11 @@ export default function UpdateList({ posts }) {
 
                     console.log(imageFileName);
 
+                    if(editedData.title =="" || editedData.description=="" || selected==""  ){
+
+                        Alert.alert('error', 'Please fill out all text');
+
+                    }
                     const response = await fetch(URL + '/api/Post/UpdatePost', {
                         method: 'PUT',
                         headers: {
@@ -103,8 +108,7 @@ export default function UpdateList({ posts }) {
                     });
 
                     if (response.ok) {
-                        console.log('Bài đăng đã được cập nhật thành công');
-                        Alert.alert('Notification', 'Bài đăng đã được cập nhật thành công');
+                        Alert.alert('Notification', 'Your post have updated successfuly');
                     } else {
                         console.error('Lỗi khi cập nhật bài đăng');
                     }

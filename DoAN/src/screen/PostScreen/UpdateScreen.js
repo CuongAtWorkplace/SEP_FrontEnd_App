@@ -33,8 +33,8 @@ export default function UpdateScreen({ navigation }) {
     };
 
     useEffect(() => {
-        // Hide the status bar when the component mounts
-        handleRefresh(); // Initial fetch when the component mounts
+        handleRefresh(); 
+        console.log(UserID);
 
 
     }, []);

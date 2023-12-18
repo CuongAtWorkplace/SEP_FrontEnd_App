@@ -118,7 +118,7 @@ export default function UpdateProfile() {
                     });
 
                     if (response.ok) {
-                        Alert.alert('Thông báo', 'Cập nhật ảnh thành công');
+                        Alert.alert('Notification', 'Update image successfully');
                     } else {
                         Alert.alert('Lỗi', 'Cập nhật ảnh thất bại');
                     }
@@ -144,7 +144,7 @@ export default function UpdateProfile() {
 
     function validateLocationString(inputString) {
         // Biểu thức chính quy để kiểm tra tên thành phố và tên đất nước của Việt Nam
-        const regex =/^[^\d,]+,\s*Việt Nam$/;
+        const regex =/^[^\d,]+.\s*Việt Nam$/;
         return regex.test(inputString);
     }
 

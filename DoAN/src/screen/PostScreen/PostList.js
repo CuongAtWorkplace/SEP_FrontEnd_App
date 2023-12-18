@@ -29,7 +29,6 @@ export default function PostList({ posts, updateLikes }) {
 
   const handleCommentPress = (postId) => {
 
-    console.log("an roi");
     setSelectedPostId(postId);
     setIsCommentListVisible(true);
   };

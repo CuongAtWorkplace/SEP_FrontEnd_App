@@ -1,6 +1,6 @@
 import React from "react"
 import { AntDesign } from '@expo/vector-icons';
-import { StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import { View, Text, Modal, TouchableOpacity, FlatList } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { TextInput } from "react-native";
@@ -12,7 +12,7 @@ import { useState } from "react";
 import myGlobalVariable from "../../global";
 
 
-const ForgetPaswordModal = ({ closeModal , sendModal ,email, setEmail}) => {
+const ForgetPaswordModal = ({ closeModal, sendModal, email, setEmail }) => {
 
     const URL = myGlobalVariable;
 
@@ -40,6 +40,30 @@ const ForgetPaswordModal = ({ closeModal , sendModal ,email, setEmail}) => {
             });
     };
 
+    const checkEmailExistence = () => {
+        // Call your API to check if the email exists
+        fetch(`${URL}/api/Login/CheckLearnerEmail/api/CheckLearnerEmail?email=${email}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.exists) {
+                Alert.alert("Your email is not available");
+                return;
+            }
+    
+            handleSend();
+        })
+        .catch(error => {
+            // Handle any other errors
+            console.error("Error checking email existence:", error);
+        });
+    };
+    
+    
 
     return (
         <View style={styles.container}>
@@ -70,7 +94,7 @@ const ForgetPaswordModal = ({ closeModal , sendModal ,email, setEmail}) => {
 
 
                         <TouchableOpacity style={{ width: 70, height: 50, backgroundColor: '#FE7104', borderRadius: 30, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ fontWeight: 'bold', color: 'white' }} onPress={handleSend}>Send</Text>
+                            <Text style={{ fontWeight: 'bold', color: 'white' }} onPress={checkEmailExistence}>Send</Text>
                         </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>

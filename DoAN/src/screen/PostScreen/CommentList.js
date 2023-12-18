@@ -91,7 +91,7 @@ const CommentList = ({ closeModal, postId }) => {
 
     const fetchComments = async () => {
         try {
-            const response = await fetch(URL + `/api/Post/ListCommentPost?postId=${postId}`);
+            const response = await fetch(URL + `/api/Post/ListCommentPost2?postId=${postId}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }

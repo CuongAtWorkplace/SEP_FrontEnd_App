@@ -41,32 +41,34 @@ export default function register({ navigation }) {
         return regex.test(phoneNumber);
     }
 
+    const isPasswordValid = (password) => {
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{10,}$/;
+        return passwordRegex.test(password);
+    };
+
     function Test() {
         let isValid = true; // Biến để kiểm tra xem tất cả đều hợp lệ
         let noti = '';
         if (!validateEmail(email.value)) {
             isValid = false;
-            noti = noti + "Email Format "
+            noti = noti + "Email Format . "
         }
 
         if (!validatePhoneNumber(phone.value)) {
             isValid = false;
-            noti = noti + "Phone Format"
+            noti = noti + "Phone Format . "
         }
 
+        if (!isPasswordValid(password.value)) {
+            isValid = false;
+            noti = noti + "Password Format . "
+        }
         if (isValid) {
             onLoginPressed();
         } else {
             Alert.alert('Error', 'Wrong ' + noti);
         }
     }
-
-
-
-    
-
-
-      
 
 
 

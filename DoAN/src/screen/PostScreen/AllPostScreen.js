@@ -42,7 +42,7 @@ export default function AllPostScreen() {
         await getUser();
         setRefreshing(false);
     };
-    
+
 
     const openImagePicker = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -73,16 +73,16 @@ export default function AllPostScreen() {
         // Sao chép danh sách bài đăng và tìm bài đăng cần cập nhật
         const updatedPosts = [...AllPost];
         const updatedPostIndex = updatedPosts.findIndex(post => post.postId === postId);
-      
+
         // Cập nhật số lượt thích cho bài đăng
         if (updatedPostIndex !== -1) {
-          updatedPosts[updatedPostIndex].likeAmount += 1; // hoặc giảm đi 1 tùy thuộc vào trạng thái thích hay không thích
+            updatedPosts[updatedPostIndex].likeAmount += 1; // hoặc giảm đi 1 tùy thuộc vào trạng thái thích hay không thích
         }
-      
+
         // Cập nhật lại danh sách bài đăng
         setAllPost(updatedPosts);
-      };
-      
+    };
+
 
     const HandleCancel = () => {
         setSelectedImage(null);
@@ -118,8 +118,11 @@ export default function AllPostScreen() {
                     const imageFileName = await uploadResponse.text(); // Assuming the response contains the image file name
 
                     // Create the postData object with the image file name and selectedItem
+                    if (title == "" || des == "" || selected == "") {
+                        Alert.alert('Notification', 'Please fill out all text');
+                    }
                     const postData = {
-                        createBy: User,
+                        createBy: UserID,
                         title: title,
                         description: des,
                         contentPost: selected, // Value from SelectDropdown
@@ -146,10 +149,10 @@ export default function AllPostScreen() {
                         console.error('Failed to add a new post');
                     }
                 } else {
-                    Alert.alert('Lỗi', 'Cập nhật ảnh thất bại');
+                    Alert.alert('Lỗi', 'Update image fail');
                 }
             } else {
-                Alert.alert('Lỗi', 'Chưa chọn ảnh');
+                Alert.alert('Error', 'You havent picked image');
             }
         } catch (error) {
             // Handle any network errors or exceptions

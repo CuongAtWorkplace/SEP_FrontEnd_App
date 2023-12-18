@@ -11,7 +11,6 @@ import { useEffect } from "react";
 import { ScrollView } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import HeaderBack from "../../../component/HeaderBack";
-import User from '../../user';
 import { Ionicons } from '@expo/vector-icons';
 import myGlobalVariable from "../../global";
 import format from "date-fns/format";
@@ -22,6 +21,8 @@ import { HubConnectionBuilder } from "@aspnet/signalr";
 import * as ImagePicker from 'expo-image-picker';
 import { KeyboardAvoidingView } from "react-native";
 import { Permission } from "react-native";
+import { useSelector } from 'react-redux';
+
 
 
 export default function Chat() {
@@ -42,6 +43,8 @@ export default function Chat() {
     const scrollViewRef = useRef();
     const URL = myGlobalVariable;
 
+    const User = useSelector((state) => state.user.userId);
+
     const prevCourseId = useRef(null);
 
     useEffect(() => {
@@ -51,7 +54,7 @@ export default function Chat() {
             // Cập nhật prevCourseId để sử dụng trong lần render tiếp theo
             prevCourseId.current = courseId;
         }
-        console.log(courseId);
+
     }, [courseId]);
 
 
@@ -192,7 +195,6 @@ export default function Chat() {
         })
             .then(response => {
                 if (response.ok) {
-                    Alert.alert('Message sent successfully');
                     // Optionally, you can handle the successful response here
                 } else {
 
@@ -266,8 +268,8 @@ export default function Chat() {
 
     const handleDelete = (messageId) => {
         Alert.alert(
-            'Xác nhận xóa tin nhắn',
-            'Bạn có chắc muốn xóa tin nhắn này?',
+            'Confirm',
+            'Are you sure to delete your message?',
             [
                 {
                     text: 'Cancel',
@@ -284,7 +286,7 @@ export default function Chat() {
                         })
                             .then(response => {
                                 if (response.ok) {
-                                    Alert.alert('Tin nhắn đã được xóa thành công');
+                                    Alert.alert('Delete successfully');
                                     setMessages(prevMessages => prevMessages.filter(message => message.messageId !== messageId));
                                 } else {
                                     Alert.alert('Xóa tin nhắn thất bại');
@@ -330,11 +332,11 @@ export default function Chat() {
 
     const renderMessageItem = ({ item, index }) => {
         return (
-            <View style={{ alignSelf: item.createBy === User ? 'flex-end' : 'flex-start' }}>
+            <View style={{ alignSelf: item.createBy == User ? 'flex-end' : 'flex-start' }}>
                 <Text style={{ fontSize: 12, color: 'white' }}>{item.fullName}</Text>
 
                 <View style={{ flexDirection: 'row' }}>
-                    {item.createBy === User && (
+                    {item.createBy == User && (
                         <TouchableOpacity style={{ margin: 8 }} onPress={() => handleDelete(item.messageId)}>
                             <Ionicons name="trash-bin-outline" size={24} color="white" />
                         </TouchableOpacity>
@@ -342,7 +344,7 @@ export default function Chat() {
                     <View style={{
                         borderRadius: 20,
                         width: 150,
-                        backgroundColor: item.createBy === User ? 'lightblue' : item.roleId === 1 ? '#C79191' : 'lightgray',
+                        backgroundColor: item.createBy == User ? 'lightblue' : item.roleId === 1 ? '#C79191' : 'lightgray',
                         padding: 8,
                         margin: 4
                     }}>

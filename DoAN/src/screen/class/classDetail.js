@@ -229,7 +229,7 @@ export default function classDetail(props) {
                 });
 
                 if (response.ok) {
-                    // Gọi HandleEnroll sau khi cập nhật thành công
+                   // handleSubmit(classData[0]?.fee);
                     HandleEnroll();
                 } else {
                     Alert.alert('Notification', 'Something wrong !!!!');
@@ -245,6 +245,34 @@ export default function classDetail(props) {
         }
     }
 
+    const handleSubmit = async (moneyAmount) => {
+        const paymentData = {
+            fromUser: UserID,
+            toUser: teacherId,
+            totalMoney: moneyAmount,
+            createDate: "2023-12-14T09:23:34.367Z",
+            type: false
+        };
+    
+        try {
+            const response = await fetch(URL + '/api/Payment/AddPayment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(paymentData) // Corrected variable name
+            });
+    
+            if (response.ok) {
+                // Handle success if needed
+            } else {
+                console.error('Error updating payment data:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating payment data:', error);
+        }
+    };
+    
     const HandleEnroll = async () => {
         try {
             setEnroll(true);
@@ -277,7 +305,8 @@ export default function classDetail(props) {
 
 
     const handleMeetingRoomPress = () => {
-        const meetingRoomUrl = 'https://2f96-2405-4802-ff-b5f0-e4e8-53a1-46ea-b29a.ngrok-free.app/videocall/Math_101';
+        const meetingRoomUrl = 'https://pretty-loved-tadpole.ngrok.app/videocall/' + classData[0]?.className;
+        console.log(meetingRoomUrl);
         Linking.openURL(meetingRoomUrl);
     };
 
@@ -291,27 +320,27 @@ export default function classDetail(props) {
                 const teacherResponse = await fetch(URL + '/api/User/GetTeacherById/GetUserById/' + classJsonConvert[0].teacherId);
                 const teacherJsonConvert = await teacherResponse.json();
                 setTeacherData(teacherJsonConvert);
-    
+
                 const studentClassResponse = await fetch(URL + '/api/ListStudentClass/CheckClassExists/CheckClassExists/' + classId + '/' + UserID);
                 if (studentClassResponse.ok) {
                     setShowButtons(true);
                 }
-    
+
                 const studentResponse = await fetch(URL + '/api/User/GetStudentById/GetStudentById/' + UserID);
                 const studentJsonConvert = await studentResponse.json();
                 setUserData(studentJsonConvert);
-    
+
                 setIsLoading(false);
             } catch (error) {
                 // Xử lý lỗi
             }
         }
-    
+
         if (isLoading) {
             getData();
         }
     }, [isLoading, classId, UserID]);
-    
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar translucent={true} backgroundColor="transparent" />

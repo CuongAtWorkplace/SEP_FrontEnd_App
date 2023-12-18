@@ -35,29 +35,33 @@ export default function registeProfile() {
 
     function validateLocationString(inputString) {
         // Biểu thức chính quy để kiểm tra tên thành phố và tên đất nước của Việt Nam
-        const regex =/^[^\d,]+,\s*Việt Nam$/;
+        const regex = /^[^\d,]+.\s*Việt Nam$/;
         return regex.test(inputString);
     }
 
-    function validateFullName(fullName){
+    function validateFullName(fullName) {
         // Regular expression for a full name without special characters
         const fullNameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ']+([ A-Za-zÀ-ÖØ-öø-ÿ']+)*$/;
-      
+
         return fullNameRegex.test(fullName);
-      };
-      
-      function Test() {
+    };
+
+
+    function Test() {
         let isValid = true; // Biến để kiểm tra xem tất cả đều hợp lệ
         let noti = '';
-        if (!validateLocationString(address.value)) {
-            isValid = false;
-            noti = noti + "Location Format "
-        }
-
         if (!validateFullName(fullname.value)) {
             isValid = false;
-            noti = noti + "Fullname Format"
+            noti = noti + "Fullname Format . "
         }
+        
+        if (!validateLocationString(address.value)) {
+            isValid = false;
+            noti = noti + "Location Format . "
+        }
+
+       
+
 
         if (isValid) {
             Alert.alert('Notification', 'Your account has created successfully');
@@ -86,7 +90,7 @@ export default function registeProfile() {
 
         try {
             // Make the API request
-            const response = await fetch(URL + '/api/Login/register', {
+            const response = await fetch(URL + '/api/Login/Resigter', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -111,7 +115,7 @@ export default function registeProfile() {
             console.error('Error during registration:', error);
         }
     };
-    
+
 
 
     return (

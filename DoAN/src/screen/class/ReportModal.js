@@ -53,7 +53,13 @@ const ReportModal = ({ closeModal , teacherId }) => {
         try {
             const formData = new FormData();
 
-            // Ensure that a valid image is selected
+
+            if(description == '' || reason == ''){
+
+                Alert.alert("Please fill out all text input");
+                return ;
+                
+            }
             if (ImagesEvidence) {
                 // Create a file object from the selectedImage
                 const imageFile = {

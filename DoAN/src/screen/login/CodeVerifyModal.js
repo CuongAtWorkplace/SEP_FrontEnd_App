@@ -31,7 +31,7 @@ const CodeVerifyModal = ({ closeModal, email , sendModal }) => {
             }),
         }).then(response => {
             if (!response.ok) {
-                Alert.alert("code not  successfully");
+                Alert.alert("code is not correct");
 
                 throw new Error(`HTTP error! Status: ${response.status}`);
                 
