@@ -48,22 +48,23 @@ const ForgetPaswordModal = ({ closeModal, sendModal, email, setEmail }) => {
                 "Content-Type": "application/json",
             },
         })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.exists) {
-                Alert.alert("Your email is not available");
-                return;
-            }
-    
-            handleSend();
-        })
-        .catch(error => {
-            // Handle any other errors
-            console.error("Error checking email existence:", error);
-        });
+            .then(response => {
+                if (response.status == 400) {
+                    Alert.alert("Your email is not available");
+                    return;
+                }
+                if (response.status == 200) {
+                    handleSend();
+                }
+            })
+
+            .catch(error => {
+                // Handle any other errors
+                console.error("Error checking email existence:", error);
+            });
     };
-    
-    
+
+
 
     return (
         <View style={styles.container}>
