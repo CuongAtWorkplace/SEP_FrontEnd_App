@@ -229,7 +229,7 @@ export default function classDetail(props) {
                 });
 
                 if (response.ok) {
-                   // handleSubmit(classData[0]?.fee);
+                    handleSubmit(classData[0]?.fee);
                     HandleEnroll();
                 } else {
                     Alert.alert('Notification', 'Something wrong !!!!');
